@@ -41,7 +41,7 @@ Rails::Initializer.run do |config|
   config.gem 'subdomain-fu',
     :lib     => 'subdomain-fu',
     :source  => 'http://gems.github.com',
-    :version => '0.5.3'
+    :version => '0.5.4'
   config.gem 'db_populate',
     :lib     => 'db_populate',
     :source  => 'http://gems.github.com',
