@@ -1,0 +1,9 @@
+class AgencyImage < Image
+  acts_as_fleximage do
+    :image_directory 'public/media/agencies/images'
+    require image false
+    preprocess_image do |image|
+      image.resize '800x600'
+    end
+  end
+end

@@ -1,0 +1,11 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  agent_id: 1
+  agency_id: 1
+  primary: 1
+
+two:
+  agent_id: 1
+  agency_id: 1
+  primary: 1

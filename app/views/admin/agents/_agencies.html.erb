@@ -1,0 +1,34 @@
+<% primary_agency_shown = false %>
+<% broker_shown = false %>
+
+<% if @agent.agencies %>
+  <p>
+    <h3>Associated agencies:</h3><br />
+    <% (@agent.agencies).each do |agency| %>
+      <% if agency.agent_affiliations[0].primary_agency %>
+        <% primary_agency_shown = true %>
+        *
+      <% end %>
+      <% if agency.broker_id == @agent.id %>
+        <% broker_shown = true %>
+        +
+      <% end %>
+      <%= agency.name %>
+      <%= link_to 'Show agency', 
+        admin_agency_path(agency) %> |
+      <%= link_to 'Agent list', 
+        admin_agency_agents_path(agency) %>
+    <% end %>
+  </p>
+  <% if primary_agency_shown || broker_shown %>
+    <p class="legend">
+      <% if primary_agency_shown %>
+        <div><i>* primary agency</i></div>
+      <% end %>
+      <% if broker_shown %>
+        <div><i>+ broker</i></div>
+      <% end %>
+    </p>
+  <% end %>
+<% end %>
+

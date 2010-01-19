@@ -1,0 +1,24 @@
+<h1>Listing agency_relationships</h1>
+
+<table>
+  <tr>
+    <th>Agency</th>
+    <th>Partner</th>
+  </tr>
+
+<% @agency_relationships.each do |agency_relationship| %>
+  <tr>
+    <td><%=h agency_relationship.agency_id %></td>
+    <td><%=h agency_relationship.partner_id %></td>
+    <td><%= link_to 'Show', admin_agency_relationship_path(agency_relationship %></td>
+    <td><%= link_to 'Edit',
+      edit_agency_relationship_path(agency_relationship) %></td>
+    <td><%= link_to 'Destroy', agency_relationship,
+      :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New agency_relationship', new_agency_relationship_path %>

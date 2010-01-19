@@ -1,0 +1,13 @@
+# EX: /agencies/3/default_logo
+site_name = @agency.name.gsub!(/\s/, '\n')
+
+Fleximage::Blank.new('220x109').operate do |image|
+  image.border :size => 0, :color => 'white'
+  image.text(site_name,
+    :alignment => :center,
+    :antialias => true,
+    :color => 'black',
+    :font_size => 32
+  )
+end
+

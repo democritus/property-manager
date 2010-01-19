@@ -1,0 +1,45 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+graceland:
+  listing_type: for_sale
+  property: heartbreak_hotel
+  agency: heredia
+  ask_currency: eur
+  label: sale
+  name: Graceland Estate
+  description: Elvis is just one more victim of subprime lending
+  ask_amount: 659999
+  publish_date: 2009-03-18
+
+neverland:
+  listing_type: for_rent
+  property: heartbreak_hotel
+  agency: heredia
+  ask_currency: crc
+  label: rental
+  name: The Original Neverland
+  description: Renting out rooms to pay mortgage
+  ask_amount: 500000
+  publish_date: 2009-04-13
+
+modesto:
+  listing_type: for_sale
+  property: hotel_california
+  agency: jaco
+  ask_currency: usd
+  label: business
+  name: Motel Modesto
+  description: Mirrors on the ceiling... champaigne on ice... she said...
+  ask_amount: 800000
+  publish_date: 2009-03-19
+
+neverland:
+  listing_type: for_sale
+  property: munster_mansion
+  agency: heredia
+  ask_currency: usd
+  label: partner version
+  name: Haunted House of Monsters
+  description: Renting out rooms to pay mortgage
+  ask_amount: 1200000
+  publish_date: 2009-03-17

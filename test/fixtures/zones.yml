@@ -1,0 +1,29 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+caribbean:
+  column: Caribbean
+  country: cr
+
+central_pacific:
+  column: Central Pacific
+  country: cr
+
+central_valley:
+  name: Central Valley
+  country: cr
+  
+north_pacific:
+  column: North Pacific
+  country: cr
+
+northern_plains:
+  column: Northern Plains
+  country: cr
+
+south_pacific:
+  column: South Pacific
+  country: cr
+
+south_pacific_ni:
+  column: South Pacific
+  country: ni

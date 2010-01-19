@@ -1,0 +1,85 @@
+<p>
+  <b>Name:</b>
+  <%=h @property.name %>
+</p>
+
+<p>
+  <b>Description:</b>
+  <%=h @property.description %>
+</p>
+
+<p>
+  <b>Agency:</b>
+  <%=h @property.agency_id %>
+</p>
+
+<p>
+  <b>Barrio:</b>
+  <%=h @property.barrio_id %>
+</p>
+
+<p>
+  <b>Bedroom number:</b>
+  <%=h @property.bedroom_number %>
+</p>
+
+<p>
+  <b>Bathroom number:</b>
+  <%=h @property.bathroom_number %>
+</p>
+
+<p>
+  <b>Construction size:</b>
+  <%=h @property.construction_size %>
+</p>
+
+<p>
+  <b>Land size:</b>
+  <%=h @property.land_size %>
+</p>
+
+<p>
+  <b>Garage spaces:</b>
+  <%=h @property.garage_spaces %>
+</p>
+
+<p>
+  <b>Parking spaces:</b>
+  <%=h @property.parking_spaces %>
+</p>
+
+<p>
+  <b>Year built:</b>
+  <%=h @property.year_built %>
+</p>
+
+<p>
+  <b>Stories:</b>
+  <%=h @property.stories %>
+</p>
+
+<p>
+  <b>Primary category:</b>
+  <%=h primary_property_category %>
+</p>
+
+<p>
+  <b>Primary style:</b>
+  <%=h primary_property_style %>
+</p>
+
+<%= render :partial => 'associated_listings' %>
+
+<%= link_to 'Add listing', new_admin_property_listing_path(@property) %> |
+<%= link_to 'Add image', new_admin_property_property_image_path(@property) %> |
+<%= link_to 'Associated listings', admin_property_listings_path(@property) %> |
+<%= link_to 'Associated images',
+  admin_property_property_images_path(@property) %> |
+<%= link_to 'Associated categories',
+  admin_property_category_assignments_path(@property) %> |
+<%= link_to 'Associated features',
+  admin_property_feature_assignments_path(@property) %> |
+<%= link_to 'Associated styles',
+  admin_property_style_assignments_path(@property) %> |
+<%= link_to 'Edit', edit_contextual_path(@property) %> |
+<%= link_to 'Back', contextual_collection_path %>

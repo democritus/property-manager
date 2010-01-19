@@ -1,0 +1,25 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+heredia:
+  name: Heredia
+  country: cr
+  news: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam tincidunt, massa ut ultricies aliquam, lectus dolor venenatis dui, vitae scelerisque purus eros id libero. Proin in odio sed turpis ornare dignissim. Quisque odio tellus, mollis a hendrerit. 
+  description: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer quis sem mauris, vitae aliquet quam. Praesent sed dui eu ante bibendum iaculis et at turpis. Quisque nec est elit. Morbi vitae nisi a turpis interdum pulvinar. Donec venenatis pretium quam, eget tincidunt nulla dignissim ut. Proin placerat congue arcu eget gravida. Nullam consectetur ipsum eu arcu condimentum bibendum volutpat dui vestibulum. Nullam nulla sapien, placerat ut consectetur ac, condimentum quis nisi. Curabitur sit amet convallis lectus. Morbi adipiscing ipsum in turpis condimentum vel accumsan sapien iaculis. Ut congue, diam quis ultricies cursus, erat lacus tristique lacus, non condimentum purus est a justo. Curabitur nec eros sed magna mollis dapibus a vitae urna. Aliquam ut justo nisi.
+
+jaco:
+  name: Jacó
+  country: cr
+  news: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam tincidunt, massa ut ultricies aliquam, lectus dolor venenatis dui, vitae scelerisque purus eros id libero. Proin in odio sed turpis ornare dignissim. Quisque odio tellus, mollis a hendrerit. 
+  description: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer quis sem mauris, vitae aliquet quam. Praesent sed dui eu ante bibendum iaculis et at turpis. Quisque nec est elit. Morbi vitae nisi a turpis interdum pulvinar. Donec venenatis pretium quam, eget tincidunt nulla dignissim ut. Proin placerat congue arcu eget gravida. Nullam consectetur ipsum eu arcu condimentum bibendum volutpat dui vestibulum. Nullam nulla sapien, placerat ut consectetur ac, condimentum quis nisi. Curabitur sit amet convallis lectus. Morbi adipiscing ipsum in turpis condimentum vel accumsan sapien iaculis. Ut congue, diam quis ultricies cursus, erat lacus tristique lacus, non condimentum purus est a justo. Curabitur nec eros sed magna mollis dapibus a vitae urna. Aliquam ut justo nisi.
+
+dominical:
+  name: Dominical
+  country: cr
+  news: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam tincidunt, massa ut ultricies aliquam, lectus dolor venenatis dui, vitae scelerisque purus eros id libero. Proin in odio sed turpis ornare dignissim. Quisque odio tellus, mollis a hendrerit. 
+  description: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer quis sem mauris, vitae aliquet quam. Praesent sed dui eu ante bibendum iaculis et at turpis. Quisque nec est elit. Morbi vitae nisi a turpis interdum pulvinar. Donec venenatis pretium quam, eget tincidunt nulla dignissim ut. Proin placerat congue arcu eget gravida. Nullam consectetur ipsum eu arcu condimentum bibendum volutpat dui vestibulum. Nullam nulla sapien, placerat ut consectetur ac, condimentum quis nisi. Curabitur sit amet convallis lectus. Morbi adipiscing ipsum in turpis condimentum vel accumsan sapien iaculis. Ut congue, diam quis ultricies cursus, erat lacus tristique lacus, non condimentum purus est a justo. Curabitur nec eros sed magna mollis dapibus a vitae urna. Aliquam ut justo nisi.
+  
+escazu:
+  name: Escazú
+  country: cr
+  news: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam tincidunt, massa ut ultricies aliquam, lectus dolor venenatis dui, vitae scelerisque purus eros id libero. Proin in odio sed turpis ornare dignissim. Quisque odio tellus, mollis a hendrerit. 
+  description: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer quis sem mauris, vitae aliquet quam. Praesent sed dui eu ante bibendum iaculis et at turpis. Quisque nec est elit. Morbi vitae nisi a turpis interdum pulvinar. Donec venenatis pretium quam, eget tincidunt nulla dignissim ut. Proin placerat congue arcu eget gravida. Nullam consectetur ipsum eu arcu condimentum bibendum volutpat dui vestibulum. Nullam nulla sapien, placerat ut consectetur ac, condimentum quis nisi. Curabitur sit amet convallis lectus. Morbi adipiscing ipsum in turpis condimentum vel accumsan sapien iaculis. Ut congue, diam quis ultricies cursus, erat lacus tristique lacus, non condimentum purus est a justo. Curabitur nec eros sed magna mollis dapibus a vitae urna. Aliquam ut justo nisi.

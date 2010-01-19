@@ -1,0 +1,168 @@
+<%
+# AJAX for updating barrio select options
+if @property.new_record?
+  form_name = 'new_property'
+else
+  form_name = 'edit_property_' + @property.id.to_s
+end
+js_checked_market_id = "$RF('" + form_name + "','market_id')"
+js_checked_zone_id = "$RF('" + form_name + "','zone_id')"
+js_checked_province_id = "$RF('" + form_name + "','province_id')"
+      
+onchange_market_province_or_zone = remote_function(
+  :url => { :action => :barrio_select },
+  :method => :get,
+  :with => "'zone_id=' + encodeURIComponent(" + js_checked_zone_id + ")" +
+    " + '&province_id=' + encodeURIComponent(" + js_checked_province_id + ")" +
+    " + '&market_id=' + encodeURIComponent(" + js_checked_market_id + ")",
+  :before => "Element.show('spinner')",
+  :complete => "Element.hide('spinner')",
+  :update => 'barrio_select'
+)
+%>
+
+<%
+# Load data into select fields and select corresponding options
+setup_property_fields
+%>
+<div class="row">
+  <div class="clearfix">
+    Market:
+    <% @lists[:markets].dup.unshift(['All', '']).each_with_index do |market, i| %>
+      <% if market[1] == params[:market_id] %>
+        <% checked = true %>
+      <% else %>
+        <% checked = false %>
+      <% end %>
+      <div class="inline_form_element">
+        <% id = 'market_' + market[1].to_s %>
+        <%= radio_button_tag :market_id, market[1].to_s, checked, :id => id,
+          :onchange => "setCheckedValue(zone_id, '')" +
+            ";setCheckedValue(province_id, '')" +
+            ";" + onchange_market_province_or_zone %>
+        <%= label_tag :market_id, market[0], :for => id %>
+      </div>
+    <% end %>
+  </div>
+  <p>OR</p>
+  <div class="clearfix">
+    Zone:
+    <% @lists[:zones].dup.unshift(['All', '']).each_with_index do |zone, i| %>
+      <% if zone[1] == params[:zone_id] %>
+        <% checked = true %>
+      <% else %>
+        <% checked = false %>
+      <% end %>
+      <div class="inline_form_element">
+        <% id = 'zone_' + zone[1].to_s %>
+        <%= radio_button_tag :zone_id, zone[1].to_s, checked, :id => id,
+          :onchange => "setCheckedValue(market_id, '')" +
+            ";" + onchange_market_province_or_zone %>
+        <%= label_tag :zone_id, zone[0], :for => id %>
+      </div>
+    <% end %>
+  </div>
+  <div class="clearfix">
+    Province:
+    <% @lists[:provinces].dup.unshift(
+    ['All', '']).each_with_index do |province, i| %>
+      <% if province[1] == params[:province_id] %>
+        <% checked = true %>
+      <% else %>
+        <% checked = false %>
+      <% end %>
+      <div class="inline_form_element">
+        <% id = 'province_' + province[1].to_s %>
+        <%= radio_button_tag :province_id, province[1].to_s, checked, :id => id,
+          :onchange => "setCheckedValue(market_id, '')" +
+            ";" + onchange_market_province_or_zone %>
+        <%= label_tag :province_id, province[0], :for => id %>
+      </div>
+    <% end %>
+  </div>
+  <div id="barrio_select">
+    <%= f.select :barrio_id, @lists[:barrios],
+      { :label_text => 'Barrio' } %>
+  </div>
+</div>
+<div class="row">
+  <%= f.text_field :name %>
+</div>
+<% unless params['context_type'] == 'agencies' %>
+  <div class="row">
+    <%= f.select :agency_id, @lists[:agencies] %>
+  </div>
+<% end %>
+<div class="row">
+  <%= f.select :primary_category_id,
+    @lists[:categories],
+    { :label_text => 'Primary category' } %>
+</div>
+<div class="row">
+  <label for="category_ids">Other categories</label>
+  <%= multiple_select 'property',
+    'category_ids',
+    @lists[:categories],
+    {
+      :outer_class => 'multiple_select',
+      :inner_class => 'multiple_select_checkbox' 
+    }
+  %>
+</div>
+<div class="row">
+  <%= f.select :primary_style_id,
+    @lists[:styles],
+    { :label_text => 'Primary style' } %>
+</div>
+<div class="row">
+  <label for="style_ids">Other styles</label>
+  <%= multiple_select 'property',
+    'style_ids',
+    @lists[:styles],
+    {
+      :outer_class => 'multiple_select',
+      :inner_class => 'multiple_select_checkbox' 
+    }
+  %>
+</div>
+<div class="row">
+  <label for="feature_ids">Features</label>
+  <%= multiple_select 'property',
+    'feature_ids',
+    @lists[:features],
+    {
+      :outer_class => 'multiple_select',
+      :inner_class => 'multiple_select_checkbox'
+    }
+  %>
+</div>
+<div class="row">
+  <%= f.text_field :stories %>
+</div>
+<div class="row">
+  <%= f.text_field :garage_spaces %>
+</div>
+<div class="row">
+  <%= f.text_field :parking_spaces %>
+</div>
+<div class="row">
+  <%= f.text_field :bedroom_number %>
+</div>
+<div class="row">
+  <%= f.text_field :bathroom_number %>
+</div>
+<div class="row">
+  <%= f.text_field :construction_size %>
+</div>
+<div class="row">
+  <%= f.text_field :land_size %>
+</div>
+<div class="row">
+  <%= f.text_field :year_built %>
+</div>
+<div class="row">
+  <%= f.date_select :date_available %>
+</div>
+<div class="row">
+  <%= f.text_area :description %>
+</div>

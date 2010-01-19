@@ -1,0 +1,14 @@
+<% set_province_form_list_data %>
+
+<div class="row">
+  <%= f.text_field :name %>
+</div>
+
+<div class="row">
+  <%= f.select :country_id, @lists[:countries] %>
+</div>
+
+<div class="row">
+  <%= f.text_field :position %>
+</div>
+

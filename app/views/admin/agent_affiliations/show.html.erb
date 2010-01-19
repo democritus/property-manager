@@ -1,0 +1,18 @@
+<p>
+  <b>Agent:</b>
+  <%=h @agent_affiliation.agent_id %>
+</p>
+
+<p>
+  <b>Agency:</b>
+  <%=h @agent_affiliation.agency_id %>
+</p>
+
+<p>
+  <b>Primary:</b>
+  <%=h @agent_affiliation.primary_agency %>
+</p>
+
+
+<%= link_to 'Edit', edit_agent_affiliation_path(@agent_affiliation) %> |
+<%= link_to 'Back', agent_affiliations_path %>

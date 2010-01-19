@@ -1,0 +1,63 @@
+<h1>Listing users</h1>
+
+<table>
+  <tr>
+    <th>Icon</th>
+    <th>First name</th>
+    <th>Last name</th>
+    <th>Sex</th>
+    <th>Nationality</th>
+    <th>Login</th>
+    <th>Email</th>
+    <th>Email public</th>
+    <th>Phone home</th>
+    <th>Phone work</th>
+    <th>Phone mobile</th>
+    <th>Phone fax</th>
+    <th>Address1</th>
+    <th>Address2</th>
+    <th>Postal code</th>
+    <th>Original referer url</th>
+    <th>Date verified</th>
+  </tr>
+
+<% @users.each do |user| %>
+  <tr>
+    <td>
+      <% if user.user_icons[0] %>
+        <%= link_to(
+          image_tag(
+            small_user_icon_path(user.user_icons[0], :format => :jpg),
+            :style => 'border: 0'
+          ),
+          user_icon_path(user.user_icons[0]),
+          :target => :image_viewer
+        ) %>
+      <% end %></td>
+    <td><%=h user.first_name %></td>
+    <td><%=h user.last_name %></td>
+    <td><%=h user.sex %></td>
+    <td><%=h user.nationality_id %></td>
+    <td><%=h user.login %></td>
+    <td><%=h user.email %></td>
+    <td><%=h user.email_public %></td>
+    <td><%=h user.phone_home %></td>
+    <td><%=h user.phone_work %></td>
+    <td><%=h user.phone_mobile %></td>
+    <td><%=h user.phone_fax %></td>
+    <td><%=h user.address1 %></td>
+    <td><%=h user.address2 %></td>
+    <td><%=h user.postal_code %></td>
+    <td><%=h user.original_referer_url %></td>
+    <td><%=h user.date_verified %></td>
+    <td><%= link_to 'Show', admin_user_path(user) %></td>
+    <td><%= link_to 'Edit', edit_admin_user_path(user) %></td>
+    <td><%= link_to 'Destroy', admin_user_path(user),
+      :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New user', new_admin_user_path %>

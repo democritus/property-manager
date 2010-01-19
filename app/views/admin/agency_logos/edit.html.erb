@@ -1,0 +1,47 @@
+<h1>Editing agency_logo</h1>
+
+<% form_for(:admin, @agency_logo) do |f| %>
+  <%= f.error_messages %>
+  <p>
+    <%= link_to(
+      image_tag(
+        thumb_agency_logo_path(@agency_logo, :format => :jpg),
+        :style => 'border: 0'
+      ),
+      agency_logo_path(@agency_logo),
+      :target => :_blank
+    ) %>
+  </p>
+  <p>
+    <%= f.label :image_filename %>
+    <%= f.text_field :image_filename %>
+  </p>
+  <p>
+    <%= f.label :image_width %>
+    <%= f.text_field :image_width %>
+  </p>
+  <p>
+    <%= f.label :image_height %>
+    <%= f.text_field :image_height %>
+  </p>
+  <p>
+    <%= f.label :caption %>
+    <%= f.text_field :caption %>
+  </p>
+  <p>
+    <%= f.label :position %>
+    <%= f.text_field :position %>
+  </p>
+  <p>
+    <%= f.label :visible %>
+    <%= f.check_box :visible %>
+  </p>
+  <p>
+    <%= f.submit 'Update' %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', agency_logo_path, :target => :_blank %> |
+<%= link_to 'Back',
+  polymorphic_path([:admin, @agency_logoable, :agency_logos]) %>
+

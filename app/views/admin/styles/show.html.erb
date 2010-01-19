@@ -1,0 +1,23 @@
+<p>
+  <b>Type:</b>
+  <%=h @style.type %>
+</p>
+
+<p>
+  <b>Name:</b>
+  <%=h @style.name %>
+</p>
+
+<p>
+  <b>User defined:</b>
+  <%=h @style.user_defined %>
+</p>
+
+<p>
+  <b>Position:</b>
+  <%=h @style.position %>
+</p>
+
+
+<%= link_to 'Edit', edit_admin_style_path(@style) %> |
+<%= link_to 'Back', admin_styles_path %>

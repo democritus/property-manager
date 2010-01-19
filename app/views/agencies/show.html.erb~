@@ -1,0 +1,26 @@
+<p>
+  <b>Name:</b>
+  <%=h @agency.name %>
+</p>
+
+<p>
+  <b>Domain:</b>
+  <%=h @agency.domain %>
+</p>
+
+<p>
+  <b>Home page:</b>
+  <%=h @agency.home_page %>
+</p>
+
+<%= render :partial => 'associated_agents' %>
+
+<%= link_to 'Add agent', new_agency_agent_path(@agency) %> |
+<%= link_to 'Edit', edit_agency_path(@agency) %> |
+<%= link_to 'Back', agencies_path %>
+
+
+
+
+<%= link_to 'Edit', edit_agency_path(@agency) %> |
+<%= link_to 'Back', agencies_path %>

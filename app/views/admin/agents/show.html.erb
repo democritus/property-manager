@@ -1,0 +1,18 @@
+<h1>Agent</h1>
+
+<p>
+  <b>User id:</b>
+  <%=h @agent.user_id %>
+</p>
+
+<%= user_snapshot %>
+    
+<p>
+  <b>Mini biography:</b>
+  <%=h @agent.mini_biography %>
+</p>
+
+<%= link_to 'Edit', edit_contextual_path(@agent) %> |
+<%= link_to 'Back', contextual_collection_path %>
+
+<%= render :partial => "agencies" %>

@@ -1,0 +1,36 @@
+<h1>Listing agency_jurisdictions</h1>
+
+<table>
+  <tr>
+    <th>Agency</th>
+    <th>Market</th>
+    <% if params[:context_type] == 'agencies' %>
+      <th>Primary Market</th>
+    <% elsif params[:context_type] == 'markets' %>
+      <th>Primary Agency</th>
+    <% end %>
+  </tr>
+
+<% @agency_jurisdictions.each do |agency_jurisdiction| %>
+  <tr>
+    <td><%=h agency_jurisdiction.agency_id %></td>
+    <td><%=h agency_jurisdiction.market_id %></td>
+    <% if params[:context_type] == 'agencies' %>
+      <td><%=h agency_jurisdiction.primary_market %></td>
+    <% elsif params[:context_type] == 'markets' %>
+      <td><%=h agency_jurisdiction.primary_agency %></td>
+    <% end %>
+    <td><%= link_to 'Show',
+      admin_agency_jurisdiction_path(agency_jurisdiction) %></td>
+    <td><%= link_to 'Edit',
+      edit_agency_jurisdiction_path(agency_jurisdiction) %></td>
+    <td><%= link_to 'Destroy',
+      admin_agency_jurisdiction_path(agency_jurisdiction),
+      :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New agency_jurisdiction', new_admin_agency_jurisdiction_path %>

@@ -1,0 +1,114 @@
+<p>
+  <b>Listing type:</b>
+  <%=h @listing.listing_type_id %>
+</p>
+
+<p>
+  <b>Property:</b>
+  <%=h @listing.property_id %>
+</p>
+
+<p>
+  <b>Label:</b>
+  <%=h @listing.label %>
+</p>
+
+<p>
+  <b>Name:</b>
+  <%=h @listing.name %>
+</p>
+
+<p>
+  <b>Description:</b>
+  <%=h @listing.description %>
+</p>
+
+<p>
+  <b>Ask amount:</b>
+  <%=h @listing.ask_amount %>
+</p>
+
+<p>
+  <b>Ask currency:</b>
+  <%=h @listing.ask_currency_id %>
+</p>
+
+<p>
+  <b>Close amount:</b>
+  <%=h @listing.close_amount %>
+</p>
+
+<p>
+  <b>Close currency:</b>
+  <%=h @listing.close_currency_id %>
+</p>
+
+<p>
+  <b>Publish date:</b>
+  <%=h @listing.publish_date %>
+</p>
+
+<p>
+  <b>Listing expiration date:</b>
+  <%=h @listing.listing_expiration_date %>
+</p>
+
+<p>
+  <b>Contract expiration date:</b>
+  <%=h @listing.contract_expiration_date %>
+</p>
+
+<p>
+  <b>Date available:</b>
+  <%=h @listing.date_available %>
+</p>
+
+<p>
+  <b>Show agent:</b>
+  <%=h @listing.show_agent %>
+</p>
+
+<p>
+  <b>Show agency:</b>
+  <%=h @listing.show_agency %>
+</p>
+
+<p>
+  <b>Admin notes:</b>
+  <%=h @listing.admin_notes %>
+</p>
+
+<p>
+  <b>Sold:</b>
+  <%=h @listing.sold %>
+</p>
+
+<p>
+  <b>Approved:</b>
+  <%=h @listing.approved %>
+</p>
+
+<p>
+  <b>Primary category:</b>
+  <%=h primary_listing_category %>
+</p>
+
+<p>
+  <b>Primary style:</b>
+  <%=h primary_listing_style %>
+</p>
+
+<%= link_to 'Add image', new_admin_listing_property_image_path(@listing) %> |
+<%= link_to 'Images',
+  admin_listing_property_images_path(@listing) %> |
+<%= link_to 'Categories',
+  admin_listing_category_assignments_path(@listing) %> |
+<%= link_to 'Features',
+  admin_listing_feature_assignments_path(@listing) %> |
+<%= link_to 'Styles',
+  admin_listing_information_requests_path(@listing) %> |
+<%= link_to 'Information requests',
+  admin_listing_information_requests_path(@listing) %>
+<%= link_to 'Edit', edit_admin_property_listing_path(@property, @listing) %> |
+<%= link_to 'Back', admin_property_listings_path(@property) %>
+

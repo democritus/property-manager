@@ -1,0 +1,6 @@
+class Zone < ActiveRecord::Base
+  belongs_to :country
+  has_many :barrios
+end
+
+# TEST -  see if this line is copied to Linux installation

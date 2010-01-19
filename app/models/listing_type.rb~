@@ -1,0 +1,13 @@
+class ListingType < ActiveRecord::Base
+  
+  has_many :categories, :as => :categoriable
+  has_many :category_options, :through => :categories
+  has_many :features, :as => :featureable
+  has_many :feature_options, :through => :features
+  has_many :styles, :as => :styleable
+  has_many :style_options, :through => :styles
+  
+  has_many :listings
+
+  validates_presence_of :name
+end

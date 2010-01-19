@@ -1,0 +1,29 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+hot_water:
+  name: hot water
+  user_defined: false
+
+balcony:
+  name: balcony
+  user_defined: false
+  
+pool:
+  name: pool
+  user_defined: false
+  
+furniture:
+  name: option to buy furniture
+  user_defined: true
+  
+stainless:
+  name: Stainless steel appliances
+  user_defined: true
+  
+maintenance:
+  name: $150 monthly maintenance fees
+  user_defined: true
+  
+rancho:
+  name: Rancho
+  user_defined: true

@@ -1,0 +1,14 @@
+<p>
+  <b>Agency:</b>
+  <%=h @agency_relationship.agency_id %>
+</p>
+
+<p>
+  <b>Partner:</b>
+  <%=h @agency_relationship.partner_id %>
+</p>
+
+
+<%= link_to 'Edit',
+  edit_admin_agency_relationship_path(@agency_relationship) %> |
+<%= link_to 'Back', admin_agency_relationships_path %>

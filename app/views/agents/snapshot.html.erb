@@ -1,0 +1,13 @@
+<% if agent.user.user_icons %>
+  <% if agent.user.user_icons[0] %>
+    <%= image_tag(
+      small_user_icon_path(agent.user.user_icons[0],
+        :format => :jpg),
+      :class=> 'agent-photo'
+    )
+    %>
+  <% end %>
+<% end %>
+<% unless agent.mini_biography.blank? %>
+  <%= agent.mini_biography %>
+<% end %>

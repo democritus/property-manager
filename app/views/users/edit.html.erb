@@ -1,0 +1,13 @@
+<div id="main_text">
+  <h2>Edit my account</h2>
+  <% labelled_form_for @user, :url => account_path do |f| %>
+    <%= f.error_messages %> 
+    <%= render :partial => 'user_fields', 
+      :locals => {
+        :f => f
+      } %>
+    <%= f.submit "Update" %>
+  <% end %>
+</div>
+ 
+<br /><%= link_to "My Profile", account_path %>

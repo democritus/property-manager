@@ -1,0 +1,24 @@
+<h1>Editing listing for <%= @listing.property.name %></h1>
+
+<%
+labelled_form_for [:admin, @property, @listing] do |f|
+%>
+<%
+#labelled_form_for(context_target) do |f|
+%>
+  <%= f.error_messages %>
+  
+  <%= render :partial => 'listing_fields', 
+    :locals => {
+      :f => f
+    } %>
+    
+  <div class="row">
+    <%= f.submit 'Update' %>
+  </div>
+<% end %>
+
+<%= link_to 'Back to listing',
+  admin_property_listing_path(@listing.property, @listing) %> | 
+<%= link_to 'Back to property',
+  admin_agency_property_path(@listing.property.agency, @listing.property) %>

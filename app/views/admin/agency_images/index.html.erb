@@ -1,0 +1,48 @@
+<h1>Listing agency_images</h1>
+
+<table>
+  <tr>
+    <th>Thumbnail</th>
+    <th>Image filename</th>
+    <th>Image width</th>
+    <th>Image height</th>
+    <th>Caption</th>
+    <th>Position</th>
+    <th>Visible</th>
+  </tr>
+
+<% @agency_images.each do |agency_image| %>
+  <tr>
+    <td>
+      <%= link_to(
+        image_tag(
+          thumb_agency_image_path(agency_image, :format => :jpg),
+          :style => 'border: 0'
+        ),
+        agency_image_path(agency_image),
+        :target => :_blank
+      ) %></td>
+    <td><%=h agency_image.image_filename %></td>
+    <td><%=h agency_image.image_width %></td>
+    <td><%=h agency_image.image_height %></td>
+    <td><%=h agency_image.caption %></td>
+    <td><%=h agency_image.position %></td>
+    <td><%=h agency_image.visible %></td>
+    <td><%= link_to 'Show', agency_image, :target => :_blank %></td>
+    <td><%= link_to 'Edit',
+      edit_polymorphic_path([:admin, @agency_imageable, agency_image]) %></td>
+    <td><%= link_to 'Destroy',
+      polymorphic_path([:admin, @agency_imageable, agency_image]),
+      :confirm => 'Are you sure?', :method => :delete %></td>
+    <!--<td><%= link_to 'Destroy', agency_image, :confirm => 'Are you sure?',
+    :method => :delete %></td>-->
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New image',
+  new_polymorphic_path([:admin, @agency_imageable, :agency_image]) %> |
+<%= link_to 'Back', polymorphic_path([:admin, @agency_imageable]) %>
+

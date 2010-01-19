@@ -1,0 +1,23 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  type: MyString
+  imageable_type: MyString
+  imageable_id: 1
+  image_filename: MyString
+  image_width: 1
+  image_height: 1
+  caption: MyString
+  position: 1
+  visible: false
+
+two:
+  type: MyString
+  imageable_type: MyString
+  imageable_id: 1
+  image_filename: MyString
+  image_width: 1
+  image_height: 1
+  caption: MyString
+  position: 1
+  visible: false

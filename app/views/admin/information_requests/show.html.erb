@@ -1,0 +1,41 @@
+<p>
+  <b>Listing:</b>
+  <%=h @information_request.listing_id %>
+</p>
+
+<p>
+  <b>Recipient Email:</b>
+  <%=h @information_request.recipient_email %>
+</p>
+
+<p>
+  <b>User:</b>
+  <%=h @information_request.user_id %>
+</p>
+
+<p>
+  <b>Name:</b>
+  <%=h @information_request.name %>
+</p>
+
+<p>
+  <b>Email:</b>
+  <%=h @information_request.email %>
+</p>
+
+<p>
+  <b>Phone:</b>
+  <%=h @information_request.phone %>
+</p>
+
+<p>
+  <b>Message:</b>
+  <%=h @information_request.message %>
+</p>
+
+
+<%= link_to 'Edit',
+  edit polymorphic_path([:admin,
+    @information_requestable, @information_request]) %> |
+<%= link_to 'Back',
+  polymorphic_path([:admin, @information_requestable, :information_requests]) %>

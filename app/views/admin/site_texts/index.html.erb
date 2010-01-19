@@ -1,0 +1,24 @@
+<% title "Site texts" %>
+
+<table>
+  <tr>
+    <th>Agency</th>
+    <th>Name</th>
+    <th>Value</th>
+  </tr>
+  <% for site_text in @site_texts %>
+    <tr>
+      <td><%=h site_text.agency_id %></td>
+      <td><%=h site_text.name %></td>
+      <td><%=h site_text.value %></td>
+      <td><%= link_to "Show",
+        admin_agency_site_text_path(@agency, site_text) %></td>
+      <td><%= link_to "Edit",
+        edit_admin_agency_site_text_path(@agency, site_text) %></td>
+      <td><%= link_to "Destroy", admin_agency_site_text_path(@agency, site_text),
+        :confirm => 'Are you sure?', :method => :delete %></td>
+    </tr>
+  <% end %>
+</table>
+
+<p><%= link_to "New Site text", new_admin_agency_site_text_path(@agency) %></p>

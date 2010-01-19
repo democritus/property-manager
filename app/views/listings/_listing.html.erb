@@ -1,0 +1,153 @@
+<div class="listing_container clearfix">
+  <div class="content clearfix">
+    <% # Combine images from Property and Lisitng; merges into @images variable %>
+    <% merge_images!(listing) %>
+    <% unless listing.images.blank? %>
+      <div class="thumbnail">
+        <%= listing_thumbnail(listing.images[0], listing) %>
+      </div>
+    <% end %>
+    <div class="flowed_content">
+      <%= price_div(listing.ask_amount, listing.ask_currency.symbol,
+        listing.ask_currency.code) %>
+      <h2><%= link_to listing.name, listing %></h2>
+      <div class="section highlighted-items">
+        <div>
+          <%
+          highlighted_items = []
+          unless primary_category(listing).blank?
+            highlighted_items << primary_category(listing)
+          end
+          highlighted_items << bed_and_bath_formatted(
+            listing.property.bedroom_number,
+            listing.property.bathroom_number
+          )
+          %>
+          <%= highlighted_items.join(' / ') %>
+        </div>
+        <%= location_formatted(listing.property.barrio.name,
+          listing.property.barrio.market.name) %>
+      </div>
+      <ul class="info_list horizontal clearfix">
+        <% unless listing.property.construction_size.blank? %>
+          <%= content_tag(:li,
+            construction_formatted(listing.property.construction_size)) %>
+        <% end %>
+        <% unless listing.property.land_size.blank? %>
+          <%= content_tag(:li,
+            land_formatted(listing.property.land_size)) %>
+        <% end %>
+        <% unless listing.property.stories.blank? %>
+          <%= content_tag(:li,
+            stories_formatted(listing.property.stories)) %>
+        <% end %>
+        <% unless listing.property.garage_spaces.blank? %>
+          <%= content_tag(:li,
+            garage_formatted(listing.property.garage_spaces)) %>
+        <% end %>
+        <% unless listing.property.parking_spaces.blank? %>
+          <%= content_tag(:li,
+            parking_formatted(listing.property.parking_spaces)) %>
+        <% end %>
+        <% unless listing.property.year_built.blank? %>
+          <%= content_tag(:li,
+            year_built_formatted(listing.property.year_built)) %>
+        <% end %>
+        <%= extra_features_inline(listing.features) %>
+      </ul>
+      
+      
+      <%
+      # TODO: make sure new way of displaying agent works
+      
+      # New way
+      if listing.property
+        if listing.property.agency
+          if listing.property.agency.broker
+            contact = listing.property.agency.broker.user
+            contact_name = (contact.first_name.capitalize + ' ' +
+              contact.last_name.capitalize).strip
+              
+            # TODO: make this a method in agent controller that can be cached
+            %>
+            <div class="agent_name">
+              Contact:
+              <%= link_to (
+                contact_name + '<div class="after_icon"></div>',
+                listing_path(listing, :anchor => 'information_request'),
+                :target => 'new',
+                :class => 'contact_link') %>
+            </div>
+            <%
+          end
+        end
+      end
+      %>
+      
+      <%
+      # Old way
+      my_broker = listing_contact(listing)
+      %>
+      <% unless my_broker.blank? %>
+        <div class="agent_name">
+          Contact:
+          <%= link_to agent_name(listing) + '<div class="after_icon"></div>',
+            listing_path(listing, :anchor => 'information_request'),
+            :target => 'new',
+            :class => 'contact_link' %>
+        </div>
+      <% end %>
+      
+      
+      <div class="show_more_wrapper">
+        <div id="show_more_bar_<%= listing_counter.to_s %>"
+        class="show_more_image"></div>
+        <div class="open_zone"
+        onclick="toggleListingInfo('show_more_bar_<%= listing_counter.to_s %>',
+        '<%= 'more_info_' + listing_counter.to_s %>')"></div>
+      </div>
+      <% javascript_tag do %>
+        function toggleListingInfo(barElementName, infoElement) {
+          classA = 'show_more_image';
+          classB = 'show_less_image';
+          barElement = $(barElementName);
+          if (barElement.className == 'show_less_image') {
+            barElement.className = classA;
+            Effect.Fade(infoElement, { duration: 0.5 });
+          } else {
+            barElement.className = classB;
+            Effect.Appear(infoElement, { duration: 0.5 });
+          }
+        }
+      <% end %>
+      <div id="more_info_<%= listing_counter.to_s %>" style="display: none">
+        <% unless listing.property.description.blank? %>
+        <div class="section description">
+          <div>
+            <div>
+              <strong>Description:</strong> <%=h listing.property.description %>
+            </div>
+          </div>
+        </div>
+        <% end %>
+        <%= render(:partial => 'liaison', :locals => {
+          :listing => listing, :listing_counter => listing_counter
+        }) %>
+      </div>
+    </div>
+  </div>
+  <div class="footer">
+    <div class="clearfix">
+      <div class="reference-id">
+        REF: <%= (listing.id).to_s %>
+      </div>
+      <div class="links">
+        <ul class="horizontal float-right clearfix">
+          <li><%= link_to t(:full_listing).capitalize, listing %></li>
+          <li><%= link_to t(:request_info).capitalize,
+            listing_path(listing, :anchor => 'information_request') %></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,51 @@
+<h1>Listing properties</h1>
+
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Description</th>
+    <th>Agency</th>
+    <th>Barrio</th>
+    <th>Bedroom number</th>
+    <th>Bathroom number</th>
+    <th>Construction size</th>
+    <th>Land size</th>
+    <th>Garage spaces</th>
+    <th>Parking spaces</th>
+    <th>Year built</th>
+    <th>Stories</th>
+    <th>Primary category</th>
+    <th>Primary style</th>
+  </tr>
+
+<% @properties.each do |property| %>
+  <tr>
+    <td><%=h property.name %></td>
+    <td><%=h property.description %></td>
+    <td><%=h property.agency_id %></td>
+    <td><%=h property.barrio_id %></td>
+    <td><%=h property.bedroom_number %></td>
+    <td><%=h property.bathroom_number %></td>
+    <td><%=h property.construction_size %></td>
+    <td><%=h property.land_size %></td>
+    <td><%=h property.garage_spaces %></td>
+    <td><%=h property.parking_spaces %></td>
+    <td><%=h property.year_built %></td>
+    <td><%=h property.stories %></td>
+    <td><%=h primary_property_category(property) %></td>
+    <td><%=h primary_property_style(property) %></td>
+    <td><%= link_to 'Show', contextual_path(property) %></td>
+    <td><%= link_to 'Edit', edit_contextual_path(property) %></td>
+    <td><%= link_to 'Destroy', contextual_path(property),
+      :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New property', new_contextual_path %>
+<br />
+<% unless params['context_type'].blank? %>
+  <%= link_to 'Back to agency', context_member_path %>
+<% end %>

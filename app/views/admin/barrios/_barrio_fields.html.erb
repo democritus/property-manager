@@ -1,0 +1,39 @@
+<% set_barrio_form_list_data %>
+
+<div class="row">
+  <%= f.text_field :name %>
+</div>
+
+<div class="row">
+  <%= f.select :country_id, @lists[:countries] %>
+</div>
+
+<%= observe_field(:barrio_country_id,
+  :url => { :action => :update_places },
+  :with => "'country_id=' + encodeURIComponent($('barrio_country_id').value)",
+  :before => "Element.show('spinner')",
+  :complete => "Element.hide('spinner')",
+  :method => :get,
+  :update => 'update_places'
+) %>
+
+<!-- Placeholder for JavaScript returned from AJAX call "update_places" -->
+<div id="update_places">
+</div>
+
+<div class="row">
+  <%= f.select :zone_id, @lists[:zones] %>
+</div>
+
+<div class="row">
+  <%= f.select :province_id, @lists[:provinces] %>
+</div>
+
+<div class="row">
+  <%= f.select :market_id, @lists[:markets] %>
+</div>
+
+<div class="row">
+  <%= f.text_field :position %>
+</div>
+

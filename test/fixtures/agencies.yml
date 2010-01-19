@@ -1,0 +1,13 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+heredia:
+  name: Heredia
+  subdomain: heredia
+  broker: brian
+  country: costa_rica
+  
+jaco:
+  name: Jacó
+  subdomain: jaco
+  broker: phil
+  country: costa_rica

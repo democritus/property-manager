@@ -1,0 +1,21 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+a_frame:
+  name: a-frame
+  user_defined: false
+
+colonial:
+  name: colonial
+  user_defined: false
+  
+contemporary:
+  name: contemporary
+  user_defined: false
+  
+victorian:
+  name: Victorian
+  user_defined: false
+
+wonky_jawed:
+  name: wonky-jawed
+  user_defined: true

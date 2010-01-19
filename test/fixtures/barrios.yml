@@ -1,0 +1,57 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+downtown_heredia:
+  name: Downtown Heredia
+  country: cr
+  zone: central_valley
+  province: heredia
+  market: heredia
+
+santa_lucia:
+  name: Santa Lucía
+  country: cr
+  zone: central_valley
+  province: heredia
+  market: heredia
+
+santo_domingo:
+  name: Santo Domingo
+  country: cr
+  zone: central_valley
+  province: heredia
+  market: heredia
+
+san_rafael:
+  name: San Rafael
+  country: cr
+  zone: central_valley
+  province: heredia
+  market: heredia
+
+san_pablo:
+  name: San Pablo
+  country: cr
+  zone: central_valley
+  province: heredia
+  market: heredia
+
+jaco_beach:
+  name: Jacó Beach
+  country: cr
+  zone: central_pacific
+  province: puntarenas
+  market: jaco
+
+playa_hermosa:
+  name: Playa Hermosa
+  country: cr
+  zone: central_pacific
+  province: puntarenas
+  market: jaco
+
+san_juan:
+  name: value
+  country: value
+  zone: value
+  province: value
+  market: value

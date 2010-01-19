@@ -1,0 +1,48 @@
+<%
+listings_show_view = false
+if controller.controller_name == 'listings' && controller.action_name == 'show'
+  listings_show_view = true
+end
+%>
+
+<%
+listing_counter = 0 unless listing_counter
+my_broker = listing_contact(listing)
+%>
+
+<% unless my_broker.blank? %>
+  <div style="clear: both" class="section agent-info clearfix">
+    <div id="<%= 'agent_info_' + listing_counter.to_s %>">
+      <div>
+        <%
+        # TODO: Get this view from a separate controller to work and cache
+        %>
+        <%= render :controller => :agents, :action => :snapshot,
+          :locals => {:agent => my_broker} %>
+        <% if my_broker.user.user_icons[0] %>
+          <% link_to(listing_path(listing, :anchor => 'information_request')) do %>
+            <%= image_tag(
+              small_user_icon_path(my_broker.user.user_icons[0],
+                :format => :jpg),
+              :class=> 'agent-photo'
+            )
+            %>
+          <% end %>
+        <% end %>
+        <% unless my_broker.mini_biography.blank? %>
+          <% unless listings_show_view %>
+            <strong>Agent: <%= agent_name(listing) %></strong>:<br />
+          <% end %>
+          <%= my_broker.mini_biography %>
+        <% end %>
+        
+        <% unless listings_show_view %>
+          <%= link_to 'Click here to contact ' + my_broker.user.first_name + 
+          ' about this listing',
+            listing_path(listing, :anchor => 'information_request'),
+            :target => '_blank' %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+<% end %>

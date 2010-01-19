@@ -1,0 +1,9 @@
+class Agency < ActiveRecord::Base
+  belongs_to :broker,
+    :class_name => 'Agent',
+    :foreign_key => 'broker_id'
+  has_many :agency_jurisdictions
+  has_many :listings
+  has_many :markets, :through => :agency_jurisdictions
+  has_many :agents, :through => :agent_affiliations
+end

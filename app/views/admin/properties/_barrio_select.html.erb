@@ -1,0 +1,7 @@
+<%
+if barrios.empty?
+  barrios = ['No records found', '']
+end
+%>
+<%= label @property, :barrio_id %>
+<%= select @property, :barrio_id, barrios, { :label_text => 'Barrio' } %>

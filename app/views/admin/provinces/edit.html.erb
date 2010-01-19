@@ -1,0 +1,18 @@
+<h1>Editing province</h1>
+
+<% labelled_form_for(:admin, @province) do |f| %>
+  <%= f.error_messages %>
+
+  <%= render :partial => 'province_fields', 
+    :locals => {
+      :f => f,
+      :lists => @lists
+    } %>
+    
+  <p>
+    <%= f.submit 'Update' %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', contextual_path(@province) %> |
+<%= link_to 'Back', contextual_collection_path %>

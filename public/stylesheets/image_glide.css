@@ -1,0 +1,226 @@
+/* 
+    Document   : image_glide
+    Created on : Feb 19, 2009, 11:49:10 PM
+    Author     : brian
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+/* Styles for scrolling layers
+	 Specify width and height in hold and wn, and in clip for wn */
+div.glide-holder {  
+  /*border: 5px dotted red;*/
+  position: relative;
+  overflow: hidden;
+  z-index: 10;
+}
+
+div.glide-holder div.scroll-left,
+div.glide-holder div.scroll-right {
+  /*border: 5px dotted red;*/
+  position: absolute;
+  
+  /* Space accounts for image border and drop shadow */
+  /*top: 12px;*/
+  bottom: 21px;
+  width: 20px;
+  height: 30px;
+  
+  /* Height should be determined programatically
+  height: 117px;
+  */
+  filter: alpha(opacity: 0.50);
+  KHTMLOpacity: 0.50;
+  MozOpacity: 0.50;
+  opacity: 0.50;
+  z-index: 100;
+}
+
+div.glide-holder div.scroll-left {
+  background: url("../images/bg_left_arrow.gif") #666666 50% 50% no-repeat;
+  left: 17px; /* Space accounts for image border and drop shadow */
+}
+
+div.glide-holder div.scroll-right {
+  background: url("../images/bg_right_arrow.gif") #666666 50% 50% no-repeat;
+  /* left should be defined programatically as it depends on the size and
+  ** number of images
+  left: ???px;
+  */
+}
+
+div.glide-holder div.scroll-left:hover,
+div.glide-holder div.scroll-right:hover {
+  filter: alpha(opacity: 0.75);
+  KHTMLOpacity: 0.75;
+  MozOpacity: 0.75;
+  opacity: 0.75;
+  cursor: pointer;
+}
+
+div.glide-window {
+  /*background-color: #f0f0f0;*/
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  width: 5540px;
+  height: 165px;
+  clip: rect(0px, 566px, 165px, 0px);
+  /*clip: rect(0px, auto, 165px, 0px); how to make variable width? */
+  overflow: hidden;
+  z-index: 1;
+}
+
+div.glide-window div.glide-panel {
+  /* This is the part that moves, causing the images to scroll left and right
+  ** within the window. Width should be defined programatically since it will
+  ** depend on the number of images being displayed */
+}
+
+div.glide-window div.glide-item {
+  position: relative;
+  float: left;
+  margin: 0px;
+}
+
+div.glide-window div.glide-item img {
+  cursor: pointer;
+  display: block;
+  border: none;
+}
+
+div.glide-window div.glide-item img.placeholder {
+  cursor: default;
+}
+
+div.glide-window div.glide-item div.text_overlay,
+div.glide-window div.glide-item div.text_overlay_shadow,
+div.glide-window div.glide-item div.text_overlay_background {
+  position: absolute;
+  width: 254px;
+  font-family: Helvetica;
+  font-size: 18px;
+  font-weight: normal;
+  letter-spacing: 1px;
+  padding: 0 4px;
+}
+
+div.glide-window div.glide-item div.text_overlay_background {
+  background: url('../images/bg_black_trans.png') repeat-y 100% 0;
+  /*background-color: #000000;*/
+  filter: alpha(opacity:0.35);
+  KHTMLOpacity: 0.35;
+  MozOpacity: 0.35;
+  opacity: 0.35;
+}
+
+div.glide-window div.glide-item div.text_overlay {
+  top: 17px;
+  left: 14px;
+  color: #f16422;
+  z-index: 100;
+}
+
+div.glide-window div.glide-item div.text_overlay_shadow {
+  top: 16px;
+  left: 13px;
+  color: #e8e8e8;
+  z-index: 90;
+}
+
+div.glide-window div.glide-item div.text_overlay_background {
+  top: 12px;
+  left: 12px;
+  width: 264px;
+  z-index: 80;
+  padding: 4px 0px;
+}
+
+div.glide-window div.agency div.text_overlay,
+div.glide-window div.agency div.text_overlay_shadow {
+  width: 854px;
+  font-family: Helvetica;
+  font-size: 60px;
+  font-weight: bold;
+  letter-spacing: 2px;
+  filter: alpha(opacity: 0.20);
+  KHTMLOpacity: 0.20;
+  MozOpacity: 0.20;
+  opacity: 0.20;
+}
+
+div.glide-window div.agency div.text_overlay {
+  top: 40px;
+  left: 40px;
+  color: #f16422;
+}
+
+div.glide-window div.agency div.text_overlay_shadow {
+  top: 38px;
+  left: 38px;
+  color: #ffffff;
+}
+
+div.glide-window div.agency div.text_overlay_background {
+  background: none;
+}
+
+div.glide-window div.large_listing div.text_overlay,
+div.glide-window div.large_listing div.text_overlay_shadow,
+div.glide-window div.large_listing div.text_overlay_background {
+  width: 835px;
+  padding: 0 8px;
+  font-family: Helvetica;
+  font-size: 20px;
+  font-weight: bold;
+  letter-spacing: 2px;
+  /*
+  filter: alpha(opacity: 0.20);
+  KHTMLOpacity: 0.20;
+  MozOpacity: 0.20;
+  opacity: 0.20;
+  */
+}
+
+div.glide-window div.large_listing div.text_overlay {
+  top: 18px;
+  left: 15px;
+  color: #f16422;
+}
+
+div.glide-window div.large_listing div.text_overlay_shadow {
+  top: 19px;
+  left: 14px;
+  color: #ffffff;
+}
+
+div.glide-window div.large_listing div.text_overlay_background {
+  top: 12px;
+  left: 12px;
+  width: 851px;
+  padding: 7px 0;
+  filter: alpha(opacity:0.25);
+  KHTMLOpacity: 0.25;
+  MozOpacity: 0.25;
+  opacity: 0.25;
+}
+
+/*
+div.with_arrows div.large_listing div.text_overlay,
+div.with_arrows div.large_listing div.text_overlay_shadow {
+  width: 793px;
+}
+
+div.with_arrows div.large_listing div.text_overlay {
+  left: 35px;
+}
+
+div.with_arrows div.large_listing div.text_overlay_shadow {
+  left: 34px;
+}
+
+div.with_arrows div.large_listing div.text_overlay_background {
+  left: 32px;
+  width: 811px;
+}
+*/

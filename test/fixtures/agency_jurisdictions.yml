@@ -1,0 +1,31 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+heredia_heredia:
+  agency: heredia
+  market: heredia
+  primary_market: 1
+  primary_agency: 1
+
+heredia_jaco:
+  agency: heredia
+  market: jaco
+  primary_market: 0
+  primary_agency: 0
+  
+heredia_dominical:
+  agency: heredia
+  market: dominical
+  primary_market: 0
+  primary_agency: 0
+
+heredia_escazu:
+  agency: heredia
+  market: escazu
+  primary_market: 0
+  primary_agency: 0
+
+jaco_jaco:
+  agency: jaco
+  market: jaco
+  primary_market: 1
+  primary_agency: 1

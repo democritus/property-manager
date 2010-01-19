@@ -1,0 +1,7 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+for_sale:
+  name: for sale
+
+for_rent:
+  name: for rent

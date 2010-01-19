@@ -1,0 +1,26 @@
+class Agent < ActiveRecord::Base
+  belongs_to :user
+  has_many :agencies, :through => :agent_affiliations
+  has_many :agent_affiliations
+  has_many :brokerages,
+    :class_name => 'Agency',
+    :foreign_key => 'broker_id'
+  
+  accepts_nested_attributes_for :agent_affiliations
+  
+  # Trim user info from user_id so that only integer remains
+  def user_id=(user_id)
+    
+    if user_id.to_i.to_s
+      super
+    else
+      user_info = user_id.split(', ')
+      user_id = user_info[0]
+      if user_id.to_i.to_s
+        write_attribute(:user_id, user_id)
+      end
+    end
+  end
+  
+end
+

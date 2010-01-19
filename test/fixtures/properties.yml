@@ -1,0 +1,40 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+munster_mansion:
+  name: Munster Mansion
+  description: Munster Mansion is full of monsters!
+  barrio: downtown_heredia
+  bedroom_number: 7
+  bathroom_number: 3.5
+  construction_size: 1000
+  land_size: 4000
+  garage_spaces: 6
+  parking_spaces: 24
+  year_built: 1823
+  stories: 3
+
+heartbreak_hotel:
+  name: Heartbreak Hotel
+  description: Hubba hubba hubba...Elvis is in the house!
+  barrio: downtown_heredia
+  bedroom_number: 88
+  bathroom_number: 2.5
+  construction_size: 7000
+  land_size: 4000
+  garage_spaces: 90
+  parking_spaces: 200
+  year_built: 1955
+  stories: 4
+
+hotel_california:
+  name: Hotel California
+  description: You can check out, but you can never leave!},
+  barrio: san_rafael
+  bedroom_number: 20,
+  bathroom_number: 1
+  construction_size: 3400
+  land_size: 2350
+  parking_spaces: 17
+  parking_spaces: 50
+  year_built: 1972
+  stories: 2

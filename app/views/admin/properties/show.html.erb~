@@ -1,0 +1,59 @@
+<p>
+  <b>Name:</b>
+  <%=h @property.name %>
+</p>
+
+<p>
+  <b>Description:</b>
+  <%=h @property.description %>
+</p>
+
+<p>
+  <b>Barrio:</b>
+  <%=h @property.barrio_id %>
+</p>
+
+<p>
+  <b>Bedroom number:</b>
+  <%=h @property.bedroom_number %>
+</p>
+
+<p>
+  <b>Bathroom number:</b>
+  <%=h @property.bathroom_number %>
+</p>
+
+<p>
+  <b>Construction size:</b>
+  <%=h @property.construction_size %>
+</p>
+
+<p>
+  <b>Land size:</b>
+  <%=h @property.land_size %>
+</p>
+
+<p>
+  <b>Garage spaces:</b>
+  <%=h @property.garage_spaces %>
+</p>
+
+<p>
+  <b>Parking spaces:</b>
+  <%=h @property.parking_spaces %>
+</p>
+
+<p>
+  <b>Year built:</b>
+  <%=h @property.year_built %>
+</p>
+
+<p>
+  <b>Stories:</b>
+  <%=h @property.stories %>
+</p>
+
+<%= render :partial => 'associated_listings' %>
+
+<%= link_to 'Edit', edit_property_path(@property) %> |
+<%= link_to 'Back', properties_path %>

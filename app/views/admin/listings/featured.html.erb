@@ -1,0 +1,12 @@
+<%
+# Set up image glider
+options = {
+  'size' => 3,
+  'image_width' => 293,
+  'image_height' => 170,
+  'image_placeholders' => true
+}
+%>
+<%= glider_js('featuredImages', @featured_images, options) %>
+<%= glider_html('featuredImages', @featured_images, options) %>
+

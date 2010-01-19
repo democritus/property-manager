@@ -1,0 +1,331 @@
+/* 
+    Document   : common
+    Created on : Feb 20, 2009, 10:36:40 AM
+    Author     : brian
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+/* TODO: what is this? */
+root { 
+    display: block;
+}
+
+
+/* Base tags */
+body {
+  background-color: #fff;
+  color: #333;
+}
+body, p, ol, ul, td {
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  font-size:   13px;
+  line-height: 18px;
+}
+pre {
+  background-color: #eee;
+  padding: 10px;
+  font-size: 11px;
+}
+a {
+  color: #000;
+}
+a:visited {
+  color: #666;
+}
+a:hover {
+  color: #fff;
+  background-color: #000;
+}
+h3 {
+  font-size: 140%;
+}
+ul {
+  margin: 0;
+}
+
+/* Forms */
+form {
+	clear: both;
+	margin-right: 20px;
+	padding: 0;
+	width: 80%;
+}
+fieldset {
+	border: 1px solid #ccc;
+	margin-top: 30px;
+	padding: 16px 20px;
+}
+fieldset legend {
+	color: #e32;
+	font-size: 160%;
+	font-weight: bold;
+}
+fieldset fieldset {
+	margin-top: 0px;
+	margin-bottom: 20px;
+	padding: 16px 0;
+}
+fieldset fieldset legend {
+	font-size: 120%;
+	font-weight: normal;
+	margin-left: 20px;
+}
+fieldset fieldset div.row {
+	clear: left;
+	margin: 0 20px;
+}
+form div.row {
+	clear: both;
+	margin-bottom: 1em;
+	padding: .5em;
+	vertical-align: text-top;
+}
+form div.input {
+	color: #444;
+}
+form div.required {
+	color: #333;
+	font-weight: bold;
+}
+form div.submit {
+	border: 0;
+	clear: both;
+	margin-top: 10px;
+	margin-left: 140px;
+}
+label {
+	display: block;
+	font-size: 110%;
+	padding-right: 20px;
+	white-space: nowrap; /* fixes radio buttons' labels from wrapping */
+}
+input, textarea {
+	clear: both;
+	display: block;
+	font-size: 140%;
+	font-family: "frutiger linotype", "lucida grande", "verdana", sans-serif;
+	padding: 2px;
+	width: 100%;
+}
+select {
+	clear: both;
+	font-size: 120%;
+	vertical-align: text-bottom;
+}
+select[multiple=multiple] {
+	width: 100%;
+}
+option {
+	font-size: 120%;
+	padding: 0 3px;
+}
+input[type=checkbox] {
+	clear: left;
+	float: left;
+	margin: 0px 6px 7px 2px;
+	width: auto;
+}
+input[type=radio] {
+	clear: left;
+	float: left;
+	margin: 0px 6px 7px 2px;
+	width: auto;
+}
+input[type=submit] {
+	display: inline;
+	font-size: 110%;
+	padding: 2px 5px;
+	width: auto;
+	vertical-align: bottom;
+}
+div.inline-form-element {
+  float: left;
+  clear: none;
+  margin: 0 20px 0 0;
+}
+/* Auto complete */
+div.auto_complete {
+  width: 350px;
+  background: #fff ;
+}
+div.auto_complete ul {
+  border:1px solid #888 ;
+  margin:0;
+  padding:0;
+  width:100%;
+  list-style-type:none;
+}
+div.auto_complete ul li {
+  margin:0;
+  padding:3px;
+}
+div.auto_complete ul li.selected {
+  background-color: #ffb ;
+}
+div.auto_complete ul strong.highlight {
+  color: #800 ;
+  margin:0;
+  padding:0;
+}
+
+/* Rails-generated scaffolding styles */
+.fieldWithErrors {
+  padding: 2px;
+  background-color: red;
+  display: table;
+}
+
+#errorExplanation {
+  width: 400px;
+  border: 2px solid red;
+  padding: 7px;
+  padding-bottom: 12px;
+  margin-bottom: 20px;
+  background-color: #f0f0f0;
+}
+
+#errorExplanation h2 {
+  text-align: left;
+  font-weight: bold;
+  padding: 5px 5px 5px 15px;
+  font-size: 12px;
+  margin: -7px;
+  background-color: #c00;
+  color: #fff;
+}
+
+#errorExplanation p {
+  color: #333;
+  margin-bottom: 0;
+  padding: 5px;
+}
+
+#errorExplanation ul li {
+  font-size: 12px;
+  list-style: square;
+}
+
+
+/* Format anchor tag for special links */
+a.external-link {
+    position: relative;
+    margin-right: 16px;
+    white-space: nowrap;
+}
+a.external-link div.after-icon {
+    background: url("../images/external_icon.gif") no-repeat right top;
+    position: absolute;
+    top: -0.1em;
+    right: -16px;
+    width: 16px;
+    height: 16px;
+}
+
+a.contact-link {
+    position: relative;
+    margin-right: 21px;
+    white-space: nowrap;
+}
+a.contact-link div.after-icon {
+    background: url("../images/mail.png") no-repeat right top;
+    position: absolute;
+    top: 0.1em;
+    right: -21px;
+    width: 21px;
+    height: 11px;
+}
+
+/* Menu-lists */
+div.menu-list {
+  margin: 10px 10%;
+}
+div.menu-list ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+div.menu-list ul li {
+  margin-bottom: 0.75em;
+}
+div.menu-list h3 {
+  margin: 0;
+  font-size: 85%;
+  margin-left: -4%;
+}
+div.menu-list a {
+  text-decoration: none;
+}
+.multiple_select {
+  border: 1px solid #aaa;
+  xheight: 200px;
+  width: 250px;
+  padding: 5px;
+  xmargin: 1em;
+  overflow: auto;
+  line-height: 1.6em;
+}
+
+.multiple_select, .multiple_select ul {
+  list-style-type: none;
+  line-height: 1.6em;
+}
+
+.multiple_select_checkbox {
+  background: #fff;
+}
+
+.alt {
+  background: #eef;
+}
+
+/* Delimited lists */
+ul.horizontal {
+  list-style-type: disc;
+  list-style-position: inside;
+  margin: 0;
+  padding: 0;
+}
+ul.horizontal li {
+  float: left;
+  margin-right: 1.5em;
+}
+
+/* Show more/less links */
+.show-more {
+  font-size: 80%;
+  font-weight: bold;
+  cursor: pointer;
+}
+.show-more span {
+  text-decoration: underline;
+}
+
+/* Currencies */
+.usd {
+  color: green !important;
+}
+.eur {
+  color: blue !important;
+}
+.gbp {
+  color: red !important;
+}
+
+/* Hacks */
+
+/* Fix for clearing elements */
+/* NOTE: Use this if you need child elements to float on top of subsequent elements on page
+ * Automatically sticks an invisible '.' after the element so that floats
+ * don't protrude below their containing elements
+ */
+.clearfix:after {
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+}
+/* Hides from IE-mac \*/
+* html .clearfix {height: 1%;}
+/* End hide from IE-mac */

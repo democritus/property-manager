@@ -1,0 +1,214 @@
+<% javascript_tag do %>
+  function hideContactContent(parentId) {
+    kids = $(parentId).childElements();
+    for (i=0; i<kids.length; i++) {
+      kids[i].style.display = 'none';
+    }
+  }
+  
+  function showContent(id, parentId) {
+    layer = $(id);
+    if (layer.style.display == 'none') {
+      // Throws error
+      //Effect.multiple(parentId, Effect.Fade, { duration: 0.25, delay: 0 });
+      Effect.Appear(id, { duration: 0.25, delay: 0 });
+    } else {
+      Effect.Fade(id, { duration: 0.25, delay: 0 });
+    }
+  }
+  
+  function undisplayContactContent(event) {
+    var contentWrapperId = 'toggleable_contact_info';
+    var element = event.element();
+    if (element.parentNode.parentNode.id != contentWrapperId) {
+      hideContactContent(contentWrapperId);
+    }
+  }
+  
+  $('body').observe('click', undisplayContactContent);
+<% end %>
+
+<%
+# TODO - caching scheme for glider
+@featured_glider = @featured_listings = Listing.by_agency(@active_agency.id).featured
+sufficient_agency_images = false
+# Prepend agency to collection of listings so that the first group of
+# images to appear in the glider are agency images
+if @active_agency.agency_images
+  if @active_agency.agency_images.length >= 3
+    sufficient_agency_images = true
+  end
+end
+if sufficient_agency_images
+  @featured_glider.insert(0, @active_agency.name)
+  @featured_glider.insert(1, @active_agency)
+end
+%>
+<%
+# Set up image glider
+options = {
+  'type' => 'large',
+  'size' => 3,
+  'image_width' => 293,
+  'image_height' => 170,
+  'images_per_object' => 3,
+  'image_placeholders' => true
+}
+# Inline styles need this value to position glider correctly
+glider_top_offset = -8
+glider_left_offset = 8
+%>
+
+<div id="header" class="large_header clearfix">
+  <%= render :partial => 'layouts/user_bar' %>
+  <div class="logo_area">
+    <div id="large_site_logo">
+      <!-- TODO: make placeholder logo if no agency photo -->
+      <% if @active_agency.agency_logos[0] %>
+        <%= link_to(
+          image_tag(
+            agency_logo_path(@active_agency.agency_logos[0], :format => :png),
+            :border => 0
+          ),
+          root_path
+        ) %>
+      <% else %>
+        <%= default_logo %>
+      <% end %>
+    </div>
+    <div id="contact_icons" class="clearfix">
+      <div class="strip">
+      </div>
+      <div class="links">
+        <div class="first_item item">
+          <%= image_tag('web_32.png',
+            :onclick => "showContent('contact_web_contents',
+            'toggleable_contact_info')") %>
+        </div>
+        <div class="item">
+          <%= image_tag('phone_32.png',
+            :onclick => "showContent('contact_phone_contents',
+            'toggleable_contact_info')") %>
+        </div>
+        <div class="item">
+          <%= image_tag('mail_32.png',
+            :onclick => "showContent('contact_mail_contents',
+            'toggleable_contact_info')") %>
+        </div>
+        <div class="item">
+          <%= image_tag('skype_32.png',
+            :onclick => "showContent('contact_skype_contents',
+            'toggleable_contact_info')") %>
+        </div>
+        <div id="toggleable_contact_info" class="toggleable_content">
+          <div style="display: none" id="contact_web_contents"
+          class="toggleable_content_item">
+            <div class="top">Contact us via the Web</div>
+            <div class="middle"><%= link_to('Click here to send us a message' +
+              ' using an online form', contact_agency_path(@active_agency)) %>
+            </div>
+            <div class="bottom">
+              <% unless @agency_content[:web_contact_note].blank? %>
+                @agency_content[:web_contact_note]
+              <% end %>
+            </div>
+          </div>
+          <div style="display: none" id="contact_phone_contents"
+          class="toggleable_content_item">
+            <div class="top">Call us now</div>
+            <div class="middle">
+              <% unless @agency_content[:office_phone_value].blank? %>
+                <div>
+                  <%= @agency_content[:office_phone_label] %>
+                  <%= @agency_content[:office_phone_value] %>
+                </div>
+              <% end %>
+              <% unless @agency_content[:mobile_phone_value].blank? %>
+                <div>
+                  <%= @agency_content[:mobile_phone_label] %>
+                  <%= @agency_content[:mobile_phone_value] %>
+                </div>
+              <% end %>
+            </div>
+            <div class="bottom">
+              <% unless @agency_content[:phone_contact_note].blank? %>
+                <div>
+                  <%= @agency_content[:phone_contact_note] %>
+                </div>
+              <% end %>
+            </div>
+          </div>
+          <div style="display: none" id="contact_mail_contents"
+          class="toggleable_content_item">
+            <div class="top">Contact us by email</div>
+            <%
+            unless @active_agency[:email].blank?
+              agency_email = @active_agency[:email]
+            else
+              if @active_agency.broker
+                agency_email = @active_agency.broker.user.email
+              end
+            end
+            %>
+            <div class="middle"><%= agency_email %></div>
+            <div class="bottom">
+              <% unless @agency_content[:email_note].blank? %>
+                <%= @agency_content[:email_note] %>
+              <% end %>
+            </div>
+          </div>
+          <%
+          skype_account = ''
+          unless @active_agency[:skype].blank?
+            skype_account = @active_agency[:skype]
+          else
+            unless @agency_content[:office_phone].blank?
+              skype_account = @agency_content[:office_phone]
+            else
+              unless @agency_content[:mobile_phone].blank?
+                skype_account = @agency_content[:mobile_phone]
+              end
+            end
+          end
+          %>
+          <div style="display: none" id="contact_skype_contents"
+          class="toggleable_content_item">
+            <div class="top">Skype us!</div>
+            <div class="middle">
+              <!--
+              Skype 'Skype Me™!' button
+              http://www.skype.com/go/skypebuttons
+              -->
+              <%= javascript_include_tag 'skypeCheck.js' %>
+              <% link_to 'skype:' + skype_account + '?call' do %>
+                <%= image_tag 'skype_call_34x34.png',
+                  :alt => "Skype Me™!",
+                  :width => 34,
+                  :height => 34,
+                  :style=> 'border: none;' %>
+              <% end %>
+              <!--
+              REMOVED: copied JavaScript and image to local and ruby-ized
+              HTML (above)
+              <script type="text/javascript" src="http://download.skype.com/share/skypebuttons/js/skypeCheck.js"></script>
+              <a href="skype:barrioearth?call"><img src="http://download.skype.com/share/skypebuttons/buttons/call_blue_transparent_34x34.png" style="border: none;" width="34" height="34" alt="Skype Me™!" /></a>
+              -->
+              <br/>
+              Click the icon above to call <%= @active_agency.short_name %>
+              via Skype</div>
+            <div class="bottom"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="main_panel" style="height: <%= (options['image_height'] +
+  glider_top_offset).to_s %>px">
+    <div id="feature_glider" style="top: <%= glider_top_offset.to_s %>px;
+    left: <%= glider_left_offset.to_s %>px;">
+      <%= glider_js('featuredImages', @featured_glider, options) %>
+      <%= glider_html('featuredImages', @featured_glider, options) %>
+    </div>
+  </div>
+</div>
+

@@ -1,0 +1,27 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+brian:
+  column: value
+  crypted_password: 7ace0be629e64fcb978658f5de985e544b8de7600213dd42c2a454a68368c4940e64165176e559e4d5729a6310162ab9e835b877a70aea329b483eccda93cc0e
+  password_salt: l7Qz1P-pQi-D3m-J51yu
+  persistence_token: a06e3babd2dffcb7ff139d2a90e36aaa73da5977848f3a6e4efabb242de1528beff30c5d719d09bc23f5f0bcef07141aafbc1a8d7a36c3fa08d6b42e5a21195c
+  first_name: Brian
+  last_name: Warren
+  nationality: us
+  email: brian@barrioearth.com
+  phone_home: 50622448776
+  phone_work: 50622448776
+  phone_mobile: 50688588942
+
+phil:
+  login: phil
+  crypted_password: 5d7af567d259fd45d4a7358685ebf38270ef391335318ccf62d81669f256be5f9e804a62f6ee4ee69aa7278f6ec13dffde47fa8a3d286ec6e4aa5b96c5312dd2
+  password_salt: Hi7MeecGFDML8ChW3-GN
+  persistence_token: 4663b64b3db4a524509a8f1186c8bc5913f74c061d7b5aacccad99e89020a07ac4251739aa854dc9acf1117d286079bc2f11727f2e1623c79510b4b8a7f696fe
+  first_name: Phil
+  last_name: Hemion
+  nationality: us
+  email: phil@barrioearth.com
+  phone_home: 50622448776
+  phone_work: 50622448776
+  phone_mobile: 50683854792

@@ -1,0 +1,61 @@
+<div class="row">
+  <div class="clearfix">
+    Province:
+    <% @zones.each_with_index do |zone, i| %>
+      <% id = 'province_or_zone_' + (i+1).to_s %>
+      <div class="inline-form-element">
+        <%= radio_button_tag :province_or_zone, zone[1], checked, :id => id %>
+        <%= label_tag :province_or_zone, zone[0], :for => id %>
+      </div>
+    <% end %>
+  </div>
+  <div class="clearfix">
+    Zone:
+    <% @provinces.each_with_index do |province, j| %>
+      <% id = 'province_or_zone_' + (j + @zones.length + 1).to_s %>
+      <div class="inline-form-element">
+        <%= radio_button_tag :province_or_zone, province[1], checked, :id => id %>
+        <%= label_tag :province_or_zone, province[0], :for => id %>
+      </div>
+    <% end %>
+  </div>
+  <%= f.select :barrio_id, @barrios %>
+</div>
+<div class="row">
+  <%= f.text_field :name %>
+</div>
+<div class="row">
+  <%= f.select :primary_style_id, @styles %>
+</div>
+<div class="row">
+  <%= f.select :styles, @styles, 
+    {:label_text => 'Other styles'}, 
+    :multiple => true %>
+</div>
+<div class="row">
+  <%= f.text_field :stories %>
+</div>
+<div class="row">
+  <%= f.text_field :garage_spaces %>
+</div>
+<div class="row">
+  <%= f.text_field :parking_spaces %>
+</div>
+<div class="row">
+  <%= f.text_field :bedroom_number %>
+</div>
+<div class="row">
+  <%= f.text_field :bathroom_number %>
+</div>
+<div class="row">
+  <%= f.text_field :construction_size %>
+</div>
+<div class="row">
+  <%= f.text_field :land_size %>
+</div>
+<div class="row">
+  <%= f.text_field :year_built %>
+</div>
+<div class="row">
+  <%= f.text_area :description %>
+</div>

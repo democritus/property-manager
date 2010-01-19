@@ -1,0 +1,91 @@
+/* 
+    Document   : debug
+    Created on : Mar 16, 2009, 10:56:06 AM
+    Author     : brian
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+body {
+  border: 2px dotted purple;
+}
+
+#container {
+  background-color: #999999;
+}
+
+#top-margin {
+  background-color: #eeeeee;
+}
+
+#header {
+  background-color: #9900FF;
+}
+
+#header-main {
+  background-color: #999999;
+}
+
+#image-glide {
+  position: relative;
+  float: left;
+}
+
+div.border-bottom {
+  background-color: #cc0033;
+}
+
+#site-nav {
+  background-color: #214FB1;
+}
+
+div.main {
+  background-color: #666666;
+}
+
+div.main div.right-margin {
+  background-color: #C7B299;
+}
+
+#content {
+  background-color: #e6ffe6;
+}
+
+#footer {
+  background-color: #222222;
+}
+
+div, h1, h2, h3 {
+  /*border: 1px dotted black;*/
+  background-color: #f8f8f8;
+}
+
+span {
+  /*border: 1px dotted orange;*/
+  background-color: #ee6600;
+}
+
+p {
+  /*border: 1px dotted green;*/
+  background-color: #99ee99;
+}
+
+table {
+  /*border: 1px dotted pink;*/
+  background-color: #ee9999;
+}
+
+th {
+  /*border: 1px dotted darkred;*/
+  background-color: #aa9999;
+}
+
+td {
+  /*border: 1px dotted red;*/
+  background-color: #cc9999;
+}
+
+ol, ul {
+  /*border: 1px dotted gray;*/
+  background-color: #cccccc;
+}

@@ -1,0 +1,13 @@
+<p>
+  <%= link_to(
+    image_tag(property_image_path(@property_image, :format => :jpg),
+      :border => false),
+    fullsize_property_image_path(@property_image),
+    :target => :image_viewer
+  ) %>
+</p>
+<p>
+  <%= link_to('original image', original_property_image_path(@property_image),
+    :target => :_blank) %>
+</p>
+

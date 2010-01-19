@@ -1,0 +1,104 @@
+class CategoryAssignmentsController < ApplicationController
+  # GET /category_assignments
+  # GET /category_assignments.xml
+  def index
+    # Enable polymorphic behavior
+    @category_assignable = context_object( :include => :category_assignments )
+    @category_assignments = @category_assignable.category_assignments
+    
+    # Data for lists
+    set_form_list_data
+    
+    respond_to do |format|
+      format.html # index.html.erb
+      format.xml  { render :xml => @category_assignments }
+    end
+  end
+
+  # POST /category_assignments
+  # POST /category_assignments.xml
+  def create
+    # Enable polymorphic behavior
+    @category_assignable = context_object( :include => :category_assignments )
+    @category_assignment = @category_assignable.category_assignments.build(
+      params[:category_assignment] )
+
+    respond_to do |format|
+      if @category_assignment.save
+        flash[:notice] = 'Category Assignment was successfully created.'
+        format.html { redirect_to(polymorphic_url([@category_assignable,
+          :category_assignments])) }
+        format.xml  { render :xml => @category_assignment,
+          :status => :created, :location => @category_assignment }
+      else
+        format.html { render :action => "new" }
+        format.xml  { render :xml => @category_assignment.errors,
+          :status => :unprocessable_entity }
+      end
+    end
+  end
+
+  # PUT /category_assignments/1
+  # PUT /category_assignments/1.xml
+  def update
+    @category_assignment = CategoryAssignment.find(params[:id])
+    
+    respond_to do |format|
+      if @category_assignment.update_attributes(params[:category_assignment])
+        flash[:notice] = 'Category Assignment was successfully updated.'
+        
+        @category_assignable = context_object(
+          :include => :category_assignments )
+        format.html { redirect_to(polymorphic_url([@category_assignable,
+          :category_assignments])) }
+        
+        format.xml  { head :ok }
+      else
+        format.html { render :action => "edit" }
+        format.xml  { render :xml => @category_assignment.errors,
+          :status => :unprocessable_entity }
+      end
+    end
+  end
+
+  # DELETE /category_assignments/1
+  # DELETE /category_assignments/1.xml
+  def destroy
+    @category_assignment = CategoryAssignment.find(params[:id])
+    @category_assignment.destroy
+
+    respond_to do |format|
+      format.html { redirect_to(category_assignments_url) }
+      format.xml  { head :ok }
+    end
+  end
+  
+  
+  private
+  
+  # Handle nested polymorphic actions
+  def context_object( *finder_options )
+    params[:context_type].classify.constantize.find( context_id, *finder_options )
+  end
+  
+  def context_id
+    params["#{ params[:context_type].singularize }_id"]
+  end
+  
+  def set_form_list_data()
+    @lists = {}
+    @lists[:categories] = Category.find(:all).map { 
+      |category| [category.name, category.id]
+    }
+    # Remove from list records already associated with this assignable entity
+    unless @category_assignments.nil?
+      category_assignment_ids = @category_assignments.map {
+        |category_assignment| category_assignment.category_id }
+      unless category_assignment_ids.blank?
+        @lists[:categories].delete_if {
+         |pair| category_assignment_ids.include?(pair[1]) }
+      end
+    end
+  end
+  
+end

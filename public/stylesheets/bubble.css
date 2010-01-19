@@ -1,0 +1,73 @@
+/* 
+    Document   : bubble
+    Created on : Feb 20, 2009, 11:43:17 AM
+    Author     : brian
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+/*---------- mouseover msg -----------*/
+a.bubble {
+  display: inline;
+  position: relative;
+  z-index: 124;
+  color: #3ca3ff;
+  text-decoration: none;
+}
+a.bubble img {
+  display: block;
+  border: none;
+}
+a.bubble div {
+  display: none;
+}
+a.bubble div.bubble-contents {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  padding: 0 0 0 0;
+  width: 240px;
+  font-size: 100%;
+  text-align: center;
+  /* Opacity - if used with Effect.Appear, opacity must be set to the same
+   * value in JavaScript
+  filter: alpha(opacity:95);
+  KHTMLOpacity: 0.95;
+  MozOpacity: 0.95;
+  opacity: 0.95;
+  */
+}
+/* different middle bg for stretch */
+a.bubble div.bottom {
+  padding: 0.5em 10px 1.2em 10px;
+  font-size: 85%;
+  font-weight: normal;
+  color: #548912;
+  background: url("../images/bubble.gif") no-repeat bottom;
+}
+a.bubble div.middle {
+  padding: 0.5em 10px;
+  font-size: 100%;
+  font-weight: normal;
+  color: #895412;
+  background: url("../images/bubble_filter.gif") repeat bottom;
+}
+a.bubble div.top {
+  padding: 1.2em 10px 0.5em 10px;
+  font-weight: bold;
+  font-size: 120%;
+  color: #541289;
+  background: url("../images/bubble.gif") no-repeat top;
+}
+/* background:; ie hack, something must be changed in a for ie to execute it */
+a.bubble:hover {
+  z-index: 125;
+  background:;
+}
+a.bubble:hover div.bubble-contents {
+  display: block;
+}
+a.bubble:hover div.top, a.bubble:hover div.middle, a.bubble:hover div.bottom {
+  display: block;
+}
+

@@ -1,0 +1,20 @@
+<% end %>
+
+
+<h1>New property</h1>
+
+<% labelled_form_for(@property) do |f| %>
+  <%= f.error_messages %>
+  
+  <%= render :partial => 'property_fields', 
+    :locals => {
+      :f => f,
+      :lists_for_property => @lists_for_property
+    } %>
+  
+  <div class="row">
+    <%= f.submit 'Create' %>
+  </div>
+<% end %>
+
+<%= link_to 'Back', properties_path %>

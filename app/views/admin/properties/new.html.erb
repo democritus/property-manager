@@ -1,0 +1,16 @@
+<h1>New property</h1>
+
+<% labelled_form_for(:admin, @property) do |f| %>
+  <%= f.error_messages %>
+  
+  <%= render :partial => 'property_fields', 
+    :locals => {
+      :f => f
+    } %>
+  
+  <div class="row">
+    <%= f.submit 'Create' %>
+  </div>
+<% end %>
+
+<%= link_to 'Back', contextual_collection_path %>

@@ -1,0 +1,46 @@
+<div id="feature_assignments">
+<% for feature_assignment in @feature_assignments %>  
+  <%
+  flag = ''
+  delete_action = link_to 'Destroy',
+    polymorphic_path( [ @feature_assignable, feature_assignment ] ),
+      :confirm => 'Are you sure?',
+      :method => :delete
+  if feature_assignment.highlighted_feature.blank?
+    highlight_boolean = '1'
+    highlight_label = 'Make highlighted feature'
+  else
+    highlight_boolean = '0'
+    highlight_label = 'Un-highlight feature'
+    flag = '*'
+  end
+  highlight_action = link_to highlight_label,
+    polymorphic_path( [ @feature_assignable, feature_assignment ],
+      :feature_assignment => { :highlighted_feature => highlight_boolean } ),
+      { :method => :put }
+  %>
+  <div class="feature_assignment">
+    <%= flag %>
+    <%= feature_assignment.feature.name %>
+    <%= highlight_action %>
+    <%= delete_action %>
+  </div>
+<% end %>
+</div>
+
+<% unless @lists[:features].empty? %>
+  <h2>New Feature Assignment</h2>
+    
+  <% form_for [@feature_assignable, FeatureAssignment.new] do |f| %>
+    <%= f.error_messages %>
+    <p>
+      <%= f.label :feature_id %>
+      <%= f.select :feature_id, @lists[:features] %>
+    </p>
+    <p>
+      <%= f.check_box :highlighted_feature %>
+      <%= f.label :highlighted_feature %>
+    </p>
+    <p><%= f.submit "Submit" %></p>
+  <% end %>
+<% end %>

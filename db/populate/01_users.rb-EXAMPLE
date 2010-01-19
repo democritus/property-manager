@@ -1,0 +1,12 @@
+# Example - use with db-populate plugin
+# http://github.com/ffmike/db-populate/tree/master
+
+user = User.create_or_update(
+  :id => 1,
+  :login => 'admin',
+  :email => 'admin@example.com', 
+  :name => 'Master Administrator',
+  :password => 'admin',
+  :password_confirmation => 'admin'
+)
+

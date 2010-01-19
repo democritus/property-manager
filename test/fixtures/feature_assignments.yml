@@ -1,0 +1,111 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+sale_hot_water:
+  feature: hot_water
+  feature_assignable: for_sale (Listing_type)
+  highlighted_feature: true
+
+sale_balcony:
+  feature: balcony
+  feature_assignable: for_sale (Listing_type)
+  highlighted_feature: true
+
+sale_pool:
+  feature: balcony
+  feature_assignable: for_sale (Listing_type)
+  highlighted_feature: true
+
+sale_furniture:
+  feature: balcony
+  feature_assignable: for_sale (Listing_type)
+  highlighted_feature: true
+
+sale_stainless:
+  feature: balcony
+  feature_assignable: for_sale (Listing_type)
+  highlighted_feature: true
+  
+sale_maintenance:
+  feature: maintenance
+  feature_assignable: for_sale (Listing_type)
+  highlighted_feature: false
+  
+sale_rancho:
+  feature: rancho
+  feature_assignable: for_sale (Listing_type)
+  highlighted_feature: false
+  
+rent_hot_water:
+  feature: hot_water
+  feature_assignable: for_rent (Listing_type)
+  highlighted_feature: true
+
+rent_balcony:
+  feature: balcony
+  feature_assignable: for_rent (Listing_type)
+  highlighted_feature: true
+
+rent_pool:
+  feature: balcony
+  feature_assignable: for_rent (Listing_type)
+  highlighted_feature: true
+
+rent_stainless:
+  feature: balcony
+  feature_assignable: for_rent (Listing_type)
+  highlighted_feature: true
+  
+rent_rancho:
+  feature: rancho
+  feature_assignable: for_rent (Listing_type)
+  highlighted_feature: false
+  
+munster_hot_water:
+  feature: hot_water
+  feature_assignable: munster_mansion (Property)
+  highlighted_feature: true
+  
+munster_balcony:
+  feature: balcony
+  feature_assignable: munster_mansion (Property)
+  highlighted_feature: true
+  
+munster_pool:
+  feature: pool
+  feature_assignable: munster_mansion (Property)
+  highlighted_feature: true
+  
+munster_furniture:
+  feature: furniture
+  feature_assignable: munster_mansion (Property)
+  highlighted_feature: true
+  
+munster_stainless:
+  feature: stainless
+  feature_assignable: munster_mansion (Property)
+  highlighted_feature: false
+
+heartbreak_hot_water:
+  feature: hot_water
+  feature_assignable: heartbreak_hotel (Property)
+  highlighted_feature: true
+  
+heartbreak_balcony:
+  feature: balcony
+  feature_assignable: heartbreak_hotel (Property)
+  highlighted_feature: true
+  
+heartbreak_pool:
+  feature: pool
+  feature_assignable: heartbreak_hotel (Property)
+  highlighted_feature: false
+
+graceland_maintenance:
+  feature: maintenance
+  feature_assignable: graceland (Listing)
+  highlighted_feature: true
+  
+graceland_rancho:
+  feature: rancho
+  feature_assignable: graceland (Listing)
+  highlighted_feature: false

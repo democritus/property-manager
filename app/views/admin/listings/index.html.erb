@@ -1,0 +1,62 @@
+<h1>Listing listings</h1>
+
+<table>
+  <tr>
+    <th>Listing type</th>
+    <th>Property</th>
+    <th>Label</th>
+    <th>Name</th>
+    <th>Description</th>
+    <th>Ask amount</th>
+    <th>Ask currency</th>
+    <th>Close amount</th>
+    <th>Close currency</th>
+    <th>Publish date</th>
+    <th>Listing expiration date</th>
+    <th>Contract expiration date</th>
+    <th>Date available</th>
+    <th>Show agent</th>
+    <th>Show agency</th>
+    <th>Admin notes</th>
+    <th>Sold</th>
+    <th>Approved</th>
+    <th>Primary category</th>
+    <th>Primary style</th>
+  </tr>
+
+<% @listings.each do |listing| %>
+  <tr>
+    <td><%=h listing.listing_type_id %></td>
+    <td><%=h listing.property_id %></td>
+    <td><%=h listing.label %></td>
+    <td><%=h listing.name %></td>
+    <td><%=h listing.description %></td>
+    <td><%=h listing.ask_amount %></td>
+    <td><%=h listing.ask_currency_id %></td>
+    <td><%=h listing.close_amount %></td>
+    <td><%=h listing.close_currency_id %></td>
+    <td><%=h listing.publish_date %></td>
+    <td><%=h listing.listing_expiration_date %></td>
+    <td><%=h listing.contract_expiration_date %></td>
+    <td><%=h listing.date_available %></td>
+    <td><%=h listing.show_agent %></td>
+    <td><%=h listing.show_agency %></td>
+    <td><%=h listing.admin_notes %></td>
+    <td><%=h listing.sold %></td>
+    <td><%=h listing.approved %></td>
+    <td><%=h primary_listing_category(listing) %></td>
+    <td><%=h primary_listing_style(listing) %></td>
+    <td><%= link_to 'Show',
+      admin_property_listing_path(@property, listing) %></td>
+    <td><%= link_to 'Edit',
+      edit_admin_property_listing_path(@property, listing) %></td>
+    <td><%= link_to 'Destroy',
+      admin_property_listing_path(@property, listing),
+      :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New listing', new_admin_property_listing_path(@property) %>

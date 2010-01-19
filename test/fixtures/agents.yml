@@ -1,0 +1,9 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+brian:
+  user: brian
+  mini_biography: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam tincidunt, massa ut ultricies aliquam, lectus dolor venenatis dui, vitae scelerisque purus eros id libero. Proin in odio sed turpis ornare dignissim. Quisque odio tellus, mollis a hendrerit.
+
+phil:
+  user: phil
+  mini_biography: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam tincidunt, massa ut ultricies aliquam, lectus dolor venenatis dui, vitae scelerisque purus eros id libero. Proin in odio sed turpis ornare dignissim. Quisque odio tellus, mollis a hendrerit.

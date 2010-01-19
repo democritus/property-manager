@@ -1,0 +1,21 @@
+<% title "Site text" %>
+
+<p>
+  <strong>Agency:</strong>
+  <%=h @site_text.agency_id %>
+</p>
+<p>
+  <strong>Name:</strong>
+  <%=h @site_text.name %>
+</p>
+<p>
+  <strong>Value:</strong>
+  <%=h @site_text.value %>
+</p>
+
+<p>
+  <%= link_to "Edit", edit_admin_agency_site_text_path(@agency, @site_text) %> |
+  <%= link_to "Destroy", admin_agency_site_text_path(@agency, @site_text),
+    :confirm => 'Are you sure?', :method => :delete %> |
+  <%= link_to "View All", admin_agency_site_texts_path(@agency) %>
+</p>

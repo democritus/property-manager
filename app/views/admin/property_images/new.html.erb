@@ -1,0 +1,33 @@
+<h1>New property_image</h1>
+
+<% form_for(:admin, @property_image), :html => { :multipart => true } do |f| %>
+  <%= f.error_messages %>
+  <p>
+    <%= f.label :image_file, 'Upload image' %>
+    <%= f.file_field :image_file %>
+    <%= f.label :image_file_url, 'or URL' %>
+    <%= f.text_field :image_file_url %>
+    <%= f.hidden_field :image_file_temp %>
+  </p>
+
+  <% if @property_image.has_image? %>
+    <p>
+      <b>Uploaded Image:</b><br />
+      <%= embedded_image_tag(@property_image.operate {
+        |img| img.resize 100 }) %>
+    </p>
+  <% end %>
+
+  <p>
+    <%= f.label :caption %>
+    <%= f.text_field :caption %>
+  </p>
+  
+  <p>
+    <%= f.submit "Create" %>
+  </p>
+<% end %>
+
+<%= link_to 'Back',
+  polymorphic_path([:admin, @property_imageable, :property_images]) %>
+

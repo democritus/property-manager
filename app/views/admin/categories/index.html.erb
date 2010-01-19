@@ -1,0 +1,27 @@
+<h1>Listing categories</h1>
+
+<table>
+  <tr>
+    <th>Type</th>
+    <th>Name</th>
+    <th>User defined</th>
+    <th>Position</th>
+  </tr>
+
+<% @categories.each do |category| %>
+  <tr>
+    <td><%=h category.type %></td>
+    <td><%=h category.name %></td>
+    <td><%=h category.user_defined %></td>
+    <td><%=h category.position %></td>
+    <td><%= link_to 'Show', admin_category_path(category) %></td>
+    <td><%= link_to 'Edit', edit_admin_category_path(category) %></td>
+    <td><%= link_to 'Destroy', admin_category_path(category),
+      :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New category', new_admin_category_path %>

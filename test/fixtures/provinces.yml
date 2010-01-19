@@ -1,0 +1,29 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+alajuela:
+  name: Alajuela
+  country: cr
+  
+cartago:
+  name: Cartago
+  country: cr
+  
+guanacaste:
+  name: Guanacaste
+  country: cr
+  
+heredia:
+  name: Heredia
+  country: cr
+  
+limon:
+  name: Limón
+  country: cr
+  
+puntarenas:
+  name: Puntarenas
+  country: cr
+  
+san_jose:
+  name: San José
+  country: cr

@@ -1,0 +1,60 @@
+<%
+# Local variables from controller:
+# ajax = {}
+if ajax[:categories].empty?
+  primary_category_options = [['No categories found', '']]
+else
+  primary_category_options = ajax[:categories].dup.unshift(['None', ''])
+end
+if ajax[:styles].empty?
+  primary_style_options = [['No styles found', '']]
+else
+  primary_style_options = ajax[:styles].dup.unshift(['None', ''])
+end
+
+html = {}
+html[:primary_category] = options_for_select(
+  primary_category_options,
+  ajax[:primary_category_id]
+)
+html[:primary_style] = options_for_select(
+  primary_style_options,
+  ajax[:primary_style_id]
+)
+html[:categories] = checkboxes_for_multiple_select_html('listing',
+  'category',
+  ajax[:categories],
+  ajax[:category_ids],
+  :empty => 'No categories found'
+)
+
+html[:styles] = checkboxes_for_multiple_select_html('listing',
+  'style',
+  ajax[:styles],
+  ajax[:style_ids],
+  :empty => 'No styles found'
+)
+html[:features] = checkboxes_for_multiple_select_html('listing',
+  'feature',
+  ajax[:features],
+  ajax[:feature_ids],
+  :empty => 'No features found'
+)
+%>
+<% javascript_tag do %>
+  js_primary_category_options = '<%= escape_javascript(
+    html[:primary_category]) %>';
+  $('listing_primary_category_id').innerHTML=js_primary_category_options;
+  
+  js_primary_style_options = '<%= escape_javascript(html[:primary_style]) %>';
+  $('listing_primary_style_id').innerHTML=js_primary_style_options;
+  
+  js_categories_checkboxes = '<%= escape_javascript(html[:categories]) %>';
+  $('category_list').select('ul.multiple_select')[0].innerHTML=js_categories_checkboxes;
+  
+  js_styles_checkboxes = '<%= escape_javascript(html[:styles]) %>';
+  $('style_list').select('ul.multiple_select')[0].innerHTML=js_styles_checkboxes;
+  
+  js_features_checkboxes = '<%= escape_javascript(html[:features]) %>';
+  $('feature_list').select('ul.multiple_select')[0].innerHTML=js_features_checkboxes;
+<% end %>

@@ -1,0 +1,257 @@
+<% content_for :extra_stylesheet_includes do %>
+  <%= stylesheet_link_tag 'listings' %>
+  <%= stylesheet_link_tag 'faux_column_right' %>
+  <%
+  case @controller.action_name
+    when 'edit', 'show'
+      %>
+      <%= stylesheet_link_tag 'listings_' + @controller.action_name %>
+      <%
+    when 'index'
+      %>
+      <%= stylesheet_link_tag 'pagination' %>
+      <%= stylesheet_link_tag 'listings_' + @controller.action_name %>
+      <%
+  end
+  %>
+<% end %>
+
+<% content_for :embedded_styles do %>
+  /* #header { display: none } */
+<% end %>
+
+<% content_for :extra_javascript_includes do %>
+  <% if @controller.action_name == 'edit' %>
+    <%= javascript_include_tag 'listings_edit.js' %>
+  <% end %>
+<% end %>
+
+<% content_for :embedded_javascript do %>
+<% end %>
+
+<% content_for :header do %>  
+  <%= render :partial => "layouts/header_small" %>
+<% end %>
+
+<% content_for :content do %>
+  <% javascript_tag do %>
+    function toggleNestedMenu(id) {
+      layer = $(id);
+      if (layer.style.display == 'none') {
+        Effect.Appear(id, { duration: 0.25, delay: 0 });
+      } else {
+        Effect.Fade(id, { duration: 0.25, delay: 0 });
+      }
+    }
+    function displayNestedMenu(id) {
+      Effect.Appear(id, { duration: 0.25, delay: 0 });
+    }
+    function undisplayNestedMenu(id) {
+      Effect.Fade(id, { duration: 0.25, delay: 0 });
+    }
+  <% end %>
+  <div id="right_margin">
+    <% if controller.action_name == 'index' %>
+      <% content_for :title, index_title %>
+      <div class="nested_menu" onclick="undisplayNestedMenu('order_menu');
+      displayNestedMenu('filter_menu')">
+        <h2>Filter Results</h2>
+        <div id="filter_menu" class="submenu" style="display: none">
+          <div class="close_element"
+          onclick="undisplayNestedMenu('filter_menu')">X</div>
+          <%= category_filter %>
+          <%= country_filter %>
+          <%= market_filter %>
+          <%= barrio_filter %>
+          <%= price_range_filter %>
+          <%= feature_filter %>
+          <%= style_filter %>
+          <%= listing_type_filter %>
+        </div>
+      </div>
+      <div class="nested_menu" onclick="undisplayNestedMenu('filter_menu');
+      displayNestedMenu('order_menu')">
+        <h2>Order Results</h2>
+        <div id="order_menu" class="submenu" style="display: none">
+          <div class="close_element"
+          onclick="undisplayNestedMenu('order_menu')">X</div>
+          <div class="menu_list">
+            <h3>Order by</h3>
+            <ul>
+              <%
+              # TODO: fix ordering so sorts can be performed on fields from
+              # associated tables
+              order_by_items = [
+    #            {
+    #              'label' => 'Category',
+    #              'order' => 'primary_category.name'
+    #            },
+    #            {
+    #              'label' => 'Style',
+    #              'order' => 'primary_style.name'
+    #            },
+    #            {
+    #              'label' => 'Country',
+    #              'order' => 'property.barrio.country.name'
+    #            },
+    #            {
+    #              'label' => 'Zone',
+    #              'order' => 'property.barrio.zone.name'
+    #            },
+    #            {
+    #              'label' => 'Province',
+    #              'order' => 'property.barrio.province.name'
+    #            },
+    #            {
+    #              'label' => 'Market',
+    #              'order' => 'property.barrio.market.name'
+    #            },
+    #            {
+    #              'label' => 'Barrio',
+    #              'order' => 'property.barrio.name'
+    #            },
+                {
+                  'label' => 'Price',
+                  'order' => 'ask_amount'
+                },
+    #            {
+    #              'label' => 'Bedrooms',
+    #              'order' => 'property.bedroom_number'
+    #            },
+    #            {
+    #              'label' => 'Construction size',
+    #              'order' => 'property.construction_size'
+    #            },
+    #            {
+    #              'label' => 'Land size',
+    #              'order' => 'property.land_size'
+    #            },
+                {
+                  'label' => 'Ref id',
+                  'order' => 'id'
+                },
+                {
+                  'label' => 'Sold',
+                  'order' => 'sold'
+                },
+                {
+                  'label' => 'Date posted',
+                  'order' => 'publish_date'
+                }
+              ]
+              %>
+              <% order_by_items.each do |item| %>
+                <li><%= link_to(
+                  item['label'],
+                  readable_listings_path(
+                    @combined_search_params,
+                    params.merge!(:order => item['order'])
+                  )
+                ) %></li>
+              <% end %>
+            </ul>
+          </div>
+        </div>
+      </div>
+    <% elsif controller.action_name == 'show' %>
+      <% content_for :title, show_title %>
+      <!--
+      # Provide useful links for similar properties
+      category = @listing.primary_category
+      market = @listing.property.barrio.market
+      province = @listing.property.barrio.province
+      barrio = @listing.property.barrio
+      PRICE_RANGES
+      -->
+      <%
+      static_params = {
+        :property_barrio_country_name_equals => @listing.property.barrio.country.name,
+        :listing_type_name_equals => @listing.listing_type.name
+      }
+      if @listing.primary_category
+        static_params.merge!(
+          :categories_name_equals => @listing.primary_category.name
+        )
+        category_in_market = 'More ' + @listing.primary_category.name.downcase +
+          ' in ' + @listing.property.barrio.market.name + '...'
+      else
+        category_in_market = 'More properties in ' +
+          @listing.property.barrio.market.name + '...'
+      end
+      market_params = static_params.merge(
+        :property_barrio_market_name_equals => @listing.property.barrio.market.name
+      )
+      %>
+      <div class="menu_list">
+        <h2>Find similar listings</h2>
+        <h3>Same market</h3>
+        <ul>        
+        <li>
+          <%= link_to(category_in_market,
+            readable_listings_path(market_params)) %>
+        </li>
+        </ul>
+        <h3>Price range</h3>
+        <ul>
+        <%
+        PRICE_RANGES[@listing.listing_type.name].each do |price_range| 
+          boundaries = {}
+          unless price_range[:lower].zero?
+            boundaries.merge!(
+              :ask_amount_greater_than_or_equal_to => price_range[:lower])
+          end
+          if price_range[:upper]
+            boundaries.merge!(
+              :ask_amount_less_than_or_equal_to => price_range[:upper])
+          end
+          %>
+          <% in_range = false %>
+          <% if price_range[:lower] <= @listing.ask_amount %>
+            <% if ! price_range[:upper] ||
+            price_range[:upper] > @listing.ask_amount %>
+              <% in_range = true %>
+            <% end %>
+          <% end %>
+          <% unless in_range %>
+            <li>
+              <%= link_to(price_range[:label],
+                readable_listings_path(market_params.merge(boundaries)
+              )) %>
+            </li>
+          <% else %>
+            <li><%= price_range[:label] %></li>
+          <% end %>
+        <% end %>
+        </ul>
+        <h3>Barrio</h3>
+        <ul>
+        <% @listing.property.barrio.market.barrios.each do |barrio| %>
+          <% unless barrio.id == @listing.property.barrio.id %>
+            <li>
+              <%= link_to(barrio.name,
+                readable_listings_path(
+                  market_params.merge(
+                    :property_barrio_name_equals => barrio.name
+                  )
+                )
+              ) %>
+            </li>
+          <% else %>
+            <%= barrio.name %>
+          <% end %>
+        <% end %>
+        </ul>
+      </div>
+    <% end %>
+  </div>
+  
+  <div id="main_window">
+    <% unless flash[:notice].blank? %>
+      <p style="color: green"><%= flash[:notice] %></p>
+    <% end %>
+    
+    <%= yield(:listings_content) or yield  %>
+  </div>
+<% end %>
+
+<%= render :file => 'layouts/application' %>

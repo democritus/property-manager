@@ -1,0 +1,175 @@
+/* 
+    Document   : listings_show
+    Created on : Mar 13, 2009, 05:25:00 PM
+    Author     : brian
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+#main_text h3 {
+  margin-top: 2em;
+}
+
+#property-overview {
+  border-top: 1px solid white;
+  margin-bottom: 10px;
+  line-height: 1.4em;
+}
+#main_image_wrapper {
+  position: relative;
+  float: left;
+  clear: left;
+  width: 372px;
+  height: 272px;
+  margin: 0 10px 3px 0;
+}
+#main_image {
+  float: left;
+  clear: left;
+}
+#main_image_spinner_wrapper {
+  position: absolute;
+  left: 170px;
+  top: 119px;
+}
+#property-overview h2 {
+  margin: 0.6em 0 0.6em 0;
+}
+#property-overview div.nav-links {
+  float: right;
+  clear: right;
+}
+#property-overview div.highlighted-items {
+  /*background-color: #ffeedd;*/
+  font-weight: bold;
+  font-size: 135%;
+  margin: 0.6em 0;
+  line-height: 1.1em;
+}
+#property-overview ul {
+  /*background-color: #eeffee;*/
+  list-style-position: inside;
+  font-size: 120%;
+}
+
+
+
+div#image-slides {
+  margin-bottom: 20px;
+}
+#listing-image-glide {
+  /*border: 10px dotted #a9a9a9;*/
+  position: relative;
+  float: left;
+  clear: both;
+  /*width: 728px;*/
+  width: 736px;
+}
+
+
+#features ul {
+  font-size: 120%;
+  line-height: 1.4em;
+}
+#features ul li {
+  margin-right: 2em;
+}
+
+
+
+#information-request {
+  clear: both;
+  padding: 0;
+}
+
+
+/* Forms */
+#information-request form {
+  margin: 0;
+  width: 100%;
+  position: relative;
+}
+#information-request fieldset {
+  margin: 0;
+}
+#information-request form div.row {
+  clear: none;
+  position: relative;
+  margin-bottom: 0.50em;
+  padding: 0.5em;
+  vertical-align: text-top;
+}
+#information-request input, #information-request textarea, #information-request div.fieldless {
+  margin-left: 30%;
+  display: block;
+}
+#information-request input, #information-request textarea {
+  font-size: 140%;
+  font-family: "frutiger linotype", "lucida grande", "verdana", sans-serif;
+  padding: 2px;
+  width: 69%;
+  line-height: 1.2em;
+}
+#information-request form div.extra-info {
+  /*display: none;*/
+  margin-top: -0.5em;
+  margin-left: 30%
+}
+#information-request textarea {
+  height: 7.2em;
+}
+#information-request input.readonly {
+  color: #808080;
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+}
+#information-request label {
+  position: absolute;
+  left: 1%;
+  top: 0.75em;
+}
+#information-request form div.submit {
+  border: 0;
+  clear: both;
+  margin-top: 10px;
+}
+#information-request input[type=submit] {
+  display: inline;
+  font-size: 110%;
+  padding: 2px 5px;
+  width: auto;
+  vertical-align: bottom;
+}
+#information-request form div.request_info_thumbnail {
+  float: right;
+  clear: right;
+  margin-top: -5px;
+  margin-right: -5px;
+  border: 0;
+  /*
+  position: absolute;
+  right: 10px;
+  top: 0px;
+  */
+}
+#information-request input.property-field {
+  clear: none;
+  width: 265px;
+}
+
+
+#all-images div.thumbnail {
+  float: left;
+  clear: none;
+  /*margin: 30px 20px;*/
+  margin-right: 58px;
+  /*width: 245px;*/
+  height: 200px;
+  text-align: center;
+}
+#all-images div.rightmost {
+  margin: 0px;
+}
+#all-images div.thumbnail img {
+  border: 0
+}

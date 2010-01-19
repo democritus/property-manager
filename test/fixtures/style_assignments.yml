@@ -1,0 +1,51 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+sale_sale_a_frame:
+  feature: a_frame
+  feature_assignable: for_sale (Listing_type)
+  primary_style: false
+
+sale_colonial:
+  feature: colonial
+  feature_assignable: for_sale (Listing_type)
+  primary_style: false
+
+sale_contemporary:
+  feature: contemporary
+  feature_assignable: for_sale (Listing_type)
+  primary_style: false
+  
+rent_colonial:
+  feature: colonial
+  feature_assignable: for_rent (Listing_type)
+  primary_style: false
+
+rent_contemporary:
+  feature: contemporary
+  feature_assignable: for_rent (Listing_type)
+  primary_style: false
+
+munster_a_frame:
+  feature: a_frame
+  feature_assignable: munster_mansion (Property)
+  primary_style: true
+
+munster_colonial:
+  feature: colonial
+  feature_assignable: munster_mansion (Property)
+  primary_style: false
+  
+heartbreak_colonial:
+  feature: colonial
+  feature_assignable: heartbreak_hotel (Property)
+  primary_style: true
+
+heartbreak_contemporary:
+  feature: contemporary
+  feature_assignable: heartbreak_hotel (Property)
+  primary_style: false
+
+california_contemporary:
+  feature: contemporary
+  feature_assignable: hotel_california (Property)
+  primary_style: true

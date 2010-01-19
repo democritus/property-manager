@@ -1,0 +1,73 @@
+/* 
+    Document   : bubble
+    Created on : Feb 20, 2009, 11:43:17 AM
+    Author     : brian
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+/* 
+   TODO customize this sample style
+   Syntax recommendation http://www.w3.org/TR/REC-CSS2/
+*/
+
+root { 
+    display: block;
+}
+
+/*---------- mouseover msg -----------*/
+a.bubble {
+  display: inline;
+  position: relative;
+  z-index: 124;
+  color: #3ca3ff;
+  text-decoration: none;
+}
+a.bubble img {
+  display: block;
+  border: none;
+}
+a.bubble div {
+  display: none;
+}
+/* background:; ie hack, something must be changed in a for ie to execute it */
+a.bubble:hover {
+  z-index: 125;
+  background:;
+}
+a.bubble:hover div.bubble-contents {
+  display: block;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  padding: 0 0 0 0;
+  width: 240px;
+  font-size: 100%;
+  text-align: center;
+  filter: alpha(opacity:90);
+  KHTMLOpacity: 0.90;
+  MozOpacity: 0.90;
+  opacity: 0.90;
+}
+a.bubble:hover div.top {
+  display: block;
+  padding: 15px 10px 0px 10px;
+  font-weight: bold;
+  color: #541289;
+  background: url("../images/bubble.gif") no-repeat top;
+}
+/* different middle bg for stretch */
+a.bubble:hover div.middle {
+  display: block;
+  padding: 0px 10px;
+  font-weight: normal;
+  color: #895412;
+  background: url("../images/bubble_filter.gif") repeat bottom;
+}
+a.bubble:hover div.bottom {
+  display: block;
+  padding: 0px 10px 12px 10px;
+  font-weight: normal;
+  color: #548912;
+  background: url("../images/bubble.gif") no-repeat bottom;
+}

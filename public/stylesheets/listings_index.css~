@@ -1,0 +1,106 @@
+/* 
+    Document   : listing
+    Created on : Mar 9, 2009, 9:13:06 AM
+    Author     : brian
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+#listings-index-content {
+  padding: 20px 15px 15px 20px;
+}
+
+div.listing-container {
+  border: 1px solid #f0f0f0;
+  color: #404040;
+  margin-bottom: 2em;
+  padding: 0 0 10px 0;
+}
+
+div.listing-container div.content {
+}
+
+div.listing-container div.thumbnail {
+  float: left;
+  margin: -7px 10px 1px -7px; /* Right margin needed because div.text extends behind
+                            image all the way to left border of container */
+}
+div.listing-container div.thumbnail img {
+  display: block;
+  /* border: 10px solid white; */
+}
+
+div.listing-container div.flowed-content {
+  padding: 10px 10px 0 10px; /* Left padding ineffective because div.text extends
+                            behind div.thumbnail all the way to left border */
+}
+
+div.listing-container div.flowed-content h2 {
+  /*background-color: #ddeeff;*/
+  font-size: 120%;
+  margin: 0;
+  padding: 0.3em 5px;
+}
+div.listing-container div.flowed-content h2 a {
+}
+div.listing-container div.flowed-content div.section {
+  line-height: 1.2em;
+  margin: 0.3em 0 0 0;
+  padding: 0.3em 5px;
+}
+div.listing-container div.flowed-content ul {
+  line-height: 1.2em;
+  margin: 0.3em 0 0 0;
+  padding: 0.3em 5px;
+}
+div.listing-container div.flowed-content div.price {
+  float: right;
+  margin: 3px 5px;
+  font-size: 150%;
+  font-weight: bold;
+  color: #666;
+}
+div.listing-container div.flowed-content div.highlighted-items {
+  /*background-color: #ffeedd;*/
+  font-weight: bold;
+}
+div.listing-container div.flowed-content ul.info-list {
+  /*background-color: #eeffee;*/
+  line-height: 1.3em;
+  font-size: 90%;
+}
+
+div.listing-container div.flowed-content div.description {
+  background-color: #ffeeee;
+}
+div.listing-container div.flowed-content div.description div.show-more-box {
+  margin: 0.3em 0 0.3em 0;
+}
+
+div.listing-container div.footer {
+  padding: 0.3em 10px 0 10px;
+  color: #333;
+}
+div.listing-container div.footer div {
+  background-color: #dddddd;
+  padding: 0.1em 3px;
+}
+div.listing-container div.footer div div {
+  background: none;
+}
+div.listing-container div.footer div.reference-id {
+  float: left;
+  font-weight: bold;
+  font-size: 110%;
+}
+div.listing-container div.footer div.links {
+  float: right;
+}
+div.listing-container div.footer ul {
+  list-style-type: none;
+}
+div.listing-container div.footer ul li {
+  float: right;
+  margin-right: 0;
+  margin-left: 1.5em;
+}

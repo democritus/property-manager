@@ -1,0 +1,226 @@
+<%
+# Format data
+main_feature_list = build_main_feature_list(@listing)
+full_feature_list = []
+
+# Get categories associated with property or listing (listing categories 
+# overrides property)
+primary_category = ''
+if @listing.categories.blank?
+  unless @listing.property.categories.blank?
+    primary_category = @listing.property.categories[0].name
+  end
+else
+  primary_category = @listing.categories[0].name
+end
+location_text = location_formatted(@listing.property.barrio.name,
+  @listing.property.barrio.market.name)
+ask_price = price_formatted(@listing.ask_amount, @listing.ask_currency.symbol,
+  @listing.ask_currency.code)
+unless primary_category.blank?
+  full_feature_list << 'Category: ' + primary_category
+end
+unless location_text.blank?
+  full_feature_list << 'Location: ' + location_text
+end
+unless ask_price.blank?
+  full_feature_list << 'Ask price: ' + ask_price
+end
+unless main_feature_list.blank?
+  full_feature_list = full_feature_list + main_feature_list
+end
+
+# Get contact for this listing
+contact = discern_contact(@listing)
+%>
+
+<div id="listings-show-content">
+
+<div id="property-overview">
+  <div class="big-screen" style="float: left">
+    <div class="alpha-shadow">
+      <div class="shadow">
+        <%= link_to (
+          image_tag('test1_sm.jpg',
+            :class => 'shadowed', :width => 320, :height => 240)
+        )
+        %>
+      </div>
+    </div>
+  </div>
+  <div class="clearfix">
+    <h2><%=h @listing.property.name %></h2>
+    <div class="highlighted-items">
+      <div><%= primary_category %></div>
+      <div><%= location_text %></div>
+      <div><%=h ask_price %></div>
+    </div>
+    <ul>
+      <% main_feature_list.each do |feature| %>
+        <% if feature.is_a?(Array) %>
+          <li><%=h feature.join(' / ') %></li>
+        <% else %>
+          <li><%=h feature %></li>
+        <% end %>
+      <% end %>
+    </ul>
+
+    <div class="nav-links">
+      <%= link_to 'Edit', edit_listing_path(@listing) %> |
+      <%= link_to 'Back', listings_path %>
+    </div>
+
+  </div>
+</div>
+
+<div id="image-slides" class="clearfix">
+  <div class="alpha-shadow">
+    <div class="shadow">
+      <div id="listing-image-glide">
+        <div class="scroll-right">
+          &nbsp;
+        </div>
+        <div class="scroll-left">
+          &nbsp;
+        </div>
+        <div class="glide-holder">
+          <div class="glide-window">
+            <% 4.times do |i|
+              class_attr = ' class="glide-item"'
+              if i.zero?
+                class_attr = ' class="glide-item leftmost"'
+              end %>
+            <div<%= class_attr %>>
+              <%= link_to image_tag "test#{i+1}_th.jpg", :width => 175, :height => 131 %>
+            </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<% unless 1==2 %>
+<div id="features">
+  <h3>All features</h3>
+  <div class="clearfix">
+    <ul style="float: left">
+    <%
+    # test data
+    full_feature_list.push('Hot water', 'Balcony',
+      '$150 monthly maintenance fees', 'Stainless steel appliances',
+      'Option to buy furniture', 'Pool and rancho', 'Bat cave')
+    %>
+
+    <%  full_feature_list.each_with_index do |feature, i| %>
+      <% if i == (full_feature_list.length + 1) / 2 # start right column %>
+        </ul>
+        <ul style="float: left">
+      <% end %>
+      <% if feature.is_a?(Array) %>
+        <li><%=h feature.join(' / ') %></li>
+      <% else %>
+        <li><%=h feature %></li>
+      <% end %>
+    <% end %>
+    </ul>
+  </div>
+</div>
+<% end %>
+
+<a name="information_request"></a>
+<div id="information-request">
+  <% labelled_form_for(@information_request) do |f| %>
+    <fieldset>
+      <legend>Request Info</legend>
+      <div class="alpha-shadow property-image">
+        <div class="shadow">
+          <%= link_to image_tag "test1_th.jpg",
+            :class => 'shadowed', :width => 175, :height => 121 %>
+        </div>
+      </div>
+      <div class="row">
+        <%= label_tag(:property_name, "Property name:") %>
+        <%= text_field_tag(:property_name, @listing.name,
+          :readonly => true,
+          :class => 'readonly property-field'
+        ) %>
+      </div>
+      <div class="row">
+        <%= label_tag(:location, "Location:") %>
+        <%= text_field_tag(:location, location_text,
+          :readonly => true,
+          :class => 'readonly property-field'
+        ) %>
+      </div>
+      <div class="row">
+        <%= f.text_field :listing_id,
+          :label_text => 'Reference ID:',
+          :value => @listing.id,
+          :readonly => true,
+          :class => 'readonly property-field' %>
+      </div>
+      <div class="row">
+        <%
+        arrow_image = image_tag 'right_arrow_black.png'
+        %>
+        <%= label_tag(:recipient, 'To: (Real Estate agent)<br />' +
+          arrow_image + ' <span class="show-more">show agent bio</span>') %>
+        <%= text_field_tag(:recipient,
+          contact.user.first_name + ' ' + contact.user.last_name,
+          :readonly => true,
+          :class => 'readonly'
+        ) %>
+      </div>
+      <div class="row extra-info">
+        <%= render(:partial => 'liaison', :locals => {
+            :listing => @listing
+          }
+        ) %>
+      </div>
+      <div class="row">
+        <%= f.text_field :name, :label_text => 'From: (your name)' %>
+      </div>
+      <div class="row">
+        <%= f.text_field :email, :label_text => 'Your email address:' %>
+      </div>
+      <div class="row">
+        <%= f.text_field :phone, :label_text => 'Your phone number:' %>
+      </div>
+      <div class="row">
+        <%= f.text_area :message, :label_text => 'Your message:' %>
+      </div>
+      <div class="submit clearfix">
+        <%= submit_tag 'Submit' %>
+      </div>
+    </fieldset>
+  <% end %>
+</div>
+
+<% unless @listing.property.description.blank? %>
+  <h3>Description</h3>
+  <div id="description">
+    <p><%=h @listing.property.description %></p>
+  </div>
+<% end %>
+
+<% unless @listing.property.images.empty? %>
+<div id="all-images">
+  <h3>All images</h3>
+  <div class="clearfix">
+    <% 25.times do |i|
+      rem = i % 4
+      %>
+      <div class="alpha-shadow">
+        <div class="shadow">
+          <%= link_to image_tag "test#{rem+1}_th.jpg",
+            :class => 'shadowed', :width => 175, :height => 131 %>
+        </div>
+      </div>
+	<% end %>
+  </div>
+</div>
+<% end %>
+
+</div>

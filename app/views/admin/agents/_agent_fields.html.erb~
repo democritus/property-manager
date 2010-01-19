@@ -1,0 +1,49 @@
+<nada />
+
+<% if controller.action_name == 'new' %>
+
+  <div class="row">
+    <%= label :agent, :user_id, 'User ID (lookup by typing name, email,' +
+      ' username or ID)' %>
+    <%= text_field :agent, :user_id, :auto_complete => :off %>
+    <div class="auto_complete" id="agent_user_id_auto_complete"></div>
+    <%= auto_complete_field :agent_user_id,
+      :url => { :action => 'auto_complete_for_agent_user_id' }
+      %>
+  </div>
+  
+  <%
+  unless @agency.nil
+    # Set up blank fields for nested record
+    new_agent_setup(@agent) %>
+      
+    <% f.fields_for :agent_affiliations do |agent_affiliation_form| %>
+      <% # REMOVED - agency_id is forced in controller
+       #= agent_affiliation_form.hidden_field :agency_id, :value => @agency.id %>
+      <div class="row">
+        <%= agent_affiliation_form.check_box :broker %>
+      </div>
+      <div class="row">
+        <%= agent_affiliation_form.check_box :primary_agency %>
+      </div>
+    <% end %>  
+  <% end %>
+  
+<% else %>
+
+  <%
+  user = f.object.user
+  user_snapshot = [
+    (user.first_name + ' ' + user.last_name).strip, user.login, user.email
+  ]
+  user_snapshot.reject! { |x| x.blank? }
+  %>
+  <div class="row">
+    <%= user_snapshot.join(' / ') %>
+  </div>
+  
+<% end %>
+
+<div class="row">
+  <%= f.text_field :mini_biography %>
+</div>

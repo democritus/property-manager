@@ -1,0 +1,17 @@
+<h1>Editing listing</h1>
+
+<% labelled_form_for [@property, @listing] do |f| %>
+  <%= f.error_messages %>
+  
+  <%= render :partial => 'listing_fields', 
+    :locals => {
+      :f => f
+    } %>
+    
+  <div class="row">
+    <%= f.submit 'Update' %>
+  </div>
+<% end %>
+
+<%= link_to 'Back to property', property_path(@property) %>
+<%= link_to 'Show listing', @listing, :target => :new %> |

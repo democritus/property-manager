@@ -1,0 +1,14 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+us:
+  name: United States
+  iso2: us
+
+cr:
+  name: Costa Rica
+  iso2: cr
+
+ni:
+  name: Nicaragua
+  iso2: ni
+

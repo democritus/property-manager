@@ -1,0 +1,14 @@
+class PropertyImage < Image
+  
+  acts_as_fleximage :image_directory => 'public/media/properties/images'
+  
+  #acts_as_fleximage do
+  #  :image_directory 'public/media/properties/images'
+  #  require image false
+  #  preprocess_image do |image|
+  #    image.resize '800x600'
+  #  end
+  #end
+  
+  belongs_to :properties
+end

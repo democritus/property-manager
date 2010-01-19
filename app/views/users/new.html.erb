@@ -1,0 +1,11 @@
+<div id="main_text">
+  <h2>Register</h2>
+  <% labelled_form_for @user, :url => account_path do |f| %>
+    <%= f.error_messages %>
+    <%= render :partial => 'user_fields', 
+      :locals => {
+        :f => f
+      } %>
+    <%= f.submit "Register" %>
+  <% end %>
+</div>

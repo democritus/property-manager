@@ -1,0 +1,67 @@
+<% set_feature_assignment_form_list_data %>
+
+<% unless params[:context_type] == 'listings' %>
+  <% back_to_feature_assignable_path = polymorphic_path(:admin, @feature_assignable) %>
+<% else %>
+  <% back_to_feature_assignable_path = admin_property_listing_path(
+    @feature_assignable.property, @feature_assignable) %>
+<% end %>
+
+<div id="feature_assignments">
+<% for feature_assignment in @feature_assignments %>  
+  <%
+  flag = ''
+  delete_action = link_to 'Destroy',
+    polymorphic_path( [ :admin, @feature_assignable, feature_assignment ] ),
+      :confirm => 'Are you sure?',
+      :method => :delete
+  if feature_assignment.highlighted_feature.blank?
+    highlight_boolean = '1'
+    highlight_label = 'Make highlighted feature'
+  else
+    highlight_boolean = '0'
+    highlight_label = 'Un-highlight feature'
+    flag = '*'
+  end
+  highlight_action = link_to highlight_label,
+    polymorphic_path( [ :admin, @feature_assignable, feature_assignment ],
+      :feature_assignment => { :highlighted_feature => highlight_boolean } ),
+      { :method => :put }
+  %>
+  <div class="feature_assignment">
+    <%= flag %>
+    <%= feature_assignment.feature.name %>
+    <%= highlight_action %>
+    <%= delete_action %>
+  </div>
+<% end %>
+</div>
+
+<% unless @lists[:features].empty? %>
+  <h2>New Feature Assignment</h2>
+    
+  <% form_for [:admin, @feature_assignable, FeatureAssignment.new] do |f| %>
+    <%= f.error_messages %>
+    <p>
+      <%= f.label :feature_id %>
+      <%= f.select :feature_id, @lists[:features] %>
+    </p>
+    <p>
+      <%
+      # REMOVED - form helper doesn't work here because checked value gets 
+      # clobbered by the hidden field. Hidden field not necessary in this case, 
+      # since this form only creates new records
+      # f.check_box :highlighted_feature
+      %>
+      <input id="feature_assignment_highlighted_feature" 
+        name="feature_assignment[highlighted_feature]" 
+        type="checkbox" 
+        value="1" />
+      <%= f.label :highlighted_feature %>
+    </p>
+    <p><%= f.submit "Submit" %></p>
+  <% end %>
+<% end %>
+
+<%= link_to 'Back', back_to_feature_assignable_path %>
+

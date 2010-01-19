@@ -1,0 +1,79 @@
+<div id="main_text">
+
+<h2>Welcome to <%= @agency.name %></h2>
+
+<% unless @agency.description.blank? %>
+  <p class="agency_description" class="clearfix">
+    <%= @agency.description %>
+  </p>
+<% end %>
+<% if @agency.markets %>
+  <h3>We specialize in the following markets:</h3>
+  <% @agency.markets.each do |market| %>
+    <%
+    path = readable_listings_path(
+      'listing_type_name_equals' => 'for sale',
+      'property_barrio_country_name_equals' => market.country.name,
+      'property_barrio_market_name_equals' => market.name
+    )
+    %>
+    <div class="market_snapshot" class="clearfix">
+      <% if market.market_images %>
+        <% unless market.market_images.empty? %>
+          <%= link_to(
+            image_tag(
+              thumb_market_image_path(market.market_images[0], :format => :jpg),
+              :class => 'market_thumb',
+              :border => 0
+            ),
+            path
+          ) %>
+        <% end %>
+      <% end %>
+      <div class="snapshot_content clearfix">
+        <h2><%= link_to(market.name, path) %></h2>
+        <p><% unless market.description.blank? %>
+          <%= market.description %></p>
+        <% end %>
+        <% if market.barrios %>
+          <p>
+            <% barrio_list = [] %>
+            <% market.barrios.each do |barrio| %>
+              <%
+              barrio_list << link_to (barrio.name, readable_listings_path(
+                'property_barrio_country_name_equals' => market.country.name,
+                'property_barrio_market_name_equals' => market.name,
+                'property_barrio_name_equals' => barrio.name
+              ))
+              %>
+            <% end %>
+            <% unless barrio_list.empty? %>
+              <div>Barrios: <%= barrio_list.join(', ') %></div>
+            <% end %>
+        <% end %>
+        <% unless market.news.blank? %>
+          <p><strong>Recent news:</strong> <%= market.news %></p>
+        <% end %>    
+        <div class="snapshot_footer">
+          <div><%= link_to(
+            'Properties for rent in ' + market.name,
+            readable_listings_path(
+                'listing_type_name_equals' => 'for rent',
+              'property_barrio_country_name_equals' => market.country.name,
+              'property_barrio_market_name_equals' => market.name
+            )
+          ) %></div>
+          <div><%= link_to(
+            'Properties for sale in ' + market.name,
+            readable_listings_path(
+                'listing_type_name_equals' => 'for sale',
+              'property_barrio_country_name_equals' => market.country.name,
+              'property_barrio_market_name_equals' => market.name
+            )
+          ) %></div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+<% end %>
+</div>

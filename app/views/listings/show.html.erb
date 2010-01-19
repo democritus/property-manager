@@ -1,0 +1,234 @@
+<%
+# Combine images from Property and Lisitng; merges into @images variable
+merge_images!
+%>
+
+<div id="main_text">
+
+<div id="property-overview">
+  <div id="main_image_wrapper">
+    <div id="main_image">
+      <%= medium_image(@listing.images[0]) %>
+    </div>
+    <%= main_image_spinner %>
+  </div>
+  <!--
+  <div class="big-screen" style="float: left">
+    <div class="alpha-shadow">
+      <div class="shadow">
+        <%= link_to (
+          image_tag('test1_sm.jpg',
+            :class => 'shadowed', :width => 320, :height => 240)
+        )
+        %>
+      </div>
+    </div>
+  </div>
+  -->
+  <div class="clearfix">
+    <h2><%=h @listing.name %></h2>
+    <div class="highlighted-items">
+      <div><%= primary_category %></div>
+      <div><%= location_text %></div>
+      <div><%=h ask_price %></div>
+    </div>
+    <ul>
+      <% main_feature_list.each do |feature| %>
+        <% if feature.is_a?(Array) %>
+          <li><%=h feature.join(' / ') %></li>
+        <% else %>
+          <li><%=h feature %></li>
+        <% end %>
+      <% end %>
+    </ul>
+
+    <div class="nav-links">
+      <%= link_to 'Edit',
+        edit_admin_property_listing_path(@listing.property, @listing) %> |
+      <%= link_to 'Back', listings_path(session[:last_seen_params]) %>
+    </div>
+
+  </div>
+</div>
+
+<div id="image-slides" class="clearfix">
+  <!--
+  <div class="alpha-shadow">
+    <div class="shadow">
+  -->
+      <div id="listing-image-glide">
+        <%
+        # Image Glider
+        
+        # TEST - add more images
+        @listing.images << @listing.images[0]
+        
+        # Set up image glider
+        options = {
+          'type' => 'listing',
+          'size' => 4,
+          'image_width' => 184,
+          'image_height' => 128,
+          'target_id' => 'main_image',
+          'image_placeholders' => true
+        }
+        %>
+        <%= glider_js('listingGlider', @listing.images, options) %>
+        <%= glider_html('listingGlider', @listing.images, options) %>      
+      </div>
+  <!--
+    </div>
+  </div>
+  -->
+</div>
+
+<%
+# TEST - fake features
+unless 1==2
+%>
+<div id="features">
+  <h3>All features</h3>
+  <div class="clearfix">
+    <ul style="float: left">
+    <%
+    # test data
+    full_feature_list.push('Hot water', 'Balcony',
+      '$150 monthly maintenance fees', 'Stainless steel appliances',
+      'Option to buy furniture', 'Pool and rancho', 'Bat cave')
+    %>
+    <%  full_feature_list.each_with_index do |feature, i| %>
+      <% if i == (full_feature_list.length + 1) / 2 %>
+        </ul>
+        <ul style="float: left">
+      <% end %>
+      <% if feature.is_a?(Array) %>
+        <li><%=h feature.join(' / ') %></li>
+      <% else %>
+        <li><%=h feature %></li>
+      <% end %>
+    <% end %>
+    </ul>
+  </div>
+</div>
+<% end %>
+
+<a name="information_request"></a>
+<div id="information-request">
+  <h3>Property info request</h3>
+  <% labelled_form_for([@listing, @information_request]) do |f| %>
+    <fieldset>
+      <div class="request_info_thumbnail">
+        <%= thumbnail(@listing.images[0]) %>
+      </div>
+      <!--
+      <div class="alpha-shadow property-image">
+        <div class="shadow">
+          <%= link_to image_tag "test1_th.jpg",
+            :class => 'shadowed', :width => 175, :height => 121 %>
+        </div>
+      </div>
+      -->
+      <div class="row">
+        <%= label_tag(:property_name, "Property name:") %>
+        <%= text_field_tag(:property_name, @listing.name,
+          :readonly => true,
+          :class => 'readonly property-field'
+        ) %>
+      </div>
+      <div class="row">
+        <%= label_tag(:location, "Location:") %>
+        <%= text_field_tag(:location, location_text,
+          :readonly => true,
+          :class => 'readonly property-field'
+        ) %>
+      </div>
+      <div class="row">
+        <%= f.text_field :listing_id,
+          :label_text => 'Reference ID:',
+          :value => @listing.id,
+          :readonly => true,
+          :class => 'readonly property-field' %>
+      </div>
+      <% unless agent_name.blank? # Agent might not be associated with listing
+        %>
+        <div class="row">
+          <%= label_tag(:recipient, 'To: ' + agent_name) %>
+          <div class="fieldless">
+            <span id="show_agent_trigger" class="show_more"
+            onclick="toggleAgentInfo(this.id, 'agent_profile')">
+              <span>Show agent info</span>
+              <span style="display: none">Hide agent info</span>
+            </span>
+          </div>
+          <div style="display: none; margin-top: 5px" id="agent_profile">
+            <%= render(:partial => 'liaison', :locals => {
+                :listing => @listing
+              }
+            ) %>
+          </div>
+        </div>
+      <% end %>
+      <% javascript_tag do %>
+        function toggleAgentInfo(triggerName, targetName) {
+          target = $(targetName);
+          children = $(triggerName).childElements();
+          opener = children[0];
+          closer = children[1];
+          //confirm(target.style.display + ' / ' + opener.style.display + ' / ' + closer.style.display);
+          if (target.style.display == 'none') {
+            opener.style.display = 'none';
+            closer.style.display = 'block';
+            Effect.Appear(targetName, {duration: 0.5})
+          } else {
+            opener.style.display = 'block';
+            closer.style.display = 'none';
+            Effect.Fade(targetName, {duration: 0.5})
+          }
+        }
+      <% end %>
+      <div class="row">
+        <%= f.text_field :name, :label_text => 'From (your name):' %>
+      </div>
+      <div class="row">
+        <%= f.text_field :email, :label_text => 'Your email address:' %>
+      </div>
+      <div class="row">
+        <%= f.text_field :phone, :label_text => 'Your phone number:' %>
+      </div>
+      <div class="row">
+        <%= f.text_area :message, :label_text => 'Your message:' %>
+      </div>
+      <div class="submit clearfix">
+        <%= submit_tag 'Submit' %>
+      </div>
+    </fieldset>
+  <% end %>
+</div>
+
+<% unless @listing.property.description.blank? %>
+  <h3>Detailed description</h3>
+  <div id="description">
+    <p><%=h @listing.property.description %></p>
+  </div>
+<% end %>
+
+<% unless @listing.property.property_images.empty? %>
+<div id="all-images">
+  <h3>Click to view high-quality images</h3>
+  <div class="clearfix">
+    <% @listing.images.each_with_index do |image, i| %>
+      <% rem = i % 3 %>
+      <% class_attr = ' class="thumbnail"' %>
+      <% if rem == 2 %>
+        <% class_attr = ' class="thumbnail rightmost"' %>
+      <% end %>
+      <div<%= class_attr %>>
+        <%= thumbnail(image, true) %>
+      </div>
+    <% end %>
+  </div>
+</div>
+<% end %>
+
+</div>
+

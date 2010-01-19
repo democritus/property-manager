@@ -1,0 +1,18 @@
+Fleximage::Blank.new('118x87').operate do |image|
+  image.border :size => 4, :color => color(241, 100, 34)
+  image.shadow(
+    :color      => 'black',
+    :background => 'white',
+    :blur       => 8,
+    :offset     => '2x2',
+    :opacity    => 0.75 
+  )
+  image.text("Featured\nlistings",
+    :alignment => :center,
+    #:offset => 0x15,
+    :antialias => true,
+    :color      => 'white',
+    :font_size => 16
+  )
+end
+

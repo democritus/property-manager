@@ -1,0 +1,19 @@
+<h1>Editing agent</h1>
+
+<% labelled_form_for(:admin, @agent) do |f| %>
+  <%= f.error_messages %>
+
+  <%= render :partial => 'agent_fields', 
+    :locals => {
+      :f => f
+    } %>
+  
+  <div class="row">
+    <%= f.submit 'Update' %>
+  </div>
+<% end %>
+
+<%= link_to 'Show', show_contextual_path(@agent) %> |
+<%= link_to 'Back', contextual_collection_path %>
+
+<%= render :partial => "agencies" %>

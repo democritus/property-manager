@@ -1,0 +1,31 @@
+/* 
+    Document   : listings
+    Created on : Apr 5, 2009, 2:06:09 PM
+    Author     : brian
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+/* 
+   TODO customize this sample style
+   Syntax recommendation http://www.w3.org/TR/REC-CSS2/
+*/
+
+root { 
+    display: block;
+}
+
+div.agent-info {
+  background-color: #eeeeff;
+}
+div.agent-info div.agent-name {
+  margin: 0.3em 0 0.3em 0;
+}
+div.agent-info img.agent-photo {
+  border: 1px solid #a9a9a9;
+  background-color: #ffffff;
+  padding: 3px;
+  float: right;
+  margin: 0 0 0 10px;
+}
+

@@ -1,0 +1,17 @@
+class User < ActiveRecord::Base
+  # Authentication (installed as gem)
+  # for available options see documentation in: Authlogic::ActsAsAuthentic
+  acts_as_authentic # do |c|
+    c.my_config_option = my_value
+  end # block optional
+
+  belongs_to :nationality,
+    :class_name => 'Country'
+  has_many :administrators
+  has_many :agents
+  has_many :information_receipts,
+    :class_name => 'InformationRequest',
+    :primary_key => 'email',
+    :foreign_key => 'recipient_email'
+  has_many :information_requests
+end

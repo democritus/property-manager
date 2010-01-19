@@ -1,0 +1,45 @@
+module AgentsHelper
+  
+  # Allow nested or regular routes
+  def agent_path(agent)
+    if @agency.nil?
+      #agent_path(agent)
+      super
+    else
+      agency_agent_path(@agency, agent)
+    end
+  end
+  
+  def agents_path
+    if @agency.nil?
+      super
+    else
+      agency_agents_path(@agency)
+    end
+  end
+  
+  def new_agent_path
+    if @agency.nil?
+      super
+    else
+      new_agency_agent_path(@agency)
+    end
+  end
+  
+  def edit_agent_path(agent)
+    if @agency.nil?
+      super
+    else
+      edit_agency_agent_path(@agency, agent)
+    end
+  end
+  
+  # Set up blank fields for nested record
+  def new_agent_setup(agent)
+    returning(agent) do |a|
+      a.agent_affiliations.build if a.agent_affiliations.empty?
+    end
+  end
+
+  
+end

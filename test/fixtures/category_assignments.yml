@@ -1,0 +1,66 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+munster_homes:
+  category: homes
+  cateogory_assignable: munster_mansion (Property)
+  primary_category: true
+
+munster_condos:
+  category: condos
+  cateogory_assignable: munster_mansion (Property)
+  primary_category: false
+  
+munster_apartments:
+  category: apartments
+  cateogory_assignable: munster_mansion (Property)
+  primary_category: false
+  
+munster_hotels:
+  category: hotels
+  cateogory_assignable: munster_mansion (Property)
+  primary_category: false
+  
+graceland_homes:
+  category: homes
+  cateogory_assignable: graceland (Listing)
+  primary_category: false
+  
+graceland_hotels:
+  category: hotels
+  cateogory_assignable: graceland (Listing)
+  primary_category: false
+
+sale_homes:
+  category: homes
+  cateogory_assignable: for_sale (ListingType)
+  primary_category: false
+  
+sale_condos:
+  category: condos
+  cateogory_assignable: for_sale (ListingType)
+  primary_category: false
+  
+sale_apartments:
+  category: apartments
+  cateogory_assignable: for_sale (ListingType)
+  primary_category: false
+  
+sale_hotels:
+  category: hotels
+  cateogory_assignable: for_sale (ListingType)
+  primary_category: false
+
+rent_homes:
+  category: homes
+  cateogory_assignable: for_rent (ListingType)
+  primary_category: false
+
+rent_homes:
+  category: condos
+  cateogory_assignable: for_rent (ListingType)
+  primary_category: false
+
+rent_apartments:
+  category: apartments
+  cateogory_assignable: for_rent (ListingType)
+  primary_category: false

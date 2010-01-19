@@ -1,0 +1,34 @@
+<h1>Listing barrios</h1>
+
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Country</th>
+    <th>Zone</th>
+    <th>Province</th>
+    <th>Market</th>
+    <th>Position</th>
+  </tr>
+
+<% @barrios.each do |barrio| %>
+  <tr>
+    <td><%=h barrio.name %></td>
+    <td><%=h barrio.country.name %></td>
+    <td><%=h barrio.zone.name %></td>
+    <td><%=h barrio.province.name %></td>
+    <td><%=h barrio.market.name %></td>
+    <td><%=h barrio.position %></td>
+    <td><%= link_to 'Show',
+      admin_market_barrio_path(@market, barrio) %></td>
+    <td><%= link_to 'Edit',
+      edit_admin_market_barrio_path(@market, barrio) %></td>
+    <td><%= link_to 'Destroy',
+      admin_market_barrio_path(@market, barrio),
+      :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New barrio', new_admin_market_barrio_path(@market) %>

@@ -1,0 +1,29 @@
+<h1>Listing zones</h1>
+
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Country</th>
+    <th>Position</th>
+  </tr>
+
+<% @zones.each do |zone| %>
+  <tr>
+    <td><%=h zone.name %></td>
+    <td><%=h zone.country.name %></td>
+    <td><%=h zone.position %></td>
+    <td><%= link_to 'Show', contextual_path(zone) %></td>
+    <td><%= link_to 'Edit', edit_contextual_path(zone) %></td>
+    <td><%= link_to 'Destroy', contextual_path(zone), :confirm => 'Are you sure?',
+      :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New zone', new_contextual_path %>
+<br />
+<% unless params['context_type'].blank? %>
+  <%= link_to 'Back to country', context_member_path %>
+<% end %>

@@ -1,0 +1,23 @@
+<p>
+  <b>Name:</b>
+  <%=h @currency.name %>
+</p>
+
+<p>
+  <b>Code:</b>
+  <%=h @currency.code %>
+</p>
+
+<p>
+  <b>Symbol:</b>
+  <%=h @currency.symbol %>
+</p>
+
+<p>
+  <b>Position:</b>
+  <%=h @currency.position %>
+</p>
+
+
+<%= link_to 'Edit', edit_admin_currency_path(@currency) %> |
+<%= link_to 'Back', admin_currencies_path %>

@@ -1,0 +1,172 @@
+/* 
+    Document   : listing_index
+    Created on : Mar 9, 2009, 9:13:06 AM
+    Author     : brian
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+#listings-index-content {
+  padding: 20px 15px 15px 20px;
+}
+
+div.listing_container {
+  border: 1px dotted #c8c8c8;
+  color: #404040;
+  margin: 26px 0;
+  padding: 0 0 10px 0;
+}
+
+div.listing_container div.content {
+}
+
+div.listing_container div.thumbnail {
+  float: left;
+  margin: -11px 10px 1px -11px; /* Right margin needed because div.text extends behind
+                            image all the way to left border of container */
+}
+div.listing_container div.thumbnail img {
+  display: block;
+  border: none;
+}
+
+div.listing_container div.flowed_content {
+  padding: 10px 10px 0 10px; /* Left padding ineffective because div.text extends
+                            behind div.thumbnail all the way to left border */
+  border-bottom: none;
+}
+
+div.listing_container div.show_more_wrapper {
+  position: relative;
+}
+div.listing_container div.show_more_wrapper div.show_more_image,
+div.listing_container div.show_more_wrapper div.show_less_image {
+  background: none;
+  margin-left: auto;
+  margin-right: auto;  
+  width: 124px;
+  height: 8px;
+  cursor: pointer;
+  z-index: 1;
+}
+div.listing_container:hover div.show_more_wrapper div.show_more_image {
+  background: url('../images/more_less_bar.png') no-repeat 0 -12px;
+}
+div.listing_container:hover div.show_more_wrapper div.show_less_image {
+  background: url('../images/more_less_bar.png') no-repeat 0 0;
+}
+div.listing_container div.show_more_wrapper div.open_zone {
+  position: absolute;
+  top: -30px;
+  left: 33%;
+  width: 33%;
+  height: 60px;
+  /*border: 1px dotted purple;*/
+  cursor: pointer;
+  z-index: 10;
+}
+
+div.listing_container div.flowed_content h2 {
+  /*background-color: #ddeeff;*/
+  font-size: 130%;
+  margin: 0;
+  padding: 0.3em 5px;
+}
+div.listing_container div.flowed_content h2 a {
+}
+div.listing_container div.flowed_content div.section {
+  line-height: 1.2em;
+  margin: 0.2em 0 0 0;
+  padding: 0.3em 5px;
+}
+div.listing_container div.flowed_content ul {
+  line-height: 1.2em;
+  margin: 0.2em 0 0 0;
+  padding: 0.2em 5px;
+}
+div.listing_container div.flowed_content div.price {
+  float: right;
+  margin: 3px 5px;
+  font-size: 130%;
+  font-weight: bold;
+  color: #666;
+}
+div.listing_container div.flowed_content div.highlighted-items {
+  /*background-color: #ffeedd;*/
+  font-weight: bold;
+  font-size: 110%;
+}
+div.listing_container div.flowed_content ul.info_list {
+  /*background-color: #eeffee;*/
+  line-height: 1.3em;
+  font-size: 110%;
+}
+
+div.listing_container div.flowed_content div.agent_name {
+  font-size: 110%;
+}
+
+div.listing_container div.flowed_content div.description {
+}
+
+div.listing_container div.footer {
+  padding: 0.3em 10px 0 10px;
+  color: #333;
+}
+div.listing_container div.footer div {
+  background-color: #dddddd;
+  padding: 0.1em 3px;
+}
+div.listing_container div.footer div div {
+  background: none;
+}
+div.listing_container div.footer div.reference-id {
+  float: left;
+  font-weight: bold;
+  font-size: 110%;
+}
+div.listing_container div.footer div.links {
+  float: right;
+}
+div.listing_container div.footer ul {
+  list-style-type: none;
+}
+div.listing_container div.footer ul li {
+  float: right;
+  margin-right: 0;
+  margin-left: 1.5em;
+}
+
+
+
+
+#right_margin div.nested_menu {
+  position: relative;
+  cursor: pointer;
+}
+
+#right_margin div.nested_menu div {
+  cursor: default;
+}
+
+#right_margin div.nested_menu div.submenu {
+  position: absolute;
+  top: 0;
+  right: 150px;
+  width: 150px;
+  background-color: #dddddd;
+}
+
+#right_margin div.nested_menu div.submenu div.close_element {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background-color: #f0f0f0;
+  border: 1px solid #ff6666;
+  color: #ff6666;
+  font-style: Verdana;
+  font-weight: bold;
+  padding: 1px 2px;
+  line-height: 1.0em;
+  cursor: pointer;
+}

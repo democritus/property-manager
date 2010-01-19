@@ -1,0 +1,45 @@
+<h1>Listing information_requests</h1>
+
+<table>
+  <tr>
+    <th>Information requestable type</th>
+    <th>Information requestable id</th>
+    <th>Recipient Email</th>
+    <th>User</th>
+    <th>Name</th>
+    <th>Email</th>
+    <th>Phone</th>
+    <th>Message</th>
+  </tr>
+
+<% @information_requests.each do |information_request| %>
+  <tr>
+    <td><%=h information_request.information_requestable_type %></td>
+    <td><%=h information_request.information_requestable_id %></td>
+    <td><%=h information_request.recipient_email %></td>
+    <td><%=h information_request.user_id %></td>
+    <td><%=h information_request.name %></td>
+    <td><%=h information_request.email %></td>
+    <td><%=h information_request.phone %></td>
+    <td><%=h information_request.message %></td>
+    <td><%= link_to 'Show', polymorphic_path([:admin,
+      @information_requestable, information_request]) %></td>      
+    <td><%= link_to 'Edit', edit_polymorphic_path([:admin,
+      @information_requestable, information_request]) %></td>
+    <td><%= link_to 'Destroy', polymorphic_path([:admin,
+      @information_requestable, information_request]),
+      :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'Back', polymorphic_path([:admin, @information_requestable]) %>
+
+<% if @information_requestable.class.name == 'Listing' %>
+  <br />
+  <br />
+  <%= link_to 'Add information request for this listing',
+    listing_path(@information_requestable), :target => '_blank' %>
+<% end %>

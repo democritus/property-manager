@@ -1,0 +1,18 @@
+<h1>Editing agency</h1>
+
+<% labelled_form_for(:admin, @agency) do |f| %>
+  <%= f.error_messages %>
+
+  <%= render :partial => 'agency_fields', 
+    :locals => {
+      :f => f
+    } %>
+    
+  <div class="row">
+    <%= f.submit 'Update' %>
+  </div>
+<% end %>
+
+<%= link_to 'Show', admin_agency_path(@agency) %> |
+<%= link_to 'Back', admin_agencies_path %>
+

@@ -1,0 +1,25 @@
+<p>
+  <b>Name:</b>
+  <%=h @market.name %>
+</p>
+
+<p>
+  <b>Country:</b>
+  <%=h @market.country.name %>
+</p>
+
+<p>
+  <b>Primary agency:</b>
+  <%=h primary_agency %>
+</p>
+
+<p>
+  <b>Position:</b>
+  <%=h @market.position %>
+</p>
+
+<%= link_to 'Edit', edit_admin_country_market_path(@country, @market) %> |
+<%= link_to 'Back', admin_country_markets_path(@country) %><br />
+<br />
+<%= link_to 'Barrios', admin_market_barrios_path(@market) %> |
+<%= link_to 'Images', admin_market_market_images_path(@market) %>

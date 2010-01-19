@@ -1,0 +1,13 @@
+<p>
+  <b>Name:</b>
+  <%=h @listing_type.name %>
+</p>
+
+<%= link_to 'Associated categories',
+  admin_listing_type_category_assignments_path(@listing_type) %> |
+<%= link_to 'Associated features',
+  admin_listing_type_feature_assignments_path(@listing_type) %> |
+<%= link_to 'Associated styles',
+  admin_listing_type_style_assignments_path(@listing_type) %> |
+<%= link_to 'Edit', edit_admin_listing_type_path(@listing_type) %> |
+<%= link_to 'Back', admin_listing_types_path %>

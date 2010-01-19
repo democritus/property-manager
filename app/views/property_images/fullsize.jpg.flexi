@@ -1,0 +1,29 @@
+# Accessed via http://mysite.com/property_images/123/original.jpg
+@property_image.operate do |image|
+  
+  # Don't resize
+  # image.resize '1024x768'
+  
+  image.border :size => 8, :color => 'white'
+  image.shadow
+  #image.shadow(
+  #  :color      => 'black',    # or color(0, 0, 0)
+  #  :background => 'white',    # or color(255, 255, 255)
+  #  :blur       => 8,
+  #  :offset     => '2x2',
+  #  :opacity    => 0.75 
+  #)
+  image.text("barrioearth.com",
+    :alignment => :bottom_right,
+    :offset => '30x30',
+    :antialias => true,
+    :color => 'gray',
+    :font_size => 24
+    #:font => 'path/to/myfont.ttf',
+    #:rotate => -15,
+    #:shadow => {
+    #  :blur => 1,
+    #  :opacity => 0.5,
+    #}
+  )
+end

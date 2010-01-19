@@ -1,0 +1,67 @@
+module ListingsHelper
+
+  include PropertiesHelper
+  include UnitConversionHelper
+
+  def price_formatted(amount, symbol, code)
+    class_attr = ' class="price "' + code.to_s.downcase
+    return number_to_currency(
+      amount,
+      :unit => symbol,
+      :precision => 0
+    ) + ' ' + code.to_s
+  end
+
+  def price_div(amount, symbol, code)
+    #classes = 'price ' + code.to_s.downcase
+    #return content_tag(:div, price(amount, symbol, code),
+      #:class => classes)
+    # TODO: find out if :class can accept array like this
+    return content_tag(:div, price_formatted(amount, symbol, code),
+      :class => ['price', ' ', code.to_s.downcase])
+  end
+
+  def location_formatted(barrio_name = nil, market_name = nil)
+    unless barrio_name.blank? && market_name.blank?
+      location_text = []
+      unless barrio_name.blank?
+        location_text << barrio_name
+      end
+      unless market_name.blank?
+        location_text << market_name
+      end
+      unless location_text.blank?
+        return location_text.join(', ')
+      end
+    end
+  end
+
+  def extra_features_inline(features)
+    feature_list = ''
+    unless features.blank?
+      features.each do |feature|
+        feature_list += '<li>' + h(feature.name) + '</li>' + "\n\r"
+      end
+    end
+    return feature_list
+  end
+  
+  # TODO: need global contact hierarchy in case no broker provided
+  # right now, just defaulting to user with id #1
+  def discern_contact(listing)
+    contact = nil
+    unless listing.agency.blank?
+      unless listing.agency.broker.blank?
+        contact = listing.agency.broker
+      end
+    end
+    if contact.blank?
+      contact = Agent.find(:first,
+        :include => :user,
+        :conditions => 'agents.id = 1'
+      )
+    end
+    return contact
+  end
+  
+end

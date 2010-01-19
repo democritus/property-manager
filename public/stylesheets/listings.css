@@ -1,0 +1,20 @@
+/* 
+    Document   : listings
+    Created on : Apr 5, 2009, 2:06:09 PM
+    Author     : brian
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+div.agent-info {
+  background-color: #ffffff;
+}
+div.agent-info div.agent-name {
+  margin: 0.3em 0 0.3em 0;
+}
+div.agent-info img.agent-photo {
+  border: 0;
+  float: right;
+  margin: -10px -15px 0 10px;
+}
+

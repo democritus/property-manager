@@ -1,0 +1,13 @@
+# Accessed via http://mysite.com/user_icons/123/small.jpg
+@user_icon.operate do |image|
+  image.resize '100x100'
+  image.border :size => 3, :color => 'white'
+  image.shadow
+#  image.shadow(
+#    :color      => 'black',    # or color(0, 0, 0)
+#    :background => 'white',    # or color(255, 255, 255)
+#    :blur       => 8,
+#    :offset     => '2x2',
+#    :opacity    => 0.75 
+#  )
+end

@@ -1,0 +1,25 @@
+<div id="main_text">
+  
+  <h2>Contact us</h2>
+  <p>Send us your general inquires and/or comments using the following form.</p>
+  
+  <% labelled_form_for( [ @agency, @information_request ] ) do |f| %>
+    <%= f.hidden_field :subject, :value => 'Web form submission' %>
+    <div class="row">
+      <%= f.text_field :name, :label_text => 'Name:' %>
+    </div>
+    <div class="row">
+      <%= f.text_field :email, :label_text => 'Email address:' %>
+    </div>
+    <div class="row">
+      <%= f.text_field :phone, :label_text => 'Phone number:' %>
+    </div>
+    <div class="row">
+      <%= f.text_area :message, :label_text => 'Message:' %>
+    </div>
+    <div class="submit clearfix">
+      <%= submit_tag 'Submit' %>
+    </div>
+  <% end %>
+</div>
+

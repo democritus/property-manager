@@ -1,0 +1,46 @@
+Hello <%= @information_request[:recipient_name] %>, you have received a
+<%= type_of_request %> from <%= from_name %>.\n\n
+
+Recipient:\n
+Recipient name: <%= @information_request[:recipient_name] %>\n
+Recipient email: <%= @information_request[:recipient_email] %>\n
+<% if associated_agency %>
+  Agency: <%= associated_agency[:name] %>\n
+<% end %>
+<% if @information_request.listing %>
+  Listing: <%= @information_request.listing[:name] %>\n
+<% end %>
+\n
+
+<strong>Sender:</strong>\n
+<% if @information_request.user %>
+  User id: <%= @information_request.user[:id] %>\n
+  Name: <%= (@information_request.user[:first_name] + ' ' +
+    @information_request.user.last_name).strip %>\n
+  User email: <%= @information_request.user[:email] %>\n
+  User home phone: <%= @information_request.user[:phone_home] %>\n
+  User work phone: <%= @information_request.user[:phone_work] %>\n
+  User mobile phone: <%= @information_request.user[:phone_mobile] %>\n
+<% end %>
+Sender name: <%= @information_request[:name] %>\n
+Sender email: <%= @information_request[:email] %>\n
+Sender phone: <%= @information_request[:phone] %>\n
+\n
+
+<% if @information_request.listing %>
+  <strong>Listing:</strong>\n
+  Listing reference id: <%= @information_request.listing[:id] %>\n
+  Listing name: <%= @information_request.listing[:name] %>\n
+  Listing type: <%= @information_request.listing.listing_type[:name] %>\n
+  Listing location:
+    <%= @information_request.listing.property.barrio.country[:name] %>,
+    <%= @information_request.listing.property.barrio.market[:name] %>,
+    <%= @information_request.listing.property.barrio[:name] %>\n
+  \n
+<% end %>
+
+<strong>Message</strong>\n
+<%= @information_request[:message] %>\n
+\n
+\n    
+

@@ -1,0 +1,105 @@
+<%
+# TODO - caching scheme for glider
+@mini_glider = []
+if session[:agencies]
+  unless @active_agency.master_agency == true
+    session_agency_id = @active_agency.id
+  else
+    session_agency_id = 0 # causes listings from all agencies to be saved in
+                          # session array for master agencies
+  end
+  if session[:agencies][session_agency_id][:recent_listings]
+    # At least two images for aesthetics
+    if session[:agencies][session_agency_id][:recent_listings].count > 1
+      listings = Listing.find(
+        session[:agencies][session_agency_id][:recent_listings])
+      if listings
+        # Order collection in the same order as Session array
+        recent_listings = []
+        session[:agencies][session_agency_id][:recent_listings].each do |id|
+          i = 0
+          while i < listings.length do
+            if listings[i].id == id
+              recent_listings << listings[i]
+              i += 1
+              break
+            end
+            i += 1
+          end
+        end
+        unless recent_listings.empty?
+          @mini_glider << 'Recently viewed listings'
+          @mini_glider += recent_listings
+          @mini_glider += recent_listings
+          if recent_listings.length == 1
+            @mini_glider << nil # Recent Listings section must have
+                                # at least 2 images
+          end
+        end
+      end
+    end
+  end
+end
+if @search
+  if @search.length > 1 # At least two images for aesthetics
+    @mini_glider << 'Featured listings'
+    @mini_glider += @search.map
+  end
+end
+if @listing
+  # TODO: create similar method in model
+  # similar_listings = Listing.similar(@listing.id) 
+  conditions = [ 'listing_type_id = ?', @listing.listing_type_id ]
+  unless @active_agency.master_agency
+    similar_listings = Listing.by_agency(@active_agency.id).find(:all,
+      :conditions => conditions
+    )
+  else
+    similar_listings = Listing.find(:all, :conditions => conditions)
+  end
+  if similar_listings
+    if similar_listings.length > 1 # At least two images for aesthetics
+      @mini_glider << 'Similar listings' # Insert "Recent Listings" placeholder
+      @mini_glider += similar_listings
+    end
+  end
+end
+
+# Set up image glider
+options = {
+  'type' => 'mini',
+  'size' => 6,
+  'image_width' => 146,
+  'image_height' => 115,
+  'images_per_object' => 1,
+  'image_placeholders' => true
+}
+# Inline styles need this value to position glider correctly
+glider_top_offset = 0
+glider_left_offset = 11
+%>
+       
+<div id="header" class="small_header clearfix">
+  <%= render :partial => 'layouts/user_bar' %>
+  <div class="logo_area">
+    <div id="small_site_logo">
+      <% if @active_agency.agency_logos[0] %>
+        <%= link_to(
+          image_tag(
+            agency_logo_path(@active_agency.agency_logos[0], :format => :png),
+            :border => 0
+          ),
+          root_path
+        ) %>
+      <% else %>
+        <%= default_logo %>
+      <% end %>
+    </div>
+  </div>
+  <div class="main_panel" style="height: <%= (options['image_height'] + glider_top_offset).to_s %>px">
+    <div id="mini_glider" style="top: <%= glider_top_offset.to_s %>px; left: <%= glider_left_offset.to_s %>px;">
+      <%= glider_js('recentListings', @mini_glider, options) %>
+      <%= glider_html('recentListings', @mini_glider, options) %>
+    </div>
+  </div>
+</div>

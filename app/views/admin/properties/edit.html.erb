@@ -1,0 +1,20 @@
+<h1>Editing property</h1>
+
+<% labelled_form_for(:admin, @property) do |f| %>
+  <%= f.error_messages %>
+  
+  <%= render :partial => 'property_fields', 
+    :locals => {
+      :f => f
+    } %>
+    
+  <div class="row">
+    <%= f.submit 'Update' %>
+  </div>
+<% end %>
+
+<% # MOVED to show.html.erb = render :partial => 'associated_listings' %>
+
+<% # MOVED to show.html.erb = link_to 'Add listing', new_property_listing_path(@property) %> |
+<%= link_to 'Show', contextual_path(@property) %> |
+<%= link_to 'Back', contextual_collection_path %>

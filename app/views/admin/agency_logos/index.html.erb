@@ -1,0 +1,42 @@
+<h1>Listing agency_logos</h1>
+
+<table>
+  <tr>
+    <th>Logo</th>
+    <th>Image filename</th>
+    <th>Image width</th>
+    <th>Image height</th>
+    <th>Caption</th>
+    <th>Position</th>
+    <th>Visible</th>
+  </tr>
+
+<% @agency_logos.each do |agency_logo| %>
+  <tr>
+    <td>
+      <%= link_to(
+        image_tag(
+          thumb_agency_logo_path(agency_logo, :format => :jpg),
+          :style => 'border: 0'
+        ),
+        agency_logo_path(agency_logo),
+        :target => :image_viewer
+      ) %></td>
+    <td><%=h agency_logo.image_filename %></td>
+    <td><%=h agency_logo.image_width %></td>
+    <td><%=h agency_logo.image_height %></td>
+    <td><%=h agency_logo.caption %></td>
+    <td><%=h agency_logo.position %></td>
+    <td><%=h agency_logo.visible %></td>
+    <td><%= link_to 'Show', agency_logo, :target => :_blank %></td>
+    <td><%= link_to 'Edit', edit_polymorphic_path([:admin, @agency_logoable, agency_logo]) %></td>
+    <td><%= link_to 'Destroy', edit_polymorphic_path([:admin, @agency_logoable, agency_logo]), :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New image', new_polymorphic_path([:admin, @agency_logoable, :agency_logo]) %> |
+<%= link_to 'Back', polymorphic_path([:admin, @agency_logoable]) %>
+

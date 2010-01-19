@@ -1,0 +1,16 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+usd:
+  name: United States of America Dollars
+  code: USD
+  symbol: $
+
+eur:
+  name: Euros
+  code: EUR
+  symbol: €
+  
+crc:
+  name: Costa Rican colón
+  code: CRC
+  symbol: ₡

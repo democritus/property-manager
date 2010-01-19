@@ -1,0 +1,54 @@
+<%
+# Load data into select fields and select corresponding options
+setup_market_select_fields
+%>
+
+<% #= debug params[:market] %>
+<% #= debug @market %>
+<% #= debug @market.primary_agency_id %>
+<% #= debug @market.country_id %>
+<% #= debug @lists[:countries] %>
+<% #= debug @market.agency_ids %>
+
+
+<div class="row">
+  <%= f.text_field :name %>
+</div>
+
+<div class="row">
+  <%= f.text_area :description %>
+</div>
+
+<div class="row">
+  <%= f.text_area :news %>
+</div>
+
+<div class="row">
+  <%= f.select :country_id, @lists[:countries],
+    { :label_text => 'Country' }
+  %>
+</div>
+
+<div class="row">
+  <%= f.select :primary_agency_id,
+    @lists[:agencies],
+    { :label_text => 'Primary agency' }
+  %>
+</div>
+
+<div id="agency_list" class="row">
+  <label for="agency_ids">Other agencies</label>
+  <%= multiple_select 'market',
+    'agency_ids',
+    @lists[:agencies],
+    { 
+      :outer_class => 'market_list multiple_select',
+      :inner_class => 'market_list_item multiple_select_checkbox'
+    }
+  %>
+</div>
+
+<div class="row">
+  <%= f.text_field :position %>
+</div>
+

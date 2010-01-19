@@ -1,0 +1,8 @@
+ButtonLabels
+============
+
+Patches radio_button and checkbox to allow for individual labels.
+Currently, neither the radio_button nor radio_button helpers allow content  the be entered within the tag. This presents problems when laying out  multiple tags in knowing what the individual choices represent.
+
+ The '':label'' option to either ''radio_button'', ''radio_button_tag'', ''check_box'' or 'check_box_tag''
+ will add the specified value as the content of the rendered tag

@@ -1,0 +1,105 @@
+class StyleAssignmentsController < ApplicationController
+  # GET /style_assignments
+  # GET /style_assignments.xml
+  def index
+    # Enable polymorphic behavior
+    @style_assignable = context_object( :include => :style_assignments )
+    @style_assignments = @style_assignable.style_assignments
+    
+    # Data for lists
+    set_form_list_data
+
+    respond_to do |format|
+      format.html # index.html.erb
+      format.xml  { render :xml => @style_assignments }
+    end
+  end
+
+  # POST /style_assignments
+  # POST /style_assignments.xml
+  def create
+    # Enable polymorphic behavior
+    @style_assignable = context_object( :include => :style_assignments )
+    @style_assignment = @style_assignable.style_assignments.build(
+      params[:style_assignment] )
+
+    respond_to do |format|
+      if @style_assignment.save
+        flash[:notice] = 'Style Assignment was successfully created.'
+        format.html { redirect_to(polymorphic_url([@style_assignable,
+          :style_assignments])) }
+        format.xml  { render :xml => @style,
+          :status => :created,
+          :location => @style_assignment }
+      else
+        format.html { render :action => "new" }
+        format.xml  { render :xml => @style_assignment.errors,
+          :status => :unprocessable_entity }
+      end
+    end
+  end
+
+  # PUT /style_assignments/1
+  # PUT /style_assignments/1.xml
+  def update
+    @style_assignment = StyleAssignment.find(params[:id])
+
+    respond_to do |format|
+      if @style_assignment.update_attributes(params[:style_assignment])
+        flash[:notice] = 'Style Assignment was successfully updated.'
+        
+        @style_assignable = context_object( :include => :style_assignments )
+        format.html { redirect_to(polymorphic_url([@style_assignable, 
+            :style_assignments])) }
+        
+        format.xml  { head :ok }
+      else
+        format.html { render :action => "edit" }
+        format.xml  { render :xml => @style_assignment.errors,
+          :status => :unprocessable_entity }
+      end
+    end
+  end
+
+  # DELETE /style_assignments/1
+  # DELETE /style_assignments/1.xml
+  def destroy
+    @style_assignment = StyleAssignment.find(params[:id])
+    @style_assignment.destroy
+
+    respond_to do |format|
+      format.html { redirect_to(style_assignments_url) }
+      format.xml  { head :ok }
+    end
+  end
+  
+  
+  private
+  
+  # Handle nested polymorphic actions
+  def context_object( *finder_options )
+    params[:context_type].classify.constantize.find(
+      context_id, *finder_options )
+  end
+  
+  def context_id
+    params["#{ params[:context_type].singularize }_id"]
+  end
+  
+  def form_list_data
+    @lists = {}
+    @lists[:styles] = Style.find(:all).map { 
+      |style| [style.name, style.id]
+    }
+    # Remove from list records already associated with this assignable entity
+    unless @style_assignments.nil?
+      style_assignment_ids = @style_assignments.map {
+        |style_assignment| style_assignment.style_id }
+      unless style_assignment_ids.blank?
+        @lists[:styles].delete_if {
+         |pair| style_assignment_ids.include?(pair[1]) }
+      end
+    end
+  end
+  
+end

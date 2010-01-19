@@ -1,0 +1,18 @@
+<div id="listings-index-content">
+
+<h3 style="margin: 0 0 1em; line-height: 1.2em"><%= page_header %></h3>
+
+<% unless @listings.empty? %>
+  <% paginated_section @listings do %>
+  <% #= will_paginate @posts %>
+  <% #= page_entries_info @listings %>
+
+  <%= render :partial => "listing", :collection => @listings %>   
+
+  <% #= will_paginate @posts %>
+  <% end %>
+<% else %>
+  <p>No listings found</p>
+<% end %>
+
+</div>

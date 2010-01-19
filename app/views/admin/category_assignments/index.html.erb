@@ -1,0 +1,65 @@
+<% set_category_assignment_form_list_data %>
+
+<% unless params[:context_type] == 'listings' %>
+  <% back_to_category_assignable_path = polymorphic_path(
+    :admin, @category_assignable) %>
+<% else %>
+  <% back_to_category_assignable_path = admin_property_listing_path(
+    @category_assignable.property, @category_assignable) %>
+<% end %>
+
+<div id="category_assignments">
+<% @category_assignments.each do |category_assignment| %>
+  <%
+  flag = ''
+  delete_action = link_to 'Destroy',
+    polymorphic_path( [ :admin, @category_assignable, category_assignment ] ),
+      :confirm => 'Are you sure?',
+      :method => :delete
+  make_primary = ''
+  if category_assignment.primary_category.blank?
+   make_primary = link_to 'make primary category',
+     polymorphic_path( [ :admin, @category_assignable, category_assignment ],
+       :category_assignment => { :primary_category => "1" } ),
+     { :method => :put }
+  else
+    flag = '*'
+  end
+  %>
+  <div class="category_assignment">
+    <%= flag %>
+    <%= category_assignment.category.name %>
+    <%= make_primary %> |
+    <%= delete_action %>
+  </div>
+<% end %>
+</div>
+
+<% unless @lists[:categories].empty? %>
+  <h2>New Category Assignment</h2>
+   
+  <% form_for [:admin, @category_assignable, CategoryAssignment.new] do |f| %>
+    <%= f.error_messages %>
+    <p>
+      <%= f.label :category_id %>
+      <%= f.select :category_id, @lists[:categories] %>
+    </p>
+    <p>
+      <%
+      # REMOVED - form helper doesn't work here because checked value gets 
+      # clobbered by the hidden field. Hidden field not necessary in this case, 
+      # since this form only creates new records
+      # f.check_box :primary_category
+      %>
+      <input id="category_assignment_primary_category" 
+        name="category_assignment[primary_category]" 
+        type="checkbox" 
+        value="1" />
+      <%= f.label :primary_category %>
+    </p>
+    <p><%= f.submit "Submit" %></p>
+  <% end %>
+<% end %>
+
+<%= link_to 'Back', back_to_category_assignable_path %>
+

@@ -1,0 +1,102 @@
+<% #= debug params[:agency] %>
+<% #= debug @agency %>
+<% #= debug @agency.primary_market_id %>
+<% #= debug @agency.broker_id %>
+
+
+<%
+spinner_id = 'select_country_spinner'
+
+# Load data into select fields and select corresponding options
+setup_agency_select_fields
+%>
+
+<div class="row">
+  <%= f.text_field :name %>
+</div>
+
+<div class="row">
+  <%= f.text_field :short_name %>
+</div>
+
+<div class="row">
+  <%= f.text_field :subdomain %>
+</div>
+
+<div class="row">
+  <%= f.text_area :description %>
+</div>
+
+<div class="row">
+  <%= f.select :country_id,
+    @lists[:countries].insert(0, 'Select country') %>
+  <%= spinner(spinner_id) %>
+</div>
+
+<%
+js_market_ids = "inputs_to_ids('market_list')"
+js_partner_agency_ids = "inputs_to_ids('partner_agency_list')"
+js_with = "'country_id=' + encodeURIComponent($('agency_country_id').value)" +
+  " + '&market_ids=' + encodeURIComponent(" + js_market_ids + ")" +
+  " + '&partner_agency_ids=' + encodeURIComponent(" +
+  js_partner_agency_ids + ")"
+#js_with = "'country_id=' + encodeURIComponent($('agency_country_id').value)" +
+#    " + '&market_ids=' + encodeURIComponent(" + js_market_ids + ")" +
+#    " + '&agency_ids=' + encodeURIComponent(" + js_agency_ids + ")"
+unless @agency.new_record?
+  js_with += " + '&agency_id=' + encodeURIComponent(" + @agency.id.to_s + ")"
+end
+%>
+<%= observe_field(:agency_country_id,
+  :url => { :action => :country_pivot },
+  :with => js_with,
+  :before => "Element.show('" + spinner_id + "')",
+  :complete => "Element.hide('" + spinner_id + "')",
+  :method => :get,
+  :update => 'country_pivot_js'
+)
+%>
+<!-- Placeholder for JavaScript returned from AJAX call "country_pivot" -->
+<div id="country_pivot_js">
+</div>
+
+<div class="row">
+  <%
+  market_options = @lists[:markets]
+  if market_options.empty?
+    market_options = [['Please choose country', '']]
+  end
+  %>
+  <%= f.select :primary_market_id,
+    market_options,
+    { :label_text => 'Primary market' }
+  %>
+</div>
+
+<div id="market_list" class="row">
+  <!--<label for="market_ids">Other markets</label>-->
+  <%= multiple_select_html('agency', 'market',
+    @lists[:markets],
+    [],
+    { :label => 'Other markets', :empty => 'Please choose country' }
+  ) %>
+</div>
+
+<div id="partner_agency_list" class="row">
+  <%= multiple_select_html('agency', 'partner_agency',
+    @lists[:partner_agencies],
+    [],
+    { :empty => 'Please choose country' }
+  ) %>
+</div>
+
+<div class="row">
+  <%= label :agency, :broker_id, 'Broker ID (lookup by typing Name, Email,' +
+    ' Login or Agent id)' %>
+  <%= text_field :agency, :broker_id, :auto_complete => :off %>
+  <div class="auto_complete" id="agency_broker_id_auto_complete"></div>
+  <%= auto_complete_field :agency_broker_id,
+    :url => { :action => 'auto_complete_for_agency_broker_id' }
+    %>
+</div>
+

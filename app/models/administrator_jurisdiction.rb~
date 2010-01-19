@@ -1,0 +1,2 @@
+class AdministratorJurisdiction < ActiveRecord::Base
+end

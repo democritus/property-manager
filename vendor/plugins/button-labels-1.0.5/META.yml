@@ -1,0 +1,7 @@
+author: Gregg Kellogg
+summary: Add labels to buttons rails plugin.
+homepage: http://kellogg-assoc.com
+plugin: svn://rubyforge.org/var/svn/button-labels/trunk/button-labels
+license: MIT
+version: 1.0.4
+rails_version: 1.2+

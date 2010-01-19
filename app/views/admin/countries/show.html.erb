@@ -1,0 +1,22 @@
+<p>
+  <b>Iso2:</b>
+  <%=h @country.iso2 %>
+</p>
+
+<p>
+  <b>Name:</b>
+  <%=h @country.name %>
+</p>
+
+<p>
+  <b>Position:</b>
+  <%=h @country.position %>
+</p>
+
+
+<%= link_to 'Edit', edit_admin_country_path(@country) %> |
+<%= link_to 'Back', admin_countries_path %><br />
+<br />
+<%= link_to 'Markets', admin_country_markets_path(@country) %> |
+<%= link_to 'Provinces', admin_country_provinces_path(@country) %> |
+<%= link_to 'Zones', admin_country_zones_path(@country) %>

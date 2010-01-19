@@ -1,0 +1,33 @@
+<p>
+  <b>Name:</b>
+  <%=h @barrio.name %>
+</p>
+
+<p>
+  <b>Country:</b>
+  <%=h @barrio.country.name %>
+</p>
+
+<p>
+  <b>Zone:</b>
+  <%=h @barrio.zone.name %>
+</p>
+
+<p>
+  <b>Province:</b>
+  <%=h @barrio.province.name %>
+</p>
+
+<p>
+  <b>Market:</b>
+  <%=h @barrio.market.name %>
+</p>
+
+<p>
+  <b>Position:</b>
+  <%=h @barrio.position %>
+</p>
+
+
+<%= link_to 'Edit', edit_admin_market_barrio_path(@market, @barrio) %> |
+<%= link_to 'Back', admin_market_barrios_path(@market) %>

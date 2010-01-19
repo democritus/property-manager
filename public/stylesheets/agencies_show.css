@@ -1,0 +1,50 @@
+p.agency_description {
+  /*
+  background-color: #f8f8e8;
+  border: 1px solid #e8e8d8;
+  color: #282828;
+  padding: 25px;
+  margin: 0;
+  */
+  font-size: 120%;
+  line-height: 1.4em;
+}
+
+div.market_snapshot {
+  margin: 15px 0px 25px 0px;
+  border: 1px dotted #ccc;
+  padding: 10px;
+}
+
+div.market_snapshot div.snapshot_content {
+  font-size: 105%
+}
+
+div.market_snapshot div.snapshot_footer {
+  background-color: #e8e8e8;
+  width: 100%;
+  float: right;
+  clear: both;
+  font-family: Arial, helvetica;
+}
+
+div.market_snapshot div.snapshot_footer div {
+  float: right;
+  margin: 3px 10px;
+}
+
+div.market_snapshot img.market_thumb {
+  display: block;
+  float: left;
+  clear: left;
+  margin: -6px 10px 0px -6px;
+}
+
+div.market_snapshot h2 {
+  margin: 0 0 0.6em 0;
+}
+
+div.market_snapshot p {
+  margin: 0.6em 0 0.6em 0;
+}
+

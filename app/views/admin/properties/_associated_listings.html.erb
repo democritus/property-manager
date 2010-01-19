@@ -1,0 +1,15 @@
+<% unless @property.listings.empty? %>  
+  <h3>Listings associated with this property</h3>
+  <ul>
+  <% @property.listings.each do |listing| %>
+    <li>
+      <%= listing.label %>
+      <%= link_to 'Show', admin_property_listing_path(@property, listing) %>
+      <%= link_to 'Edit', edit_admin_property_listing_path(@property, listing) %>
+      <%= link_to 'Delete', admin_property_listing_path(@property, listing),
+        :confirm => 'Are you sure?',
+        :method => :delete %>
+    </li>
+  <% end %>
+  </ul>
+<% end %>

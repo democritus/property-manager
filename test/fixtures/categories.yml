@@ -1,0 +1,18 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+homes:
+  name: Homes
+  user_defined: false
+
+condos:
+  name: Condos
+  user_defined: false
+
+apartments:
+  name: Apartments
+  user_defined: false
+
+hotels:
+  name: Hotels
+  user_defined: false
+

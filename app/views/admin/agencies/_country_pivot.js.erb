@@ -1,0 +1,32 @@
+<%
+if ajax[:markets].empty?
+  primary_market_options = [['No markets found', '']]
+else
+  primary_market_options = ajax[:markets]
+end
+%>
+<% javascript_tag do %>
+  $('agency_primary_market_id').innerHTML='<%= escape_javascript(
+    options_for_select(primary_market_options)
+  ) %>';
+  ul_tag = $('market_list').select('ul.multiple_select')[0];
+  ul_tag.innerHTML='<%= escape_javascript(
+    checkboxes_for_multiple_select_html('agency',
+      'market',
+      ajax[:markets],
+      ajax[:market_ids],
+      :empty => 'No markets found'
+    )
+  ) %>'
+<% end %>
+<% javascript_tag do %>
+  ul_tag = $('partner_agency_list').select('ul.multiple_select')[0];
+  ul_tag.innerHTML='<%= escape_javascript(
+    checkboxes_for_multiple_select_html('agency',
+      'partner_agency',
+      ajax[:partner_agencies],
+      ajax[:partner_agency_ids],
+      :empty => 'No partner agencies found'
+    )
+  ) %>'
+<% end %>

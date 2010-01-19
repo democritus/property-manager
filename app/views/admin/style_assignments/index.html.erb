@@ -1,0 +1,65 @@
+<% set_style_assignment_form_list_data %>
+
+<% unless params[:context_type] == 'listings' %>
+  <% back_to_style_assignable_path = polymorphic_path(
+    :admin, @style_assignable) %>
+<% else %>
+  <% back_to_style_assignable_path = admin_property_listing_path(
+    @style_assignable.property, @style_assignable) %>
+<% end %>
+
+<div id="style_assignments">
+<% for style_assignment in @style_assignments %>
+  <%
+  flag = ''
+  delete_action = link_to 'Destroy',
+    polymorphic_path( [ :admin, @style_assignable, style_assignment ] ),
+      :confirm => 'Are you sure?',
+      :method => :delete
+  make_primary = ''
+  if style_assignment.primary_style.blank?
+   make_primary = link_to 'make primary style',
+     polymorphic_path( [ :admin, @style_assignable, style_assignment ],
+       :style_assignment => { :primary_style => "1" } ),
+     { :method => :put }
+  else
+    flag = '*'
+  end
+  %>
+  <div class="style_assignment">
+    <%= flag %>
+    <%= style_assignment.style.name %>
+    <%= make_primary %>
+    <%= delete_action %>
+  </div>
+<% end %>
+</div>
+
+<% unless @lists[:styles].empty? %>
+  <h2>New Style Assignment</h2>
+    
+  <% form_for [:admin, @style_assignable, StyleAssignment.new] do |f| %>
+    <%= f.error_messages %>
+    <p>
+      <%= f.label :style_id %>
+      <%= f.select :style_id, @lists[:styles] %>
+    </p>
+    <p>
+      <%
+      # REMOVED - form helper doesn't work here because checked value gets 
+      # clobbered by the hidden field. Hidden field not necessary in this case, 
+      # since this form only creates new records
+      # f.check_box :primary_style
+      %>
+      <input id="style_assignment_primary_style" 
+        name="style_assignment[primary_style]" 
+        type="checkbox" 
+        value="1" />
+      <%= f.label :primary_style %>
+    </p>
+    <p><%= f.submit "Submit" %></p>
+  <% end %>
+<% end %>
+
+<%= link_to 'Back', back_to_style_assignable_path %>
+

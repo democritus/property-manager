@@ -1,0 +1,48 @@
+<h1>Listing market_images</h1>
+
+<table>
+  <tr>
+    <th>Thumbnail</th>
+    <th>Image filename</th>
+    <th>Image width</th>
+    <th>Image height</th>
+    <th>Caption</th>
+    <th>Position</th>
+    <th>Visible</th>
+  </tr>
+
+<% @market_images.each do |market_image| %>
+  <tr>
+    <td>
+      <%= link_to(
+        image_tag(
+          thumb_market_image_path(market_image, :format => :jpg),
+          :style => 'border: 0'
+        ),
+        market_image_path(market_image),
+        :target => :_blank
+      ) %></td>
+    <td><%=h market_image.image_filename %></td>
+    <td><%=h market_image.image_width %></td>
+    <td><%=h market_image.image_height %></td>
+    <td><%=h market_image.caption %></td>
+    <td><%=h market_image.position %></td>
+    <td><%=h market_image.visible %></td>
+    <td><%= link_to 'Show', market_image, :target => :_blank %></td>
+    <td><%= link_to 'Edit',
+      edit_polymorphic_path([:admin, @market_imageable, market_image]) %></td>
+    <td><%= link_to 'Destroy',
+      edit_polymorphic_path([:admin, @market_imageable, market_image]),
+      :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New image', new_polymorphic_path(
+  [:admin, @market_imageable, :market_image]) %> |
+<%= link_to 'Back', admin_country_market_path(
+  @market_imageable.country, @market_imageable) %>
+
+
