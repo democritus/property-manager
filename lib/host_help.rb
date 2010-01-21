@@ -23,7 +23,7 @@ module HostHelp
     else
       domain_parts = domain_from_url.split('.')[-2..2]
       unless domain_parts.blank? # unless no top-level domain
-        return domain_parts[0].chomp(ENV['RAILS_ENV'][0,3]) + '.' +
+        return domain_parts[0].chomp('-' + ENV['RAILS_ENV'][0,3]) + '.' +
           domain_parts[1]
       end
     end

@@ -109,7 +109,7 @@ class ApplicationController < ActionController::Base
     return unless active_agency
     # Redirect if current domain and subdomain don't match record
     if intended_domain(current_domain) == active_agency.domain
-      if current_subdomain != active_agency.subdomain
+      if (current_subdomain || "") != active_agency.subdomain
         unless active_agency.subdomain.blank?
           redirect_subdomain = active_agency.subdomain
         else
