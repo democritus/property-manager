@@ -28,7 +28,7 @@ class CreateDatabaseFromSchema < ActiveRecord::Migration
       t.string   "name",        :limit => 64,                         :null => false
       t.string   "short_name",        :limit => 32,                   :null => false
       t.string   "domain",        :limit => 64,                       :null => false
-      t.string   "subdomain",       :limit => 64
+      t.string   "subdomain",       :limit => 64,                     :null => false
       t.string   "email",       :limit => 128
       t.string   "skype",       :limit => 64
       t.integer  "broker_id"

@@ -32,6 +32,8 @@ class Agency < ActiveRecord::Base
     :allow_blank => true,
     :only_integer => true,
     :message => "{{value}} must be an integer"
+  validates_exclusion_of :subdomain, :in => %w(www),
+    :message => 'Subdomain {{value}} is reserved.'
     
   before_validation :short_name_same_as_name
   before_save :add_primary_market_to_market_ids

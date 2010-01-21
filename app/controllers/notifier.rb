@@ -1,6 +1,4 @@
 class Notifier < ActionMailer::Base
-
-  before_filter :require_user
   
   default_url_options[:host] = "authlogic_example.binarylogic.com"
 

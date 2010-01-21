@@ -1,9 +1,0 @@
-class Barrio < ActiveRecord::Base
-  acts_as_tree :order => 'name'
-
-  belongs_to :country
-  belongs_to :zone
-  belongs_to :province
-  belongs_to :market
-  has_many :properties
-end

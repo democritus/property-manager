@@ -1,7 +1,0 @@
-class ApplicationModel < ActiveRecord::Base
-  
-  def numeric?(object)
-    if Float(object) rescue false
-  end
-   
-end

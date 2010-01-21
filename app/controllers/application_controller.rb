@@ -79,10 +79,7 @@ class ApplicationController < ActionController::Base
     if current_domain
       order_parts << "agencies.domain = '" + current_domain + "' DESC"
     end
-    if current_subdomain
-      order_parts << "agencies.subdomain = '" + current_subdomain + "' DESC"
-    else
-      order_parts << "agencies.subdomain IS NULL DESC"
+    order_parts << "agencies.subdomain = '" + current_subdomain + "' DESC"
     end
     order_parts << "agencies.master_agency = 1 DESC, agencies.id ASC"
     order = order_parts.join(', ')
@@ -99,14 +96,20 @@ class ApplicationController < ActionController::Base
     @active_agency = active_agency
   end
   
+  # Redirect to known agency for current domain
+  # NOTE: Hostnames that are not associated with an agency record (such as
+  # localhost, IP addresses, and other hostnames that happen to resolve to the
+  # server) are not redirected and result in the default agency record being
+  # used as the "active agency". This makes it so developers can test basic
+  # functionality without having to set up name resolution in /etc/hosts.
   def redirect_if_current_agency_not_found
+    return unless active_agency
     # Redirect if current domain and subdomain don't match record
     suffixed_domain = domain_with_environment(active_agency.domain)
     if current_domain == suffixed_domain
       if current_subdomain != active_agency.subdomain
-        redirect_to agency_url(active_agency)
+        redirect_to root_url(:subdomain => active_agency.subdomain)
       end
-    #else
       # NOTE: if domain doesn't match, then continue with current value for
       # active agency, which will be the master agency with the smallest id
     end

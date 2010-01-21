@@ -1,4 +1,0 @@
-class StyleAssignment < ActiveRecord::Base
-  belongs_to :style
-  belongs_to :style_assignable, :polymorphic => true
-end

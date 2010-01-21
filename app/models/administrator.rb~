@@ -1,5 +1,0 @@
-class Administrator < ActiveRecord::Base
-  belongs_to :member
-  has_many :administrator_jurisdictions
-  has_many :markets, :through => :administrator_jurisdictions
-end

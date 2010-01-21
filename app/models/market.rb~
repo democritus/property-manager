@@ -1,7 +1,0 @@
-class Market < ActiveRecord::Base
-  has_many :administrators, :through => :market_administrations
-  has_many :agencies, :through => :agency_jurisditions
-  has_many :barrios
-  has_many :primary_listings,
-    :foreign_key => 'primary_market_id'
-end

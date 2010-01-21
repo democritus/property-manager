@@ -1,9 +1,0 @@
-class UserImage < ActiveRecord::Base
-  #acts_as_fleximage do
-    #:image_directory 'public/media/users/images'
-    #require image false
-    #preprocess_image do |image|
-    #  image.resize '800x600'
-    #end
-  #end
-end

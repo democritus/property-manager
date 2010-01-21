@@ -1,6 +1,6 @@
 module Admin::AgentsHelper
   
-  include AgentsHelper
+  include ::AgentsHelper
   
   # Set up blank fields for nested record
   def new_agent_setup(agent)

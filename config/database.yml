@@ -27,8 +27,8 @@ development:
   reconnect: false
   database: barrioearth_development
   pool: 5
-  username: root
-  password: abr67b89
+  username: be_user_dev
+  password: jupit3r
   host: localhost
   # Note from installation instructions at wiki.rubyonrails.org:
   # Rails assumes that the MySQL socket file will be found in /tmp/mysqld.sock. 
@@ -45,8 +45,8 @@ test:
   reconnect: false
   database: barrioearth_test
   pool: 5
-  username: root
-  password: abr67b89
+  username: be_user_dev
+  password: jupit3r
   host: localhost
 
 production:
@@ -55,6 +55,6 @@ production:
   reconnect: false
   database: barrioearth_production
   pool: 5
-  username: root
-  password: 
+  username: be_user
+  password: voyag3r
   host: localhost

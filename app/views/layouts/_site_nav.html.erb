@@ -4,7 +4,7 @@
   # separate include file for each agency
   %>
   <%
-  if @active_agency.subdomain
+  unless @active_agency.subdomain.blank?
     subdomain_filename_part = '.' + @active_agency.subdomain
   else
     subdomain_filename_part = ''
@@ -93,7 +93,7 @@
         agency_host = [ agency.subdomain,
           domain_with_environment(agency.domain)
         ].reject {
-          |x| x.nil? }.join('.')
+          |x| x.blank? }.join('.')
         agency_options = { :host => agency_host }
         agency_options.merge!( :port => request.port ) unless request.port == 80
         %>
