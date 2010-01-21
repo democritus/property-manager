@@ -1,60 +1,6 @@
 class AddTestData < ActiveRecord::Migration
   def self.up
-
-
-# Not sure if administrator-related tables will be used
-#    Administrator.delete_all
-
-#    Administrator.create(:user_id => 1
-#    )
-#    Administrator.create(:user_id => 2
-#    )
-
-
-#    AdministratorJurisdiction.delete_all
-
-#    AdministratorJurisdiction.create(:market_id => 1,
-#      :administrator_id => 1
-#    )
-
-#    AdministratorJurisdiction.create(:market_id => 1,
-#      :administrator_id => 2
-#    )
-
-
-# Users and related data should be added via website
-#    Agent.delete_all
-
-#    Agent.create(:user_id => 1,
-#      :mini_biography =>
-#    %{Brian is cool}
-#    )
-
-#    Agent.create(:user_id => 2,
-#      :mini_biography =>
-#      %{Having lived and worked in Costa Rica for a number of years, Phil has developed a keen sense for finding properties that best match a client's lifestyle. Phil's practical, no-nonsense approach also helps his clients make clear, informed choices when qualifying candidate properties for investment.}
-#    )
-
-
-#    AgentAffiliation.delete_all
-
-#    AgentAffiliation.create(:agent_id => 1,
-#      :agency_id => 2
-#    )
-
-#    AgentAffiliation.create(:agent_id => 1,
-#      :agency_id => 3
-#    )
-
-#    AgentAffiliation.create(:agent_id => 2,
-#      :agency_id => 2
-#    )
-
-#    AgentAffiliation.create(:agent_id => 2,
-#      :agency_id => 3
-#    )
-
-
+  
     Category.delete_all
 
     Category.create(:name => 'Homes',
@@ -89,31 +35,6 @@ class AddTestData < ActiveRecord::Migration
       :iso2 => 'cr'
       #:position =>
     )
-
-
-#    Agency.delete_all
-#
-#    Agency.create(:name => 'BarrioEarth Real Estate',
-#      :short_name => 'BarrioEarth',
-#      :country_id => 2,
-#      :domain => 'barrioearth.com',
-#      :subdomain => nil,
-#      :master_agency => true
-#    )
-#
-#    Agency.create(:name => 'BarrioEarth Heredia',
-#      :short_name => 'Heredia',
-#      :country_id => 2,
-#      :domain => 'barrioearth.com',
-#      :subdomain => 'heredia'
-#    )
-#
-#    Agency.create(:name => 'BarrioEarth Jacó',
-#      :short_name => 'Jacó Beach',
-#      :country_id => 2,
-#      :domain => 'barrioearth.com',
-#      :subdomain => 'jaco'
-#    )
 
 
     Currency.delete_all
@@ -158,19 +79,6 @@ class AddTestData < ActiveRecord::Migration
     Feature.create(:name => 'Rancho',
       :user_defined => true
     )
-
-
-    # REMOVED: better to test these manually
-    #InformationRequest.delete_all
-    #
-    #InformationRequest.create(:listing_id => 1,
-    #  :recipient_email => 'phemion@hotmail.com',
-    #  #:user_id => ,
-    #  :name => 'Visitor',
-    #  :email => 'visitor@xyz.com',
-    #  :phone => '2819703700',
-    #  :message => 'test message'
-    #)
 
 
     Property.delete_all
@@ -795,80 +703,12 @@ class AddTestData < ActiveRecord::Migration
       :style_id => 3,
       :primary_style => false
     )
-
-
-# Users need to be added by registering so that encrypted password is
-# saved correctly
-#    User.delete_all
-
-#    User.create(:login => 'brian',
-#      :crypted_password => 'x',
-#      :password_salt => 'x',
-#      :persistence_token => 'x',
-#      :single_access_token => 'x',
-#      :perishable_token => 'x',
-#      :login_count => 0,
-#      :failed_login_count => 0,
-#      :last_request_at => '2009-01-01 00:00:00',
-#      :current_login_at => '2009-01-01 00:00:00',
-#      :last_login_at => '2009-01-01 00:00:00',
-
-#      :first_name => 'Brian',
-#      :last_name => 'Warren',
-#      :sex => 'm',
-#      :nationality_id => 1,
-#      :email => 'brian.scott.warren@gmail.com',
-#      :email_public => 'brian@barrioearth.com',
-#      :phone_home => '2817518838',
-#      :phone_work => '2819703700',
-#      :phone_mobile => '8327238129',
-#      :phone_fax => '2819703702',
-#      :address1 => '10960 Millridge N. Dr.',
-#      :address2 => 'Suite 113',
-#      :postal_code => '77070',
-#      :original_referer_url => 'http://www.meeps.com?who=barrioearth.com',
-#      :date_verified => '2009-03-10 12:33:22'
-#    )
-
-#    User.create(:login => 'phil',
-#      :crypted_password => 'x',
-#      :password_salt => 'x',
-#      :persistence_token => 'x',
-#      :single_access_token => 'x',
-#      :perishable_token => 'x',
-#      :login_count => 0,
-#      :failed_login_count => 0,
-#      :last_request_at => '2009-01-01 00:00:00',
-#      :current_login_at => '2009-01-01 00:00:00',
-#      :last_login_at => '2009-01-01 00:00:00',
-
-#      :first_name => 'Phil',
-#      :last_name => 'Hemion',
-#      :sex => 'm',
-#      :nationality_id => 1,
-#      :email => 'phemion@hotmail.com',
-#      :email_public => '',
-#      :phone_home => '50622657777',
-#      :phone_work => '50622656666',
-#      :phone_mobile => '50683856952',
-#      :phone_fax => '',
-#      :address1 => 'Somewhere.',
-#      :address2 => '',
-#      :postal_code => '',
-#      :original_referer_url => 'http://www.boops.com?who=barrioearth.com',
-#      :date_verified => '2009-03-12 14:23:51'
-#    )
-
   end
 
   def self.down
-#    Administrator.delete_all
-#    AdministratorJurisdiction.delete_all
     Agency.delete_all
     AgencyJurisdiction.delete_all
     AgencyRelationship.delete_all
-#    Agent.delete_all
-#    AgentAffiliation.delete_all
     Barrio.delete_all
     Category.delete_all
     CategoryAssignment.delete_all
@@ -881,7 +721,6 @@ class AddTestData < ActiveRecord::Migration
     Listing.delete_all
     ListingType.delete_all
     Market.delete_all
-#    User.delete_all
     Property.delete_all
     Province.delete_all
     Style.delete_all

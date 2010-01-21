@@ -77,11 +77,14 @@ class ApplicationController < ActionController::Base
   def active_agency
     order_parts = []
     if current_domain
-      order_parts << "agencies.domain = '" + current_domain + "' DESC"
+      order_parts << "agencies.domain = '" + intended_domain(current_domain) +
+        "' DESC"
     end
-    order_parts << "agencies.subdomain = '" + current_subdomain + "' DESC"
+    if current_subdomain
+      order_parts << "agencies.subdomain = '" + current_subdomain + "' DESC" 
     end
-    order_parts << "agencies.master_agency = 1 DESC, agencies.id ASC"
+    order_parts << "agencies.master_agency = 1 DESC"
+    order_parts << "agencies.id ASC"
     order = order_parts.join(', ')
     Agency.find(:first,
       :include => {
@@ -105,10 +108,14 @@ class ApplicationController < ActionController::Base
   def redirect_if_current_agency_not_found
     return unless active_agency
     # Redirect if current domain and subdomain don't match record
-    suffixed_domain = domain_with_environment(active_agency.domain)
-    if current_domain == suffixed_domain
+    if intended_domain(current_domain) == active_agency.domain
       if current_subdomain != active_agency.subdomain
-        redirect_to root_url(:subdomain => active_agency.subdomain)
+        unless active_agency.subdomain.blank?
+          redirect_subdomain = active_agency.subdomain
+        else
+          redirect_subdomain = nil
+        end
+        redirect_to root_url(:subdomain => redirect_subdomain)
       end
       # NOTE: if domain doesn't match, then continue with current value for
       # active agency, which will be the master agency with the smallest id
