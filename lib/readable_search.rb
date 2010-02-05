@@ -27,6 +27,10 @@ module ReadableSearch
   # search[styles_name_equals]=A-Frame
   #
   def readable_string_to_searchlogic_params(readable_string)
+    
+    # scrub "+" from incoming
+    readable_string.gsub!(/\+/, ' ')
+    
     return {} unless readable_string
     values = readable_string.split('--')
     search_params = {}

@@ -45,31 +45,32 @@ class ApplicationController < ActionController::Base
     parsed_locale = request.host.split('.').last
     (I18n.available_locales.include? parsed_locale) ? parsed_locale : nil
   end
+  
+  ##
+  # "cache_page" alias method which effectivly forces the domain name to be
+  # pre-pended to the page cache path. Note that the "caches_page" method
+  # called on actions within a controller is affected by this as well
+  def cache_page_with_domain(content = nil, options = nil)
+    return unless perform_caching && caching_allowed
+    
+    path = "/#{request.host}"
+    path << case options
+      when Hash
+        url_for(options.merge(:only_path => true,
+          :skip_relative_url_root => true, :format => params[:format]))
+      when String
+        options
+      else
+        if request.path.empty? || request.path == '/'
+          '/index'
+        else
+          request.path
+        end
+    end
 
-  # Get locale from subdomain (first part of domain name) - easy to implement,
-  # maybe not as ideal as getting from TLD. Downside is you have to set up
-  # subdomains
-  # Get locale code from request subdomain (like http://it.application.local:3000)
-  # You have to put something like:
-  #   127.0.0.1 gr.application.local
-  # in your /etc/hosts file to try this out locally
-  #def extract_locale_from_subdomain
-  #  parsed_locale = request.subdomains.first
-  #  (available_locales.include? parsed_locale) ? parsed_locale  : nil
-  #end
-
-  # Tack locale onto the end of every URL's parameters - not the best way since
-  # it doesn't respect conventional hierarchy (locale should be first),
-  # is less readable, and isn't as good for search engines. It also breaks
-  # Rails' auto-magic URL and resource ID has to be passed explicitly
-  #def set_locale
-  #  # if params[:locale] is nil then I18n.default_locale will be used
-  #  I18n.locale = params[:locale]
-  #end
-  #def default_url_options(options={})
-  #  logger.debug "default_url_options is passed options: #{options.inspect}\n"
-  #  { :locale => I18n.locale }
-  #end
+    cache_page_without_domain(content, path)
+  end
+  alias_method_chain :cache_page, :domain
   
   #
   # Active agency
@@ -237,10 +238,6 @@ class ApplicationController < ActionController::Base
       end
     end
     friendly_id
-  end
-  
-  def current_domain
-    request.domain
   end
   
   # Combine readable constraints and searchlogic constraints

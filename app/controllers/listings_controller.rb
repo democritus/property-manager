@@ -15,7 +15,9 @@ class ListingsController < ApplicationController
     else
       @search = Listing.search(combined_search_params)
     end
+    
     @listings = @search.paginate :page => params[:page], :order => infer_order
+    #@listings = @search
     
     respond_to do |format|
       format.html # index.html.erb
@@ -63,7 +65,11 @@ class ListingsController < ApplicationController
   private
   
   def infer_order
-    return params[:order] unless params[:order].blank?
+    direction = ''
+    unless params[:order_dir].blank?
+      direction = ' ' + params[:order_dir]
+    end
+    return params[:order] + direction unless params[:order].blank?
     # TODO: create scheme to change order of listings so that the same listings
     # don't always show up at the top of the list
     if combined_search_params.has_key?('property_barrio_country_name_equals')

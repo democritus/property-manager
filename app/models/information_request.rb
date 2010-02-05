@@ -28,7 +28,7 @@ class InformationRequest < ActiveRecord::Base
   
   private
   
-  # Don't save email recipient since email hasn't been sent yet, but record
+  # Don't save email recipient since email hasn't been sent yet, but remember
   # the intended recipient so that it can be saved later upon succesful
   # delivery  
   def set_intended_recipient

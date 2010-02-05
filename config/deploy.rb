@@ -13,9 +13,9 @@ server "luna.qlogicinc.com", :app, :web, :db, :primary => true # alternative syn
 #role :db,  "your primary db-server here", :primary => true # This is where Rails migrations will run
 #role :db,  "your slave db-server here"
 
-# What does this do? Creates config file /config/mongrel_cluster.yml??
+# What does this do? Need to figure out how to auto-create config/mongrel.yml from these parameters
 set :mongrel_port, "8000"
-set :mongrel_nodes, "5"
+set :mongrel_nodes, "2"
 
 # Deploying with git seems to require: default_run_options[:pty] = true
 # http://groups.google.com/group/capistrano/browse_thread/thread/13b029f75b61c09d

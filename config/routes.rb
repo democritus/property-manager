@@ -18,6 +18,36 @@ ActionController::Routing::Routes.draw do |map|
     :controller => :property_images, :action => :mini_glider_similar
   map.connect 'agency_images/large_glider_placeholder',
     :controller => :agency_images, :action => :large_glider_placeholder
+    
+  # Intercept cachable search urls
+  map.connect('real_estate/search/:search',
+    :controller => :listings, :action => :index,
+    :requirements => { :search => %r([^/;,?]+) },
+    :search => nil
+  )
+  map.connect('real_estate/search/:search/:page',
+    :controller => :listings, :action => :index,
+    :requirements => { :search => %r([^/;,?]+), :page => %r([^/;,?]+) },
+    :search => nil,
+    :page => nil
+  )
+  map.connect('real_estate/search/:search/:page/:order',
+    :controller => :listings, :action => :index,
+    :requirements => { :search => %r([^/;,?]+), :page => %r([^/;,?]+), :order => %r([^/;,?]+) },
+    :search => nil,
+    :page => nil,
+    :order => nil
+  )
+  map.connect('real_estate/search/:search/:page/:order/:order_dir',
+    :controller => :listings, :action => :index,
+    :requirements => { :search => %r([^/;,?]+), :page => %r([^/;,?]+),
+       :order => %r([^/;,?]+), :order_dir => %r([^/;,?]+) },
+    :search => nil,
+    :page => nil,
+    :order => nil,
+    :order_dir => nil
+  )
+  #http://heredia.barrioearth.com.dev/real_estate/search/Costa+Rica--property--for+sale/1/id/desc
   
   #
   # Standard routes

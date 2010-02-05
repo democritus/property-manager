@@ -96,7 +96,7 @@ Rails::Initializer.run do |config|
 end
   
 # SubdomainFu plugin configuration
-SubdomainFu.tld_sizes = { :development => 1, :test => 1, :production => 1 }
+SubdomainFu.tld_sizes = { :development => 2, :test => 1, :production => 1 }
 SubdomainFu.mirrors = []
 SubdomainFu.preferred_mirror = nil # Must be nil if NO subdomain is desired
 
