@@ -19,7 +19,24 @@ ActionController::Routing::Routes.draw do |map|
   map.connect 'agency_images/large_glider_placeholder',
     :controller => :agency_images, :action => :large_glider_placeholder
     
-  # Intercept cachable search urls
+  # Intercept cachable search urls (including pagination)
+  bound_params_string = 'real_estate/search'
+  bound_params_requirements = {}
+  bound_params_defaults = {}
+  LISTING_PARAMS_MAP.each do |param|
+    bound_params_string += '/:' + param[:key].to_s
+    bound_params_requirements.merge!(param[:key] => %r([^/;,?]+))
+    #bound_params_defaults.merge!(param[:key] => nil)
+  end
+  map.connect(
+    bound_params_string,
+    bound_params_defaults.merge(
+      :controller => :listings,
+      :action => :index,
+      :requirements => bound_params_requirements
+    )
+  )
+  
   map.connect('real_estate/search/:search',
     :controller => :listings, :action => :index,
     :requirements => { :search => %r([^/;,?]+) },

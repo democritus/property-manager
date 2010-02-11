@@ -26,9 +26,10 @@ module ReadableSearch
   # search[ask_amount_less_than_or_equal_to]=500000
   # search[styles_name_equals]=A-Frame
   #
-  def readable_string_to_searchlogic_params(readable_string)
+  def readable_string_to_searchlogic_params(readable_string)    
     
-    # scrub "+" from incoming
+    # "+" char is not replaced with space if string comes from request uri
+    # instead of querystring
     readable_string.gsub!(/\+/, ' ')
     
     return {} unless readable_string
@@ -57,9 +58,11 @@ module ReadableSearch
               # barrio shouldn't be specified unless market is
               # specified as well
           elsif value.slice(0..5) == 'under-'              
-            search_params.merge!(:ask_amount_less_than_or_equal_to => value.slice(6..-1).slice(0..-9).to_i)
+            search_params.merge!(:ask_amount_less_than_or_equal_to =>
+              value.slice(6..-1).slice(0..-9).to_i)
           elsif value.slice(0..4) == 'over-'
-            search_params.merge!(:ask_amount_greater_than_or_equal_to => value.slice(5..-1).slice(0..-9).to_i)
+            search_params.merge!(:ask_amount_greater_than_or_equal_to =>
+              value.slice(5..-1).slice(0..-9).to_i)
           elsif value.slice(-6..-1) == '-style'
             search_params.merge!(:styles_name_equals => value.slice(0..-7))
           elsif value.slice(0..8) == 'features-'
@@ -103,20 +106,55 @@ module ReadableSearch
   # under-500000-dollars--over-200000-dollars--A-frame-style
   #
    
-  def readable_listings_path(search_params, params_to_persist = {}, exclude_keys = [], readable_key = 'search', searchlogic_key = 'q')
+  def readable_listings_path(search_params, params_to_persist = {},
+        exclude_keys = [], readable_key = :search, searchlogic_key = :q)
     new_search_params = search_params.dup
     unless exclude_keys.empty?
       new_search_params.delete_if { |key, value| exclude_keys.include?(key) }
     end
-    readable_string, non_readable_params = searchlogic_params_to_readable_params(new_search_params)
+    readable_string, non_readable_params = searchlogic_params_to_readable_params(
+      new_search_params)
     new_params = {}
-    new_params.merge!(readable_key => readable_string) unless readable_string.empty?
+    unless readable_string.empty?
+      new_params.merge!(readable_key => readable_string)
+    end
     new_params.merge!(searchlogic_key => non_readable_params)
     unless params_to_persist.empty?
       new_params = params_to_persist.merge(new_params)
     end
     new_params.delete(searchlogic_key) if new_params[searchlogic_key].empty?
-    return listings_path(new_params)
+    
+    # If caching is turned on, use caching-friendly URLs.
+    # Example:
+    # /real_estate?search=Costa+Rica--property--for+sale&page=1&order=publish_date&order_dir=desc
+    # ...becomes...
+    # /real_estate/search/Costa+Rica--property--for+sale/1/publish_date/desc
+    
+    # TODO: more granulated caching will allow for more efficiency since cached
+    # subsets can be cleared instead of all listings for a given agency
+    if @page_caching_active
+      options = { :controller => :listings, :action => :index }
+      [
+        :property_barrio_country_name_equals,
+        :categories_name_equals,
+        :listing_type_name_equals,
+        :property_barrio_market_name_equals,
+        :property_barrio_name_equals,
+        :ask_amount_less_than_or_equal_to,
+        :ask_amount_greater_than_or_equal_to,
+        :styles_name_equals,
+        :features_name_equals_any,
+        :page,
+        :order,
+        :order_dir,
+        :q
+      ].each do |key|      
+        options.merge!(key => new_params[key]) if new_params[key]
+      end
+      return url_for(options)
+    else
+      return listings_path(new_params)
+    end
   end
   
   def searchlogic_params_to_readable_params(searchlogic_params, type = 'url',
@@ -135,24 +173,24 @@ module ReadableSearch
     style = nil
     features = nil
     searchlogic_params.each_pair do |key, value|
-      case key.to_s
-        when 'property_barrio_country_name_equals'
+      case key.to_sym
+        when :property_barrio_country_name_equals
           country = value
-        when 'categories_name_equals'
+        when :categories_name_equals
           category = value
-        when 'listing_type_name_equals'
+        when :listing_type_name_equals
           listing_type = value
-        when 'property_barrio_name_equals'
+        when :property_barrio_name_equals
           barrio = value
-        when 'property_barrio_market_name_equals'
+        when :property_barrio_market_name_equals
           market = value
-        when 'ask_amount_less_than_or_equal_to'
+        when :ask_amount_less_than_or_equal_to
           ask_amount_maximum = value.to_s
-        when 'ask_amount_greater_than_or_equal_to'
+        when :ask_amount_greater_than_or_equal_to
           ask_amount_minimum = value.to_s
-        when 'styles_name_equals'
+        when :styles_name_equals
           style = value
-        when 'features_name_equals_any'
+        when :features_name_equals_any
           features = value
         else
           non_readable_params.merge!(key => value.to_s)

@@ -220,6 +220,8 @@ module ListingsHelper
     end
   end
   
+  # Methods that make use of Searchlogic plugin
+  # # # 
   def listing_type_filter
     if @combined_search_params[:listing_type_name_equals]
       has_filter = true

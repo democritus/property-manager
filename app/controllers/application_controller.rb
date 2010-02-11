@@ -20,12 +20,25 @@ class ApplicationController < ActionController::Base
   # Scrub sensitive parameters from your log
   # filter_parameter_logging :password
 
-  before_filter :set_active_agency, :set_agency_content,
-    :redirect_if_current_agency_not_found, :set_locale, :glide_image_pairs,
-    :set_combined_search_params
+  before_filter :set_page_caching_status, :set_active_agency,
+    :set_agency_content, :redirect_if_current_agency_not_found, :set_locale,
+    :glide_image_pairs, :set_combined_search_params,
+    :clean_params_for_searchlogic
   
 
   private
+  
+  # Need variable in view to know if caching is enabled. Used to save
+  # javascript into cached page so that certain dynamic things are handled by
+  # client-side javascript since Rails is skipped when page caching is on
+  # TODO: better way?
+  def set_page_caching_status
+    if perform_caching && caching_allowed
+      @page_caching_active = true
+    else
+      @page_caching_active = false
+    end
+  end
   
   #
   # Locale-related methods
@@ -248,5 +261,42 @@ class ApplicationController < ActionController::Base
   def combined_search_params
     readable_string_to_searchlogic_params( params[:search] || '' ).merge!(
       params[:q] || {} )
+  end
+  
+  # http://rails.barrioearth.com/real_estate/search/all/property/for+sale+or+rent/any+market/any+barrio/under+any+amount/over+any+amount/any+style/any+feature
+  # http://rails.barrioearth.com/real_estate/search/Costa+Rica/Homes/for+sale/Heredia/Santo+Domingo/under+500000+dollars/over+250000+dollars/modern/beach+home,pool
+  
+  # Remove extraneous words from global params so that it reflects the intended
+  # values of a verbose URL
+  def clean_params_for_searchlogic
+    params = @sparse_params
+  end
+  
+  # Sanitize searchlogic params by removing strings indicating default_value and
+  # removing extraneous words that are not actually part of the lookup value
+  # (reverse of "ApplicationHelpter::verbose_params")
+  def sparse_params(parameters = nil)
+    if parameters.nil?
+      parameters = params.dup
+    end
+    LISTING_PARAMS_MAP.each do |param|
+      if parameters[param[:key]]
+        if parameters[param[:key]] == default_value
+          parameters[param[:key]] = nil
+        else
+          case key
+            # Slice off "under " and " dollars"
+            when :ask_amount_less_than_or_equal_to
+              parameters[param[:key]] = parameters[
+                param[:key]].slice(6..-1).slice(0..-9)
+            # Slice off "over " and " dollars"
+            when :ask_amount_greater_than_or_equal_to
+              parameters[param[:key]] = parameters[
+                param[:key]].slice(5..-1).slice(0..-9)
+          end
+        end
+      end
+    end
+    return parameters
   end
 end

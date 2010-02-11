@@ -17,6 +17,13 @@ module ApplicationHelper
     Agency.find(:all)
   end
   
+  # Make listings URL that is keyword rich and compatible with advanced caching
+  def cacheable_listings_path( parameters = {} )
+    parameters.merge!(verbose_params(parameters)) unless parameters.empty?
+    parameters.merge!(:controller => :listings, :action => :index)
+    url_for(parameters)
+  end      
+     
   # Searchlogic conditions with active agency's country
   def agency_country_searchlogic_params
     # Constrain "all listings" by agency's primary country by default
@@ -29,6 +36,33 @@ module ApplicationHelper
     else
       {}
     end
+  end
+  
+  # Make params more human readable and keyword-rich so that URLs are better
+  # for search engines
+  # (reverse of this is "ApplicationController::sparse_params")
+  def verbose_params(parameters = nil)
+    if parameters.nil?
+      parameters = params.dup
+    end
+    LISTING_PARAMS_MAP.each do |param|
+      if parameters[param[:key]]
+        unless parameters[param[:key]] == default_value
+          case key
+            # Slice off "under " and " dollars"
+            when :ask_amount_less_than_or_equal_to
+              parameters[param[:key]] = 'under ' + params[key] + ' dollars'
+            # Slice off "over " and " dollars"
+            when :ask_amount_greater_than_or_equal_to
+              parameters[param[:key]] = 'over ' + params[key] + ' dollars'
+          end
+        end
+      else
+        # All possible listings
+        parameters.merge!(param[:key] => param[:default_value])
+      end
+    end
+    return parameters
   end
   
   # Root path with default search conditions

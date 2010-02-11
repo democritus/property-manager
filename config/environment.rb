@@ -1,11 +1,29 @@
 # Be sure to restart your server when you modify this file
 
-# TODO: Figure out why version 2.3.3 doesn't work
 # Specifies gem version of Rails to use when vendor/rails is not present
 RAILS_GEM_VERSION = '2.3.5' unless defined? RAILS_GEM_VERSION
 
 # Bootstrap the Rails environment, frameworks, and default configuration
 require File.join(File.dirname(__FILE__), 'boot')
+
+# Constants needed for routing
+LISTING_PARAMS_MAP = [
+  { :key => :property_barrio_country_name_equals, :default_value => 'all' },
+  { :key => :categories_name_equals, :default_value => 'property' },
+  { :key => :listing_type_name_equals, :default_value => 'for sale or rent' },
+  { :key => :property_barrio_market_name_equals,
+    :default_value => 'any market' },
+  { :key => :property_barrio_name_equals, :default_value => 'any barrio' },
+  { :key => :ask_amount_less_than_or_equal_to,
+    :default_value => 'under any amount' },
+  { :key => :ask_amount_greater_than_or_equal_to,
+    :default_value => 'over any amount' },
+  { :key => :styles_name_equals, :default_value => 'any style' },
+  { :key => :features_name_equals_any, :default_value => 'any feature' },
+  { :key => :page, :default_value => '1' },
+  { :key => :order, :default_value => 'publish_date' },
+  { :key => :order_dir, :default_value => 'desc' }
+]
 
 Rails::Initializer.run do |config|
   # Settings in config/environments/* take precedence over those specified here.

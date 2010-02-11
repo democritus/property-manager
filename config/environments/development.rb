@@ -11,6 +11,7 @@ config.whiny_nils = true
 # Show full error reports
 config.action_controller.consider_all_requests_local = true
 config.action_view.debug_rjs                         = true
+#config.action_controller.perform_caching             = false
 
 # Enable caching (otherwise Fleximage renders will be super slow)
 config.action_controller.perform_caching             = true
@@ -22,22 +23,12 @@ config.action_mailer.delivery_method = :smtp
 config.action_mailer.default_charset = "utf-8"
 
 # SMTP settings
+# NOTE: Postfix is configured to relay mail that originates from networks
+# determined by the "mynetworks" parameter in postfix's config file
+# /etc/postfix/main.cf
 config.action_mailer.smtp_settings = {
-  :address        => 'mail.barrioearth.com',
-  :port           => 2525,
-  :domain         => 'barrioearth.com',
-  :authentication => :login,
-  :user_name      => 'user_services+barrioearth.com',
-  :password       => 'abr67b89'
+  :address          => 'luna.qlogicinc.com',
+  :port             => 25,
+  :domain           => 'qlogicinc.com'
 }
-
-# GMail settings
-#config.action_mailer.smtp_settings = {
-#  :address        => "smtp.gmail.com",
-#  :port           => 587,
-#  :domain         => "gmail.com",
-#  :user_name      => "brian.scott.warren@gmail.com",
-#  :password       => "abr67b89",
-#  :authentication => :plain
-#}
 

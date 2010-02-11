@@ -1,6 +1,6 @@
 class AgenciesController < ApplicationController
 
-  caches_page :default_logo
+  caches_page :show, :contact, :links, :default_logo
   
   # GET /agencies/1
   # GET /agencies/1.xml

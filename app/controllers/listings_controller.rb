@@ -1,6 +1,6 @@
 class ListingsController < ApplicationController
   
-  #caches_page :large_glider
+  caches_page :index
   
   # GET /listings
   # GET /listings.xml
