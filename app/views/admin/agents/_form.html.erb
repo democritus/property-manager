@@ -1,0 +1,44 @@
+<% labelled_form_for( [ :admin, @agency, @agent ] ) do |f| %>
+  <%= f.error_messages %>
+  <% if f.object.new_record? %>
+    <div class="row">
+      <%= label :agent, :user_id, 'User ID (lookup by typing Name, Email,' +
+        ' Login or User id)' %>
+      <%= text_field :agent, :user_id, :auto_complete => :off %>
+      <div class="auto_complete" id="agent_user_id_auto_complete"></div>
+      <%= auto_complete_field :agent_user_id,
+        :url => { :action => 'auto_complete_for_agent_user_id' }
+        %>
+    </div>
+    
+    <% if @agency %>
+      <% # Set up blank fields for nested record %>
+      <% new_agent_setup(@agent) %>
+        
+      <% f.fields_for :agent_affiliations do |agent_affiliation_form| %>
+        <div class="row">
+          <%= agent_affiliation_form.label 'Primary agency' %>
+          <%= agent_affiliation_form.radio_button :primary_agency,
+            true,
+            :label => 'Yes' %>
+          <%= agent_affiliation_form.radio_button :primary_agency,
+            false,
+            :label => 'No' %>
+        </div>
+        <!-- TODO: Figure out why checkbox isn't working (works with radio button)
+        <div class="row">
+          <%= agent_affiliation_form.check_box :primary_agency %>
+        </div>
+        -->
+      <% end %>  
+    <% end %>
+  <% end %>
+
+  <div class="row">
+    <%= f.text_field :mini_biography %>
+  </div>
+  
+  <div class="row">
+    <%= f.submit 'Submit' %>
+  </div>
+<% end %>

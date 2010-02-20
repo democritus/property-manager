@@ -1,0 +1,148 @@
+/* powered by http://mierendo.com/software/rounded_css_boxes/ */
+.rounded_box_tl, .rounded_box_t, .rounded_box_tr, .rounded_box_l,
+.rounded_box_r, .rounded_box_bl, .rounded_box_b, .rounded_box_br,
+.rounded_box {
+    width: auto;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    position: relative;
+}
+.rounded_box_t {
+    /*
+    change this div to layout the whole box (width, height, float, margin, ...)
+    example lines:
+    width: 60%;
+    margin: 7px 35px 0px 1px
+    to change distance to content/text scroll to class ".rounded_box" and
+    change the padding
+    */
+    background-color: #e0e0e0;
+    background-image: url("../images/rounded_box_border.png");
+    background-repeat: repeat-x;
+    background-position: top;
+}
+.rounded_box_tl {
+    height: 100%;
+    background-image: url("../images/rounded_box_topleft.png");
+    background-repeat: no-repeat;
+    background-position: left top;
+}
+.rounded_box_tr {
+    height: 100%;
+    background-image: url("../images/rounded_box_topright.png");
+    background-repeat: no-repeat;
+    background-position: right top;
+}
+.rounded_box_bl {
+    height: 100%;
+    background-image: url("../images/rounded_box_bottomleft.png");
+    background-repeat: no-repeat;
+    background-position: left bottom;
+}
+.rounded_box_br {
+    height: 100%;
+    background-image: url("../images/rounded_box_bottomright.png");
+    background-repeat: no-repeat;
+    background-position: right bottom;
+}
+.rounded_box {
+    height: 100%;
+    /* change this if you want to change the distance distance to
+    text/content */
+    padding: 4px 5px 4px 5px;
+}
+
+.rounded_box_l {
+    height: 100%;
+    background-image: url("../images/rounded_box_border.png");
+    background-repeat: repeat-y;
+    background-position: left;
+}
+.rounded_box_r {
+    height: 100%;
+    background-image: url("../images/rounded_box_border.png");
+    background-repeat: repeat-y;
+    background-position: right;
+}
+.rounded_box_b {
+    height: 100%;
+    background-image: url("../images/rounded_box_border.png");
+    background-repeat: repeat-x;
+    background-position: bottom;
+}
+
+
+
+
+/* powered by http://mierendo.com/software/rounded_css_boxes/ */
+.rounded_corners_gray_tl, .rounded_corners_gray_t, .rounded_corners_gray_tr,
+.rounded_corners_gray_l, .rounded_corners_gray_r, .rounded_corners_gray_bl,
+.rounded_corners_gray_b, .rounded_corners_gray_br, .rounded_corners_gray {
+    width: auto;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    position: relative;
+}
+.rounded_corners_gray_t {
+    /*
+        change this div to layout the whole box (width, height, float, margin, ...)
+        example lines:
+        width: 60%;
+        margin: 7px 35px 0px 1px
+        to change distance to content/text scroll to class ".rounded_corners_gray" and change the padding
+    */
+    background-color: #dddddd;
+    background-image: url("../images/rounded_corners_gray_border.png");
+    background-repeat: repeat-x;
+    background-position: top;
+}
+.rounded_corners_gray_tl {
+    height: 100%;
+    background-image: url("../images/rounded_corners_gray_topleft.png");
+    background-repeat: no-repeat;
+    background-position: left top;
+}
+.rounded_corners_gray_tr {
+    height: 100%;
+    background-image: url("../images/rounded_corners_gray_topright.png");
+    background-repeat: no-repeat;
+    background-position: right top;
+}
+.rounded_corners_gray_bl {
+    height: 100%;
+    background-image: url("../images/rounded_corners_gray_bottomleft.png");
+    background-repeat: no-repeat;
+    background-position: left bottom;
+}
+.rounded_corners_gray_br {
+    height: 100%;
+    background-image: url("../images/rounded_corners_gray_bottomright.png");
+    background-repeat: no-repeat;
+    background-position: right bottom;
+}
+.rounded_corners_gray {
+    height: 100%;
+    /* change this if you want to change the distance distance to text/content */
+    padding: 6px 7px 6px 7px;
+}
+
+.rounded_corners_gray_l {
+    height: 100%;
+    background-image: url("../images/rounded_corners_gray_border.png");
+    background-repeat: repeat-y;
+    background-position: left;
+}
+.rounded_corners_gray_r {
+    height: 100%;
+    background-image: url("../images/rounded_corners_gray_border.png");
+    background-repeat: repeat-y;
+    background-position: right;
+}
+.rounded_corners_gray_b {
+    height: 100%;
+    background-image: url("../images/rounded_corners_gray_border.png");
+    background-repeat: repeat-x;
+    background-position: bottom;
+}

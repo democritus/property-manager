@@ -1,0 +1,19 @@
+<% form_for( [ :admin, @agent_affiliation ] ) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :agent_id %><br />
+    <%= f.text_field :agent_id %>
+  </p>
+  <p>
+    <%= f.label :agency_id %><br />
+    <%= f.text_field :agency_id %>
+  </p>
+  <p>
+    <%= f.label :primary_agency %><br />
+    <%= f.text_field :primary_agency %>
+  </p>
+  <p>
+    <%= f.submit 'Submit' %>
+  </p>
+<% end %>
