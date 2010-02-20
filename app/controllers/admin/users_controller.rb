@@ -1,7 +1,5 @@
 class Admin::UsersController < Admin::AdminController
 
-  before_filter :require_user
-
   # GET /users
   # GET /users.xml
   def index

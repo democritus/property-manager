@@ -1,7 +1,5 @@
 class Admin::MarketImagesController < Admin::AdminController
   
-  before_filter :require_user, :only => [:new, :create, :edit, :update,
-    :destroy]
   before_filter :set_market_imageable
   
   caches_page :show

@@ -19,8 +19,9 @@ ActionController::Routing::Routes.draw do |map|
   map.connect 'agency_images/large_glider_placeholder',
     :controller => :agency_images, :action => :large_glider_placeholder
     
-  # Intercept cachable search urls (including pagination)
-  bound_params_string = 'real_estate/search'
+  # Listings search
+  # Cachable search urls compatible with Searchlogic (including pagination)
+  bound_params_string = 'real_estate'
   bound_params_requirements = {}
   bound_params_defaults = {}
   LISTING_PARAMS_MAP.each do |param|
@@ -37,41 +38,10 @@ ActionController::Routing::Routes.draw do |map|
     )
   )
   
-  map.connect('real_estate/search/:search',
-    :controller => :listings, :action => :index,
-    :requirements => { :search => %r([^/;,?]+) },
-    :search => nil
-  )
-  map.connect('real_estate/search/:search/:page',
-    :controller => :listings, :action => :index,
-    :requirements => { :search => %r([^/;,?]+), :page => %r([^/;,?]+) },
-    :search => nil,
-    :page => nil
-  )
-  map.connect('real_estate/search/:search/:page/:order',
-    :controller => :listings, :action => :index,
-    :requirements => { :search => %r([^/;,?]+), :page => %r([^/;,?]+), :order => %r([^/;,?]+) },
-    :search => nil,
-    :page => nil,
-    :order => nil
-  )
-  map.connect('real_estate/search/:search/:page/:order/:order_dir',
-    :controller => :listings, :action => :index,
-    :requirements => { :search => %r([^/;,?]+), :page => %r([^/;,?]+),
-       :order => %r([^/;,?]+), :order_dir => %r([^/;,?]+) },
-    :search => nil,
-    :page => nil,
-    :order => nil,
-    :order_dir => nil
-  )
-  #http://heredia.barrioearth.com.dev/real_estate/search/Costa+Rica--property--for+sale/1/id/desc
-  
   #
   # Standard routes
   #
-  map.resources :countries,
-    :member => [ :contact, :links ],
-    :only => [ :show, :contact, :links ]
+  map.resources :countries, :only => :show
   
   # User / User authentication routes
   map.resource :account,
@@ -123,7 +93,7 @@ ActionController::Routing::Routes.draw do |map|
     :default_logo => :get
   } do |agencies|
     agencies.resources :information_requests,
-      :only => [ :new, :create ],
+      :only => :create,
       :requirements => { :context_type => 'agencies' }
   end
   
@@ -133,53 +103,12 @@ ActionController::Routing::Routes.draw do |map|
   :member => { :glider_image_swap => :get },
   :collection => { :featured_glider => :get } do |listings|
     listings.resources :information_requests,
-      :only => [ :new, :create ],
+      :only => :create,
       :requirements => { :context_type => 'listings' }
   end
     
   # Admin routes
   map.namespace(:admin) do |admin|
-  
-    admin.resources :categories,
-      :currencies,
-      :features,
-      :information_requests,
-        { :only => [ :index, :show, :edit, :update, :destroy ] },
-      :styles
-    
-    admin.resources :countries do |countries|
-      countries.resources :markets,
-        :requirements => { :context_type => 'countries' }
-      countries.resources :provinces,
-        :except => [:update, :destroy],
-        :requirements => { :context_type => 'countries' }
-      countries.resources :zones,
-        :except => [:update, :destroy],
-        :requirements => { :context_type => 'countries' }
-    end
-    
-    admin.resources :listing_types do |listing_types|
-      listing_types.resources :category_assignments,
-        :only => [ :index, :edit, :update ],
-        :requirements => { :context_type => 'listing_types' }
-      listing_types.resources :feature_assignments,
-        :only => [ :index, :edit, :update ],
-        :requirements => { :context_type => 'listing_types' }
-      listing_types.resources :style_assignments,
-        :only => [ :index, :edit, :update ],
-        :requirements => { :context_type => 'listing_types' }
-    end
-    
-    admin.resources :markets, :only => :show do |markets|
-      markets.resources :barrios,
-        :member => { :update_places => :get },
-        :new => { :update_places => :get },
-        :requirements => { :context_type => 'markets' }
-      markets.resources :market_images,
-        :except => :show,
-        :requirements => { :context_type => 'markets' },
-        :member => { :thumb => :get }
-    end
     
     admin.resources :agencies,
     :new => {
@@ -213,6 +142,36 @@ ActionController::Routing::Routes.draw do |map|
       agencies.resources :site_texts,
         :requirements => { :context_type => 'agencies' }
     end
+  
+    admin.resources :categories,
+      :currencies,
+      :features,
+      :information_requests,
+        { :only => [ :index, :show, :edit, :update, :destroy ] },
+      :styles
+    
+    admin.resources :countries do |countries|
+      countries.resources :markets,
+        :requirements => { :context_type => 'countries' }
+      countries.resources :provinces,
+        :except => [:update, :destroy],
+        :requirements => { :context_type => 'countries' }
+      countries.resources :zones,
+        :except => [:update, :destroy],
+        :requirements => { :context_type => 'countries' }
+    end
+    
+    admin.resources :listing_types do |listing_types|
+      listing_types.resources :category_assignments,
+        :only => [ :index, :edit, :update ],
+        :requirements => { :context_type => 'listing_types' }
+      listing_types.resources :feature_assignments,
+        :only => [ :index, :edit, :update ],
+        :requirements => { :context_type => 'listing_types' }
+      listing_types.resources :style_assignments,
+        :only => [ :index, :edit, :update ],
+        :requirements => { :context_type => 'listing_types' }
+    end
     
     admin.resources :listings, :only => :show do |listings|
       listings.resources :property_images,
@@ -233,6 +192,17 @@ ActionController::Routing::Routes.draw do |map|
       listings.resources :style_assignments,
         :only => [ :index, :edit, :update ],
         :requirements => { :context_type => 'listings' }
+    end
+    
+    admin.resources :markets, :only => :show do |markets|
+      markets.resources :barrios,
+        :member => { :update_places => :get },
+        :new => { :update_places => :get },
+        :requirements => { :context_type => 'markets' }
+      markets.resources :market_images,
+        :except => :show,
+        :requirements => { :context_type => 'markets' },
+        :member => { :thumb => :get }
     end
     
     admin.resources :properties,
@@ -260,30 +230,34 @@ ActionController::Routing::Routes.draw do |map|
       
     admin.resources :users do |users|
       users.resources :user_icons,
-        :except => :show,
+        :except => [ :show, :new, :create ],
         :member => { :small => :get },
         :requirements => { :context_type => 'users' }
     end
   end
   
-  # The priority is based upon order of creation: first created -> highest priority.
+  # The priority is based upon order of creation:
+  # first created -> highest priority.
 
   # Sample of regular route:
   #   map.connect 'products/:id', :controller => 'catalog', :action => 'view'
   # Keep in mind you can assign values other than :controller and :action
 
   # Sample of named route:
-  #   map.purchase 'products/:id/purchase', :controller => 'catalog', :action => 'purchase'
+  #   map.purchase 'products/:id/purchase', :controller => 'catalog',
+  # :action => 'purchase'
   # This route can be invoked with purchase_url(:id => product.id)
 
   # Sample resource route (maps HTTP verbs to controller actions automatically):
   #   map.resources :products
 
   # Sample resource route with options:
-  #   map.resources :products, :user => { :short => :get, :toggle => :post }, :collection => { :sold => :get }
+  #   map.resources :products, :user => { :short => :get,
+  # :toggle => :post }, :collection => { :sold => :get }
 
   # Sample resource route with sub-resources:
-  #   map.resources :products, :has_many => [ :comments, :sales ], :has_one => :seller
+  #   map.resources :products, :has_many => [ :comments, :sales ],
+  # :has_one => :seller
 
   # Sample resource route with more complex sub-resources
   #   map.resources :products do |products|
@@ -293,7 +267,8 @@ ActionController::Routing::Routes.draw do |map|
 
   # Sample resource route within a namespace:
   #   map.namespace :admin do |admin|
-  #     # Directs /admin/products/* to Admin::ProductsController (app/controllers/admin/products_controller.rb)
+  #     # Directs /admin/products/* to Admin::ProductsController
+  # (app/controllers/admin/products_controller.rb)
   #     admin.resources :products
   #   end
 
@@ -306,16 +281,20 @@ ActionController::Routing::Routes.draw do |map|
   # Also need this for the website root page (should go right before map.root)
   # map.dashboard '/:locale', :controller => "dashboard"
 
-  # You can have the root of your site routed with map.root -- just remember to delete public/index.html.
+  # You can have the root of your site routed with map.root -- just remember
+  # to delete public/index.html.
   # map.root :controller => "welcome"
   map.root :controller => :agencies, :action => :show
-  #map.root :controller => "user_sessions", :action => "new" # optional, this just sets the root route
+  #map.root :controller => "user_sessions", :action => "new" # optional, this
+  # just sets the root route
 
   # See how all your routes lay out with "rake routes"
 
   # Install the default routes as the lowest priority.
-  # Note: These default routes make all actions in every controller accessible via GET requests. You should
-  # consider removing the them or commenting them out if you're using named routes and resources.
+  # Note: These default routes make all actions in every controller accessible
+  # via GET requests. You should
+  # consider removing the them or commenting them out if you're using named
+  # routes and resources.
   #map.connect ':controller/:action/:id'
   #map.connect ':controller/:action/:id.:format'
     

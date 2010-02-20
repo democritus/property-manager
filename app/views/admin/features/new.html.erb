@@ -1,27 +1,5 @@
 <h1>New feature</h1>
 
-<% form_for(:admin, @feature) do |f| %>
-  <%= f.error_messages %>
-
-  <p>
-    <%= f.label :type %><br />
-    <%= f.text_field :type %>
-  </p>
-  <p>
-    <%= f.label :name %><br />
-    <%= f.text_field :name %>
-  </p>
-  <p>
-    <%= f.label :user_defined %><br />
-    <%= f.check_box :user_defined %>
-  </p>
-  <p>
-    <%= f.label :position %><br />
-    <%= f.text_field :position %>
-  </p>
-  <p>
-    <%= f.submit 'Create' %>
-  </p>
-<% end %>
+<%= render :partial => 'form' %>
 
 <%= link_to 'Back', admin_features_path %>

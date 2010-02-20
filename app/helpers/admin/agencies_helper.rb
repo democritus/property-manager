@@ -2,10 +2,6 @@ module Admin::AgenciesHelper
   
   include ::AgenciesHelper
   
-  def setup_agency_select_fields
-    set_agency_form_list_data
-  end
-  
   def set_agency_form_list_data
     @lists = {}
     @lists[:countries] = Country.find(:all,

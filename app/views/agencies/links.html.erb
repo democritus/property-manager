@@ -2,3 +2,12 @@
   Useful links
 </div>
 
+<% content_for :extra_stylesheet_includes do %>
+  <%= stylesheet_link_tag 'faux_column_right' %>
+<% end %>
+
+<% content_for :right_margin do %>
+  <div id="right_margin">
+    &nbsp;
+  </div>
+<% end %>

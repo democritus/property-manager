@@ -1,19 +1,22 @@
 class ListingsController < ApplicationController
   
-  caches_page :index
+  # TODO: re-enable this to test caching
+  #caches_page :index
+  
+  before_filter :set_search_params
   
   # GET /listings
   # GET /listings.xml
   def index
-    # Record querystring in session so we can return to these results
-    session[:last_seen_params] = params_with_maximum_readability
-    
+    # Record user's search results for the most recent listings index they
+    # have viewed
+    session[:last_seen_params] = search_params
+
     # Searchlogic filtering
     unless active_agency.master_agency
-      @search = Listing.by_agency(active_agency.id).search(
-        combined_search_params)
+      @search = Listing.by_agency(active_agency.id).search(search_params)
     else
-      @search = Listing.search(combined_search_params)
+      @search = Listing.search(search_params)
     end
     
     @listings = @search.paginate :page => params[:page], :order => infer_order
@@ -43,7 +46,12 @@ class ListingsController < ApplicationController
     @listing = Listing.find(params[:id])
 
     # User might send information request
-    @information_request = InformationRequest.new
+    if session[:information_request] # Load data from session after redirect
+      @information_request = session[:information_request]
+      session.delete(:information_request)
+    else
+      @information_request = InformationRequest.new
+    end
 
     respond_to do |format|
       format.html { add_recent_listing(@listing) } # remember listings seen
@@ -72,10 +80,10 @@ class ListingsController < ApplicationController
     return params[:order] + direction unless params[:order].blank?
     # TODO: create scheme to change order of listings so that the same listings
     # don't always show up at the top of the list
-    if combined_search_params.has_key?('property_barrio_country_name_equals')
-      if combined_search_params.has_key?('categories_name_equals')
-        if combined_search_params.has_key?('property_barrio_market_name_equals')
-          if combined_search_params.has_key?('property_barrio_name_equals')
+    if search_params.has_key?('property_barrio_country_name_equals')
+      if search_params.has_key?('categories_name_equals')
+        if search_params.has_key?('property_barrio_market_name_equals')
+          if search_params.has_key?('property_barrio_name_equals')
             order = 'listings.ask_amount'
           else
             order = 'barrios.name, listings.ask_amount'
@@ -84,8 +92,8 @@ class ListingsController < ApplicationController
           order = 'markets.name, barrios.name'
         end
       else
-        if combined_search_params.has_key?('property_barrio_market_name_equals')
-          if combined_search_params.has_key?('property_barrio_name_equals')
+        if search_params.has_key?('property_barrio_market_name_equals')
+          if search_params.has_key?('property_barrio_name_equals')
             order = 'categories.name'
           else
             order = 'categories.name, barrios.name'
@@ -95,7 +103,7 @@ class ListingsController < ApplicationController
         end
       end
     else
-      if combined_search_params.has_key?('categories_name_equals')
+      if search_params.has_key?('categories_name_equals')
         order = 'countries.name, markets.name, barrios.name'
       else
         order = 'listings.ask_amount'
@@ -133,35 +141,8 @@ class ListingsController < ApplicationController
     recent_listings.insert(0, listing.id)
   end
   
-  # Integrate explicit searchlogic params into readable string and append
-  # non-readable searchlogic params. This is useful when performing advanced
-  # searches where the user introduces seach parameters that can be rewritten
-  # so as to avoid pagination and navigation links with unwieldy urls.
-  # Example:
-  #   http://barrioearth-dev.com:3000/real_estate?search=all--property--for+sale
-  #     &q[property_barrio_country_name_equals]=Costa+Rica
-  #     &q[categories_name_equals]=Hotels
-  # would be rewritten:
-  #   http://barrioearth-dev.com:3000/real_estate?search=Costa-Rica--Hotels--
-  #     for+sale
-  def params_with_maximum_readability
-    new_params = params.dup
-    return new_params unless combined_search_params # No searchlogic params
-    # Extract readable and non-readable params from combined search params
-    # so that any searchlogic params that *can* be integrated into readable
-    # string are thusly converted
-    readable_string, non_readable_params =
-      searchlogic_params_to_readable_params(combined_search_params)
-    # Get rid of un-normalized readable string + searchlogic params... 
-    new_params.delete(:q)
-    new_params.delete(:search)
-    # ...and replace with more readable version
-    unless readable_string.blank?
-      new_params.merge!(:search => readable_string)
-    end
-    unless non_readable_params.empty?
-      new_params.merge!(:q => non_readable_params)
-    end
-    return new_params
+  # Combine readable constraints and searchlogic constraints
+  def set_search_params
+    @search_params = search_params
   end
 end

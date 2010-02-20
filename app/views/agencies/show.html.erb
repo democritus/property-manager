@@ -11,11 +11,9 @@
   <h3>We specialize in the following markets:</h3>
   <% @agency.markets.each do |market| %>
     <%
-    path = readable_listings_path(
-      'listing_type_name_equals' => 'for sale',
+    options = listings_options(
       'property_barrio_country_name_equals' => market.country.name,
-      'property_barrio_market_name_equals' => market.name
-    )
+      'property_barrio_market_name_equals' => market.name )
     %>
     <div class="market_snapshot" class="clearfix">
       <% if market.market_images %>
@@ -26,12 +24,12 @@
               :class => 'market_thumb',
               :border => 0
             ),
-            path
+            options
           ) %>
         <% end %>
       <% end %>
       <div class="snapshot_content clearfix">
-        <h2><%= link_to(market.name, path) %></h2>
+        <h2><%= link_to(market.name, options) %></h2>
         <p><% unless market.description.blank? %>
           <%= market.description %></p>
         <% end %>
@@ -40,7 +38,7 @@
             <% barrio_list = [] %>
             <% market.barrios.each do |barrio| %>
               <%
-              barrio_list << link_to (barrio.name, readable_listings_path(
+              barrio_list << link_to (barrio.name, listings_options(
                 'property_barrio_country_name_equals' => market.country.name,
                 'property_barrio_market_name_equals' => market.name,
                 'property_barrio_name_equals' => barrio.name
@@ -57,16 +55,15 @@
         <div class="snapshot_footer">
           <div><%= link_to(
             'Properties for rent in ' + market.name,
-            readable_listings_path(
-                'listing_type_name_equals' => 'for rent',
+            listings_options(
+              'listing_type_name_equals' => 'for rent',
               'property_barrio_country_name_equals' => market.country.name,
               'property_barrio_market_name_equals' => market.name
             )
           ) %></div>
           <div><%= link_to(
             'Properties for sale in ' + market.name,
-            readable_listings_path(
-                'listing_type_name_equals' => 'for sale',
+            listings_options(
               'property_barrio_country_name_equals' => market.country.name,
               'property_barrio_market_name_equals' => market.name
             )
@@ -77,3 +74,59 @@
   <% end %>
 <% end %>
 </div>
+
+<% content_for :extra_stylesheet_includes do %>
+  <%= stylesheet_link_tag 'agencies_show' %>
+  <%= stylesheet_link_tag 'faux_column_right' %>
+<% end %>
+
+<% content_for :right_margin do %>
+  <div id="right_margin">
+    <h2>Popular searches</h2>
+    <div class="menu_list">
+      <ul id="alternative_listing_filters">
+        <li><%= link_to 'Homes under $200,000', listings_options(
+          'categories_name_equals' => 'Homes',
+          'ask_amount_less_than_or_equal_to' => '200000'
+        ) %></li>
+        
+        <li><%= link_to 'Businesses for sale', listings_options(
+          'categories_name_equals' => 'Businesses'
+        ) %></li>
+      </ul>
+    </div>
+    <h2>Contact Us</h2>
+    <div class="menu_list">
+      <ul id="alternative_contact_links">
+        <li><%= link_to 'List your property', contact_agency_path(
+          @active_agency) %></li>
+        <li><%= link_to 'Become a partner agency', contact_agency_path(
+          @active_agency) %></li>
+        <li><%= link_to 'Other inquiries', contact_agency_path(
+          @active_agency) %></li>
+      </ul>
+    </div>
+    <h2>Suggested links</h2>
+    <div class="menu_list">
+      <ul id="partner_list">
+        <li>
+          <% link_to 'http://www.costaricatraveler.com/',
+            :target => '_blank' do %>
+            <%= image_tag 'cr_traveler_cover.jpg', :width => 126,
+              :height => 160, :alt => 'Costa Rica Traveler Magazine' %>
+          <% end %>
+          The best source of information for the traveler
+        </li>
+        <!--
+        <li><%= link_to 'Green Mango Real Estate',
+          'http://www.greenmangosa.com/',
+          :target => '_blank' %></li>
+        <li><%= image_tag '', :width => 100, :height => 75,
+          :alt => 'Green Mango Real Estate, Puriscal' %></li>
+        <li><%= image_tag '', :width => 100, :height => 75,
+          :alt => 'The Eco Embassy' %></li>
+        -->
+      </ul>
+    </div>
+  </div>
+<% end %>

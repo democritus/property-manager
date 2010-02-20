@@ -267,7 +267,7 @@ class CreateDatabaseFromSchema < ActiveRecord::Migration
       t.string   "name",              :limit => 64,                               :default => "", :null => false
       t.text     "description"
       t.integer  "agency_id"
-      t.integer  "barrio_id",                                                                     :null => false
+      t.integer  "barrio_id",
       t.integer  "bedroom_number",    :limit => 2
       t.decimal  "bathroom_number",                 :precision => 3, :scale => 1
       t.integer  "construction_size"

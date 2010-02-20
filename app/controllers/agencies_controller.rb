@@ -1,6 +1,7 @@
 class AgenciesController < ApplicationController
 
-  caches_page :show, :contact, :links, :default_logo
+  # TODO: re-enable this to test caching
+  #caches_page :show, :contact, :links, :default_logo
   
   # GET /agencies/1
   # GET /agencies/1.xml
@@ -19,7 +20,12 @@ class AgenciesController < ApplicationController
     infer_agency
     
     # User might send information request
-    @information_request = InformationRequest.new
+    if session[:information_request] # Load data from session after redirect
+      @information_request = session[:information_request]
+      session.delete(:information_request)
+    else
+      @information_request = InformationRequest.new
+    end
 
     respond_to do |format|
       format.html # contact.html.erb
@@ -53,6 +59,7 @@ class AgenciesController < ApplicationController
   # GET /agencies/1/default_logo
   def default_logo
     infer_agency
+    
     respond_to do |format|
       format.png  # default.png.flexi
     end

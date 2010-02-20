@@ -1,8 +1,7 @@
-<% title "Edit Site text" %>
+<h1>Edit site text </h1>
 
 <%= render :partial => 'form' %>
 
-<p>
-  <%= link_to "Show", admin_agency_site_text_path(@agency, @site_text) %> |
-  <%= link_to "View All", admin_agency_site_texts_path(@agency) %>
-</p>
+<%= link_to "Show", admin_agency_site_text_path(@agency, @site_text) %> |
+<%= link_to "View All", admin_agency_site_texts_path(@agency) %>
+

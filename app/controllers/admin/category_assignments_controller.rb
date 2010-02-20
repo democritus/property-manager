@@ -1,6 +1,5 @@
 class Admin::CategoryAssignmentsController < Admin::AdminController
 
-  before_filter :require_user
   before_filter :set_category_assignable
 
   # GET /category_assignments

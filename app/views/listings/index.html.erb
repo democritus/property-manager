@@ -1,18 +1,128 @@
 <div id="listings-index-content">
-
-<h3 style="margin: 0 0 1em; line-height: 1.2em"><%= page_header %></h3>
-
-<% unless @listings.empty? %>
-  <% paginated_section @listings do %>
-  <% #= will_paginate @posts %>
-  <% #= page_entries_info @listings %>
-
-  <%= render :partial => "listing", :collection => @listings %>   
-
-  <% #= will_paginate @posts %>
+  <h3 style="margin: 0 0 1em; line-height: 1.2em"><%= page_header %></h3>
+  <% unless @listings.empty? %>
+    <% paginated_section @listings do %>
+    <% #= will_paginate @posts %>
+    <% #= page_entries_info @listings %>
+    <%= render :partial => "listing", :collection => @listings %>   
+    <% #= will_paginate @posts %>
+    <% end %>
+  <% else %>
+    <p>No listings found</p>
   <% end %>
-<% else %>
-  <p>No listings found</p>
+</div>
+
+<% content_for :extra_stylesheet_includes do %>
+  <%= stylesheet_link_tag 'faux_column_right' %>
+  <%= stylesheet_link_tag 'pagination' %>
+  <%= stylesheet_link_tag 'listings' %>
+  <%= stylesheet_link_tag 'listings_index' %>
 <% end %>
 
-</div>
+<% content_for :extra_javascript_includes do %>
+  <%= javascript_include_tag 'nested_menu' %>
+<% end %>
+
+<% content_for :right_margin do %>
+  <div id="right_margin">
+    <% content_for :title, index_title %>
+    <div class="bold_link">
+      <%= listing_type_toggle %>
+    </div>
+    <div class="nested_menu" onclick="toggleAndUndisplayOthers('filter_menu')">
+      <h2><%= rounded_box('<- Filter Results', 'rounded_corners_gray') %></h2>
+      <div id="filter_menu" class="submenu" style="display: none">
+        <div class="close_element"
+        onclick="undisplayNestedMenu('filter_menu')">X</div>
+        <%= category_filter %>
+        <%= country_filter %>
+        <%= market_filter %>
+        <%= barrio_filter %>
+        <%= price_range_filter %>
+        <%= feature_filter %>
+        <%= style_filter %>
+        <%= listing_type_filter %>
+      </div>
+    </div>
+    <div class="nested_menu" onclick="toggleAndUndisplayOthers('order_menu')">
+      <h2><%= rounded_box '<- Order Results', 'rounded_corners_gray' %></h2>
+      <div id="order_menu" class="submenu" style="display: none">
+        <div class="close_element"
+        onclick="undisplayNestedMenu('order_menu')">X</div>
+        <div class="menu_list">
+          <h3>Order by</h3>
+          <ul>
+            <%
+            # TODO: fix ordering so sorts can be performed on fields from
+            # associated tables
+            order_by_items = [
+  #            {
+  #              'label' => 'Category',
+  #              'order' => 'primary_category.name'
+  #            },
+  #            {
+  #              'label' => 'Style',
+  #              'order' => 'primary_style.name'
+  #            },
+  #            {
+  #              'label' => 'Country',
+  #              'order' => 'property.barrio.country.name'
+  #            },
+  #            {
+  #              'label' => 'Zone',
+  #              'order' => 'property.barrio.zone.name'
+  #            },
+  #            {
+  #              'label' => 'Province',
+  #              'order' => 'property.barrio.province.name'
+  #            },
+  #            {
+  #              'label' => 'Market',
+  #              'order' => 'property.barrio.market.name'
+  #            },
+  #            {
+  #              'label' => 'Barrio',
+  #              'order' => 'property.barrio.name'
+  #            },
+              {
+                'label' => 'Price',
+                'order' => 'ask_amount'
+              },
+  #            {
+  #              'label' => 'Bedrooms',
+  #              'order' => 'property.bedroom_number'
+  #            },
+  #            {
+  #              'label' => 'Construction size',
+  #              'order' => 'property.construction_size'
+  #            },
+  #            {
+  #              'label' => 'Land size',
+  #              'order' => 'property.land_size'
+  #            },
+              {
+                'label' => 'Ref id',
+                'order' => 'id'
+              },
+              {
+                'label' => 'Sold',
+                'order' => 'sold'
+              },
+              {
+                'label' => 'Date posted',
+                'order' => 'publish_date'
+              }
+            ]
+            %>
+            <% order_by_items.each do |item| %>
+              <li><%= link_to item['label'],
+                listings_options(
+                  @search_params.merge(:order => item['order'])
+                ) %></li>
+            <% end %>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>

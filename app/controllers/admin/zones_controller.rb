@@ -1,6 +1,5 @@
 class Admin::ZonesController < Admin::AdminController
 
-  before_filter :require_user
   before_filter :set_contextual_country
   
   # GET /zones

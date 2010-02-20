@@ -1,6 +1,5 @@
 class Admin::AgentsController < Admin::AdminController
 
-  before_filter :require_user, :except => :show
   before_filter :set_contextual_agency
 
   caches_page :snapshot

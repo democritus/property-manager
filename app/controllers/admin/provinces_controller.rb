@@ -1,6 +1,5 @@
 class Admin::ProvincesController < Admin::AdminController
 
-  before_filter :require_user
   before_filter :set_contextual_country
   
   # GET /provinces

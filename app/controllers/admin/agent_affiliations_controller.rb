@@ -1,7 +1,5 @@
 class Admin::AgentAffiliationsController < Admin::AdminController
 
-  before_filter :require_user, :only => [:index, :new, :create, :edit, :update,
-    :destroy]
   before_filter :set_affiliable
 
   # GET /agent_affiliations

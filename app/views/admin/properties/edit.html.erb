@@ -1,17 +1,6 @@
 <h1>Editing property</h1>
 
-<% labelled_form_for(:admin, @property) do |f| %>
-  <%= f.error_messages %>
-  
-  <%= render :partial => 'property_fields', 
-    :locals => {
-      :f => f
-    } %>
-    
-  <div class="row">
-    <%= f.submit 'Update' %>
-  </div>
-<% end %>
+<%= render :partial => 'form' %>
 
 <% # MOVED to show.html.erb = render :partial => 'associated_listings' %>
 

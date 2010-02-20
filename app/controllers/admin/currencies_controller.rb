@@ -1,6 +1,4 @@
 class Admin::CurrenciesController < Admin::AdminController
-
-  before_filter :require_user
   
   def index
     @currencies = Currency.all
@@ -39,7 +37,7 @@ class Admin::CurrenciesController < Admin::AdminController
     respond_to do |format|
       if @currency.save
         flash[:notice] = 'Currency was successfully created.'
-        format.html { redirect_to(currency_url(@currency)) }
+        format.html { redirect_to(admin_currency_url(@currency)) }
       else
         format.html { render :action => "new" }
       end
@@ -54,7 +52,7 @@ class Admin::CurrenciesController < Admin::AdminController
     respond_to do |format|
       if @currency.update_attributes(params[:currency])
         flash[:notice] = 'Currency was successfully updated.'
-        format.html { redirect_to(currency_url(@currency)) }
+        format.html { redirect_to(admin_currency_url(@currency)) }
       else
         format.html { render :action => "edit" }
       end

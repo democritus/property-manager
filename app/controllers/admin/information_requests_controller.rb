@@ -1,6 +1,5 @@
 class Admin::InformationRequestsController < Admin::AdminController
-  
-  before_filter :require_user, :except => [:new, :create]
+
   before_filter :set_information_requestable
     
   # GET /information_requests

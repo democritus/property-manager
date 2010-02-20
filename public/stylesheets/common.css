@@ -54,7 +54,6 @@ form {
 	clear: both;
 	margin-right: 20px;
 	padding: 0;
-	width: 80%;
 }
 fieldset {
 	border: 1px solid #ccc;
@@ -215,16 +214,16 @@ div.auto_complete ul strong.highlight {
 /* Format anchor tag for special links */
 a.external_link {
     position: relative;
-    margin-right: 16px;
+    margin-right: 13px;
     white-space: nowrap;
 }
 a.external_link div.after_icon {
-    background: url("../images/external_icon.gif") no-repeat right top;
+    background: url("../images/external-link-gray.png") no-repeat right top;
     position: absolute;
-    top: -0.1em;
-    right: -16px;
-    width: 16px;
-    height: 16px;
+    top: 0px;
+    right: -13px;
+    width: 10px;
+    height: 10px;
 }
 
 a.contact_link {

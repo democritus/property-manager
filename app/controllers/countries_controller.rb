@@ -1,6 +1,7 @@
 class CountriesController < ApplicationController
 
-  caches_page :show
+  # TODO: re-enable this to test caching
+  #caches_page :show
   
   # GET /countries/1
   # GET /countries/1.xml

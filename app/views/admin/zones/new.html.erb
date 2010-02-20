@@ -1,17 +1,5 @@
 <h1>New zone</h1>
 
-<% labelled_form_for(:admin, @zone) do |f| %>
-  <%= f.error_messages %>
-
-  <%= render :partial => 'zone_fields', 
-    :locals => {
-      :f => f,
-      :lists => @lists
-    } %>
-    
-  <p>
-    <%= f.submit 'Create' %>
-  </p>
-<% end %>
+<%= render :partial => 'form' %>
 
 <%= link_to 'Back', contextual_collection_path %>

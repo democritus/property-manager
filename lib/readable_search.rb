@@ -6,158 +6,77 @@ module ReadableSearch
     end
   end
   
-  #
-  # Translate readable URL into parameters that Searchlogic understands
-  #
-  # EXAMPLE:
-  #
-  # URL
-  # http://heredia.barrioearth-dev.com:3000/real_estate/
-  # ?listing=Costa+Rica--Homes--for+sale--in--Santo+Domingo--de-Heredia--
-  # under-500000-dollars--over-200000-dollars--A-frame-style
-  #
-  # Searchlogic parameters
-  # search[property_barrio_country_name_equals]=Costa+Rica
-  # search[categories_name_equals]=Homes
-  # search[listing_type_name_is]=for+sale
-  # search[property_barrio_name_equals]=Santo+Domingo
-  # search[property_barrio_market_name_equals]=Heredia
-  # search[ask_amount_greater_than_or_equal_to]=200000
-  # search[ask_amount_less_than_or_equal_to]=500000
-  # search[styles_name_equals]=A-Frame
-  #
-  def readable_string_to_searchlogic_params(readable_string)    
+  # Remove extraneous words that are not actually part of the lookup value
+  def listings_params(parameters = nil)
+    if parameters.nil?
+      parameters = params.dup
+    end
     
-    # "+" char is not replaced with space if string comes from request uri
-    # instead of querystring
-    readable_string.gsub!(/\+/, ' ')
-    
-    return {} unless readable_string
-    values = readable_string.split('--')
-    search_params = {}
-    location = []
-    features = nil
-    values.each_with_index do |value, i|
-      case i
-        when 0 # Country
-          unless value == 'all'
-            search_params = {:property_barrio_country_name_equals => value}
+    SEARCHLOGIC_PARAMS_MAP.each do |param|
+      if parameters[param[:key]]
+        # Remove elements set to their defaults
+        if parameters[param[:key]] == param[:default_value]
+          parameters.delete(param[:key])
+        else
+          case param[:key]
+            # Slice off "under " and " dollars"
+            when :ask_amount_less_than_or_equal_to
+              parameters[param[:key]] = parameters[
+                param[:key]].slice(6..-1).slice(0..-9)
+            # Slice off "over " and " dollars"
+            when :ask_amount_greater_than_or_equal_to
+              parameters[param[:key]] = parameters[
+                param[:key]].slice(5..-1).slice(0..-9)
           end
-        when 1 # Category
-          unless value == 'property'
-            search_params.merge!(:categories_name_equals => value)
-          end
-        when 2 # Listing type (for sale or for rent)
-          if value == 'for sale' || value == 'for rent'
-            search_params.merge!(:listing_type_name_equals => value)
-          end
-        else # Location, Price Range, Style or Features
-          prefix = value.slice(0..2)
-          if prefix == 'in-' || prefix == 'de-'
-            location << value.slice(3..-1)
-              # barrio shouldn't be specified unless market is
-              # specified as well
-          elsif value.slice(0..5) == 'under-'              
-            search_params.merge!(:ask_amount_less_than_or_equal_to =>
-              value.slice(6..-1).slice(0..-9).to_i)
-          elsif value.slice(0..4) == 'over-'
-            search_params.merge!(:ask_amount_greater_than_or_equal_to =>
-              value.slice(5..-1).slice(0..-9).to_i)
-          elsif value.slice(-6..-1) == '-style'
-            search_params.merge!(:styles_name_equals => value.slice(0..-7))
-          elsif value.slice(0..8) == 'features-'
-            features = [value.slice(9..-1)]
-          else
-            features << value if features
-          end
+        end
       end
     end
-    unless location.empty?
-      if location.length > 1
-        search_params.merge!(:property_barrio_name_equals => location[0])
-        search_params.merge!(:property_barrio_market_name_equals => location[1])
+    return parameters.merge( params[:q] || {} )
+  end
+  
+  # Prepare params for use with Searchlogic plugin by removing non-Searchlogic
+  # elements, i.e. :controller, :action, :page, :order, :order_dir, etc.
+  def search_params(parameters = nil)
+    if parameters.nil?
+      parameters = params.dup
+    end
+    # Remove non-Searchlogic elements
+    searchlogic_keys = SEARCHLOGIC_PARAMS_MAP.map { |param| param[:key] }
+    parameters.delete_if {
+      |key, value| ! searchlogic_keys.include?(key.to_sym) }
+      
+    return listings_params(parameters)
+  end
+  
+  # Make params more human readable and keyword-rich so that URLs are better
+  # for search engines
+  def verbose_params(parameters = nil)
+    if parameters.nil?
+      parameters = params.dup
+    end
+    LISTING_PARAMS_MAP.each do |param|
+      string_key = param[:key].to_s
+      value = parameters[string_key]
+      if value
+        unless value == param[:default_value]
+          case param[:key]
+            # Slice off "under " and " dollars"
+            when :ask_amount_less_than_or_equal_to
+              parameters[string_key] = 'under ' + value + ' dollars'
+            # Slice off "over " and " dollars"
+            when :ask_amount_greater_than_or_equal_to
+              parameters[string_key] = 'over ' + value + ' dollars'
+          end
+        end
       else
-        search_params.merge!(:property_barrio_market_name_equals => location[0])
+        # All possible listings
+        parameters.merge!(param[:key].to_s => param[:default_value])
       end
     end
-    search_params.merge!(:features_name_equals_any => features) if features
-    
-    return search_params || {}
+    return parameters
   end
   
-  #
-  # Translate Searchlogic parameters to readable URL
-  #
-  # EXAMPLE:
-  #
-  # Searchlogic parameters
-  # search[property_barrio_country_name_equals]=Costa+Rica
-  # search[categories_name_equals]=Homes
-  # search[listing_type_name_equals]=for+sale
-  # search[property_barrio_name_equals]=Santo+Domingo
-  # search[property_barrio_market_name_equals]=Heredia
-  # search[ask_amount_greater_than_or_equal_to]=200000
-  # search[ask_amount_less_than_or_equal_to]=500000
-  # search[styles_name_equals]=A-Frame
-  #
-  # URL
-  # http://heredia.barrioearth-dev.com:3000/real_estate/
-  # ?listing=Costa+Rica--Homes--for+sale--in--Santo+Domingo--de-Heredia--
-  # under-500000-dollars--over-200000-dollars--A-frame-style
-  #
-   
-  def readable_listings_path(search_params, params_to_persist = {},
-        exclude_keys = [], readable_key = :search, searchlogic_key = :q)
-    new_search_params = search_params.dup
-    unless exclude_keys.empty?
-      new_search_params.delete_if { |key, value| exclude_keys.include?(key) }
-    end
-    readable_string, non_readable_params = searchlogic_params_to_readable_params(
-      new_search_params)
-    new_params = {}
-    unless readable_string.empty?
-      new_params.merge!(readable_key => readable_string)
-    end
-    new_params.merge!(searchlogic_key => non_readable_params)
-    unless params_to_persist.empty?
-      new_params = params_to_persist.merge(new_params)
-    end
-    new_params.delete(searchlogic_key) if new_params[searchlogic_key].empty?
-    
-    # If caching is turned on, use caching-friendly URLs.
-    # Example:
-    # /real_estate?search=Costa+Rica--property--for+sale&page=1&order=publish_date&order_dir=desc
-    # ...becomes...
-    # /real_estate/search/Costa+Rica--property--for+sale/1/publish_date/desc
-    
-    # TODO: more granulated caching will allow for more efficiency since cached
-    # subsets can be cleared instead of all listings for a given agency
-    if @page_caching_active
-      options = { :controller => :listings, :action => :index }
-      [
-        :property_barrio_country_name_equals,
-        :categories_name_equals,
-        :listing_type_name_equals,
-        :property_barrio_market_name_equals,
-        :property_barrio_name_equals,
-        :ask_amount_less_than_or_equal_to,
-        :ask_amount_greater_than_or_equal_to,
-        :styles_name_equals,
-        :features_name_equals_any,
-        :page,
-        :order,
-        :order_dir,
-        :q
-      ].each do |key|      
-        options.merge!(key => new_params[key]) if new_params[key]
-      end
-      return url_for(options)
-    else
-      return listings_path(new_params)
-    end
-  end
-  
-  def searchlogic_params_to_readable_params(searchlogic_params, type = 'url',
+  def searchlogic_params_to_readable_params(parameters, type = 'url',
                                               insert_linebreaks = true)
     # Return values
     readable_string = ''
@@ -172,7 +91,7 @@ module ReadableSearch
     ask_amount_minimum = nil
     style = nil
     features = nil
-    searchlogic_params.each_pair do |key, value|
+    parameters.each_pair do |key, value|
       case key.to_sym
         when :property_barrio_country_name_equals
           country = value

@@ -1,20 +1,6 @@
 <h1>Editing agency_relationship</h1>
 
-<% form_for(:admin, @agency_relationship) do |f| %>
-  <%= f.error_messages %>
+<%= render :partial => 'form' %>
 
-  <p>
-    <%= f.label :agency_id %><br />
-    <%= f.text_field :agency_id %>
-  </p>
-  <p>
-    <%= f.label :partner_id %><br />
-    <%= f.text_field :partner_id %>
-  </p>
-  <p>
-    <%= f.submit 'Update' %>
-  </p>
-<% end %>
-
-<%= link_to 'Show', @agency_relationship %> |
-<%= link_to 'Back', agency_relationships_path %>
+<%= link_to 'Show', admin_agency_relationship_path(@agency_relationship) %> |
+<%= link_to 'Back', admin_agency_relationships_path %>

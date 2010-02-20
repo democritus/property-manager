@@ -1,29 +1,11 @@
-<% content_for :extra_stylesheet_includes do %>
-  <% if @controller.action_name == 'show' %>
-    <%= stylesheet_link_tag 'agencies_show' %>
-    <%= stylesheet_link_tag 'faux_column_right' %>
-  <% end %>
-<% end %>
-
-<% content_for :embedded_styles do %>
-  #faux_column_right {
-    background: url("../images/right_margin_bg.gif") repeat-y 100% 0;
-  }
-<% end %>
-
-<% content_for :extra_javascript_includes do %>
-<% end %>
-
-<% content_for :embedded_javascript do %>
-<% end %>
-
 <% content_for :header do %>  
   <%= render :partial => "layouts/header_small" %>
 <% end %>
 
 <% content_for :content do %>
-  <div id="right_margin">
-  </div>
+  
+  <%= yield :right_margin %>
+  
   <div id="main_window">
     <% unless flash[:notice].blank? %>
       <p style="color: green"><%= flash[:notice] %></p>
@@ -34,3 +16,4 @@
 <% end %>
 
 <%= render :file => 'layouts/application' %>
+

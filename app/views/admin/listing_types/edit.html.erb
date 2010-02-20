@@ -1,17 +1,6 @@
 <h1>Edit listing_type</h1>
 
-<% labelled_form_for(:admin, @listing_type) do |f| %>
-  <%= f.error_messages %>
-  
-  <%= render :partial => 'listing_type_fields', 
-    :locals => {
-      :f => f
-    } %>
-  
-  <div class="row">
-    <%= f.submit 'Update' %>
-  </div>
-<% end %>
+<%= render :partial => 'form' %>
 
 <%= link_to 'Show', admin_listing_type_path(@listing_type) %> |
 <%= link_to 'Back', admin_listing_types_path %>

@@ -1,6 +1,4 @@
 class Admin::FeatureAssignmentsController < Admin::AdminController
-
-  before_filter :require_user
   before_filter :set_feature_assignable
 
   # GET /feature_assignments

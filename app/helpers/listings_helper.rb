@@ -6,8 +6,8 @@ module ListingsHelper
   # Convert searchlogic search params to a formatted, readable title
   def params_to_title(add_linebreaks = true)
     text = ''
-    unless @combined_search_params.empty?
-      text = searchlogic_params_to_readable_params(@combined_search_params, 'text',
+    unless @search_params.empty?
+      text = searchlogic_params_to_readable_params(@search_params, 'text',
         add_linebreaks)[0]
       text = text[0..0].upcase + text[1..-1]
     else
@@ -222,25 +222,44 @@ module ListingsHelper
   
   # Methods that make use of Searchlogic plugin
   # # # 
+  def listing_type_toggle
+    if @search_params[:listing_type_name_equals]
+      current_type = @search_params[:listing_type_name_equals]
+    else
+      current_type = 'for sale'
+    end
+    if current_type == 'for sale'
+      current_type + ' <span>|</span> ' +
+      link_to('rentals', listings_options(
+        :listing_type_name_equals => 'for rent'))
+    else
+      link_to('for sale', listings_options(
+        :listing_type_name_equals => 'for sale')) + ' <span>|</span> ' +
+          current_type
+    end
+  end
+  
   def listing_type_filter
-    if @combined_search_params[:listing_type_name_equals]
+    if @search_params[:listing_type_name_equals]
       has_filter = true
     end
     if has_filter
-      html = '<li>' + link_to('All listing types', readable_listings_path(
-        @combined_search_params, params, [:listing_type_name_equals])) +
-        '</li>'
+      html = '<li>' +
+        link_to('All listing types', listings_options(
+          @search_params.merge(:listing_type_name_equals => nil)
+        )) + '</li>'
     else
       # TODO: select subset of records associated with current listings
       listing_types = ListingType.all
       if listing_types
         html = ''
         listing_types.each do |listing_type|
-          html += '<li>' + link_to(
-            listing_type.name.capitalize,
-            readable_listings_path((@combined_search_params || {}).merge(
-              :listing_type_name_equals => listing_type.name), params)
-          ) + '</li>'
+          html += '<li>' +
+            link_to(listing_type.name.capitalize, listings_options(
+              @search_params.merge(
+                :listing_type_name_equals => listing_type.name
+              )
+            )) + '</li>'
         end
       end
     end
@@ -253,22 +272,23 @@ module ListingsHelper
   end
   
   def category_filter
-    if @combined_search_params[:categories_name_equals]
+    if @search_params[:categories_name_equals]
       has_filter = true
     end
     if has_filter
-      html = '<li>' + link_to('All categories', readable_listings_path(
-        @combined_search_params, params, [:categories_name_equals])) + '</li>'
+      html = '<li>' +
+        link_to('All categories', listings_options(
+          @search_params.merge(:categories_name_equals => nil)
+        )) + '</li>'
     else
       # TODO: select subset of records associated with current listings
-      if params[:search]
-        if params[:search][:listing_type_name_equals]
-          categories = Category.find(:all,
-            :joins => :listing_types,
-            :conditions => ['listing_types.name = ?',
-              params[:search][:listing_type_name_equals]]
-          )
-        end
+      if @search_params[:listing_type_name_equals]
+        categories = Category.find(:all,
+          :joins => :listing_types,
+          :conditions => [
+            'listing_types.name = ?', @search_params[:listing_type_name_equals]
+          ]
+        )
       end
       unless categories
         categories = Category.all
@@ -276,11 +296,12 @@ module ListingsHelper
       if categories
         html = ''
         categories.each do |category|
-          html += '<li>' + link_to(
-            category.name.capitalize,
-            readable_listings_path((@combined_search_params || {}).merge(
-              :categories_name_equals => category.name), params)
-          ) + '</li>'
+          html += '<li>' +
+            link_to(category.name.capitalize, listings_options(
+              @search_params.merge(
+                :categories_name_equals => category.name
+              )
+            )) + '</li>'
         end
       end
     end
@@ -293,19 +314,22 @@ module ListingsHelper
   end
   
   def style_filter
-    if @combined_search_params[:styles_name_equals]
+    if @search_params[:styles_name_equals]
       has_filter = true
     end
     if has_filter
-      html = '<li>' + link_to('All styles', readable_listings_path(
-        @combined_search_params, params, [:styles_name_equals])) + '</li>'
+      html = '<li>' +
+        link_to('All styles', listings_options(
+          @search_params.merge(:styles_name_equals => nil)
+        )) + '</li>'
     else
       # TODO: select subset of records associated with current listings
-      if @combined_search_params[:listing_type_name_equals]
+      if @search_params[:listing_type_name_equals]
         styles = Style.find(:all,
           :joins => :listing_types,
-          :conditions => ['listing_types.name = ?',
-            @combined_search_params[:listing_type_name_equals]]
+          :conditions => [
+            'listing_types.name = ?', @search_params[:listing_type_name_equals]
+          ]
         )
       end
       unless styles
@@ -314,11 +338,10 @@ module ListingsHelper
       if styles
         html = ''
         styles.each do |style|
-          html += '<li>' + link_to(
-            style.name.capitalize,
-            readable_listings_path((@combined_search_params || {}).merge(
-              :styles_name_equals => style.name), params)
-          ) + '</li>'
+          html += '<li>' +
+            link_to(style.name.capitalize, listings_options(
+              @search_params.merge(:styles_name_equals => style.name)
+            )) + '</li>'
         end
       end
     end
@@ -331,38 +354,40 @@ module ListingsHelper
   end
   
   def feature_filter
-    if @combined_search_params[:features_name_equals_any]
+    if @search_params[:features_name_equals_any]
       has_filter = true
     end
     if has_filter
-      html = '<li>' + link_to('All features', readable_listings_path(
-        @combined_search_params, params, [:features_name_equals_any])) + '</li>'
+      html = '<li>' +
+        link_to('All features', listings_options(
+          @search_params.merge(:features_name_equals_any => nil)
+        )) + '</li>'
     else
       # TODO: select subset of records associated with current listings
-      if params[:search]
-        if params[:search][:listing_type_name_equals]
+      if @search_params
+        if @search_params[:listing_type_name_equals]
           features = Feature.find(:all,
             :joins => [:listing_types, :feature_assignments],
             :conditions => [
-              'listing_types.name = ? AND feature_assignments.highlighted_feature = 1',
-              params[:search][:listing_type_name_equals]
+              'listing_types.name = ?' +
+                ' AND feature_assignments.highlighted_feature = 1',
+              @search_params[:listing_type_name_equals]
             ]
           )
         end
       end
       unless features
         features = Feature.find(:all,
-          :include => {:listing_types => :feature_assignments},
+          :include => { :listing_types => :feature_assignments },
           :conditions => 'feature_assignments.highlighted_feature = 1')
       end
       if features
         html = ''
         features.each do |feature|
-          html += '<li>' + link_to(
-            feature.name.capitalize,
-            readable_listings_path((@combined_search_params || {}).merge(
-              :features_name_equals_any => feature.name), params)
-          ) + '</li>'
+          html += '<li>' +
+            link_to(feature.name.capitalize, listings_options(
+              @search_params.merge(:features_name_equals_any => feature.name)
+            )) + '</li>'
         end
       end
     end
@@ -375,31 +400,29 @@ module ListingsHelper
   end
   
   def country_filter
-    if @combined_search_params[:property_barrio_country_name_equals]
+    if @search_params[:property_barrio_country_name_equals]
       has_filter = true
     end
     if has_filter
-      html = '<li>' + link_to('All countries',
-        readable_listings_path(
-          @combined_search_params,
-          params,
-          [
-            :property_barrio_country_name_equals,
-            :property_barrio_market_name_equals,
-            :property_barrio_name_equals
-          ]
-        )
-      ) + '</li>'
+      html = '<li>' +
+        link_to('All countries', listings_options(
+          @search_params.merge(
+            :property_barrio_country_name_equals => nil,
+            :property_barrio_market_name_equals => nil,
+            :property_barrio_name_equals => nil
+          )
+        )) + '</li>'
     else
       countries = Country.all
       if countries
         html = ''
         countries.each do |country|
-          html += '<li>' + link_to(
-            country.name.capitalize,
-            readable_listings_path((@combined_search_params || {}).merge(
-              :property_barrio_country_name_equals => country.name), params)
-          ) + '</li>'
+          html += '<li>' +
+            link_to(country.name.capitalize, listings_options(
+              @search_params.merge(
+                :property_barrio_country_name_equals => country.name
+              )
+            )) + '</li>'
         end
       end
     end
@@ -412,25 +435,22 @@ module ListingsHelper
   end
   
   def market_filter
-    if @combined_search_params[:property_barrio_market_name_equals]
-      html = '<li>' + link_to(
-        'All markets',
-        readable_listings_path(
-          @combined_search_params,
-          params,
-          [
-            :property_barrio_market_name_equals,
-            :property_barrio_name_equals
-          ]
-        )
-      ) + '</li>'
-    elsif @combined_search_params[:property_barrio_country_name_equals]        
+    if @search_params[:property_barrio_market_name_equals]
+      html = '<li>' +
+        link_to('All markets', listings_options(
+          @search_params.merge(
+            :property_barrio_market_name_equals => nil,
+            :property_barrio_name_equals => nil
+          )
+        )) + '</li>'
+    elsif @search_params[:property_barrio_country_name_equals]        
       markets = []
       unless @active_agency.master_agency
         if @active_agency.markets
           @active_agency.markets.each do |market|
             # TODO: allow for non-standard characters
-            if market.country.name.downcase == @combined_search_params[:property_barrio_country_name_equals].downcase
+            if market.country.name.downcase == @search_params[
+            :property_barrio_country_name_equals].downcase
               markets << market
             end
           end
@@ -440,17 +460,19 @@ module ListingsHelper
           :joins => :country,
           :conditions => [
             'countries.name = ?',
-            params[:search][:property_barrio_country_name_equals]
+            params[:property_barrio_country_name_equals]
           ]
         )
       end
       unless markets.empty?
         html = ''
         markets.each do |market|
-          html += '<li>' + link_to(market.name.capitalize,
-            readable_listings_path((@combined_search_params || {}).merge(
-              :property_barrio_market_name_equals => market.name), params)
-          ) + '</li>'
+          html += '<li>' +
+            link_to(market.name.capitalize, listings_options(
+              @search_params.merge(
+                :property_barrio_market_name_equals => market.name
+              )
+            )) + '</li>'
         end
       end
     end
@@ -463,25 +485,29 @@ module ListingsHelper
   end
   
   def barrio_filter
-    if @combined_search_params[:property_barrio_name_equals]
-      html = '<li>' + link_to('All barrios', readable_listings_path(
-        @combined_search_params, params, [:property_barrio_name_equals])) + '</li>'
-    elsif @combined_search_params[:property_barrio_country_name_equals] && @combined_search_params[:property_barrio_market_name_equals]
-      country_name = @combined_search_params[:property_barrio_country_name_equals]
-      market_name = @combined_search_params[:property_barrio_market_name_equals]
+    if @search_params[:property_barrio_name_equals]
+      html = '<li>' +
+        link_to('All barrios', listings_options(
+          @search_params.merge(:property_barrio_name_equals => nil)
+        )) + '</li>'
+    elsif @search_params[:property_barrio_country_name_equals] &&
+    @search_params[:property_barrio_market_name_equals]
+      country_name = @search_params[:property_barrio_country_name_equals]
+      market_name = @search_params[:property_barrio_market_name_equals]
       barrios = Barrio.find(:all,
         :joins => [:market, :country],
-        :conditions => ['countries.name = :x AND markets.name = :y', 
-          {:x => country_name, :y => market_name}]
+        :conditions => [
+          'countries.name = :x AND markets.name = :y', 
+          {:x => country_name, :y => market_name}
+        ]
       )
       if barrios
         html = ''
         barrios.each do |barrio|
-          html += '<li>' + link_to(
-            barrio.name.capitalize,
-            readable_listings_path((@combined_search_params || {}).merge(
-              :property_barrio_name_equals => barrio.name), params)
-          ) + '</li>'
+          html += '<li>' +
+            link_to(barrio.name.capitalize, listings_options(
+              @search_params.merge(:property_barrio_name_equals => barrio.name)
+            )) + '</li>'
         end
       end
     end
@@ -494,22 +520,23 @@ module ListingsHelper
   end
   
   def price_range_filter
-    if @combined_search_params[:ask_amount_greater_than_or_equal_to] || @combined_search_params[:ask_amount_less_than_or_equal_to]
+    if @search_params[:ask_amount_greater_than_or_equal_to] ||
+    @search_params[:ask_amount_less_than_or_equal_to]
       has_filter = true
     end
     if has_filter
-      html = '<li>' + link_to('Any price', readable_listings_path(
-        @combined_search_params,
-        params,
-        [ :ask_amount_greater_than_or_equal_to,
-          :ask_amount_less_than_or_equal_to
-        ]
-      )) + '</li>'
+      html = '<li>' +
+        link_to('Any price', listings_options(
+          @search_params.merge(
+            :ask_amount_greater_than_or_equal_to => nil,
+            :ask_amount_less_than_or_equal_to => nil
+          )
+        )) + '</li>'
       html = '<div class="menu_list"><h3>Filter by price range' + '</h3><ul>' +
         html + '</ul></div>'
     else
-      if @combined_search_params[:listing_type_name_equals]
-        listing_type = @combined_search_params[:listing_type_name_equals]
+      if @search_params[:listing_type_name_equals]
+        listing_type = @search_params[:listing_type_name_equals]
         if listing_type == 'for sale' || listing_type == 'for rent'
           listing_types = [ listing_type ]
         end
@@ -524,19 +551,16 @@ module ListingsHelper
           boundaries = {}
           unless price_range[:lower].zero?
             boundaries.merge!(
-              :ask_amount_greater_than_or_equal_to => price_range[:lower])
+              :ask_amount_greater_than_or_equal_to => price_range[:lower].to_s)
           end
           if price_range[:upper]
             boundaries.merge!(
-              :ask_amount_less_than_or_equal_to => price_range[:upper])
+              :ask_amount_less_than_or_equal_to => price_range[:upper].to_s)
           end
-          list_items += '<li>' + link_to(
-            price_range[:label],
-            readable_listings_path(
-              (@combined_search_params || {}).merge(boundaries),
-              params
-            )
-          ) + '</li>'
+          list_items += '<li>' +
+            link_to(price_range[:label], listings_options(
+              @search_params.merge(boundaries)
+            )) + '</li>'
         end
         if listing_types.length > 1
           listing_type_label = ' (' + listing_type + ')'

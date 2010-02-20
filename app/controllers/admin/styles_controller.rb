@@ -1,6 +1,4 @@
 class Admin::StylesController < Admin::AdminController
-
-  before_filter :require_user
   
   # GET /styles
   # GET /styles.xml
@@ -74,7 +72,7 @@ class Admin::StylesController < Admin::AdminController
     @style.destroy
 
     respond_to do |format|
-      format.html { redirect_to(styles_url) }
+      format.html { redirect_to(admin_styles_url) }
       format.xml  { head :ok }
     end
   end

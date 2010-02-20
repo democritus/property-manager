@@ -7,7 +7,7 @@ RAILS_GEM_VERSION = '2.3.5' unless defined? RAILS_GEM_VERSION
 require File.join(File.dirname(__FILE__), 'boot')
 
 # Constants needed for routing
-LISTING_PARAMS_MAP = [
+SEARCHLOGIC_PARAMS_MAP = [
   { :key => :property_barrio_country_name_equals, :default_value => 'all' },
   { :key => :categories_name_equals, :default_value => 'property' },
   { :key => :listing_type_name_equals, :default_value => 'for sale or rent' },
@@ -19,11 +19,14 @@ LISTING_PARAMS_MAP = [
   { :key => :ask_amount_greater_than_or_equal_to,
     :default_value => 'over any amount' },
   { :key => :styles_name_equals, :default_value => 'any style' },
-  { :key => :features_name_equals_any, :default_value => 'any feature' },
+  { :key => :features_name_equals_any, :default_value => 'any feature' }
+]
+PAGINATE_PARAMS_MAP = [
   { :key => :page, :default_value => '1' },
   { :key => :order, :default_value => 'publish_date' },
   { :key => :order_dir, :default_value => 'desc' }
 ]
+LISTING_PARAMS_MAP = SEARCHLOGIC_PARAMS_MAP + PAGINATE_PARAMS_MAP
 
 Rails::Initializer.run do |config|
   # Settings in config/environments/* take precedence over those specified here.
@@ -33,7 +36,8 @@ Rails::Initializer.run do |config|
   # Add additional load paths for your own custom dirs
   # config.load_paths += %W( #{RAILS_ROOT}/extras )
 
-  # Specify gems that this application depends on and have them installed with rake gems:install
+  # Specify gems that this application depends on and have them installed with
+  # rake gems:install
   # config.gem "bj"
   # config.gem "hpricot", :version => '0.6', :source => "http://code.whytheluckystiff.net"
   # config.gem "sqlite3-ruby", :lib => "sqlite3"
@@ -65,7 +69,8 @@ Rails::Initializer.run do |config|
     :source  => 'http://gems.github.com',
     :version => '0.2.5'
 
-  # Only load the plugins named here, in the order given (default is alphabetical).
+  # Only load the plugins named here, in the order given (default is
+  # alphabetical).
   # :all can be used as a placeholder for all plugins not explicitly named
   # config.plugins = [ :exception_notification, :ssl_requirement, :all ]
 
@@ -74,16 +79,20 @@ Rails::Initializer.run do |config|
   # config.frameworks -= [ :active_record, :active_resource, :action_mailer ]
 
   # Activate observers that should always be running
-  # config.active_record.observers = :cacher, :garbage_collector, :forum_observer
+  # config.active_record.observers = :cacher, :garbage_collector,
+  # :forum_observer
   config.active_record.observers = :information_request_observer
 
-  # Set Time.zone default to the specified zone and make Active Record auto-convert to this zone.
+  # Set Time.zone default to the specified zone and make Active Record
+  # auto-convert to this zone.
   # Run "rake -D time" for a list of tasks for finding time zone names.
   config.time_zone = 'UTC'
 
-  # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
+  # The default locale is :en and all translations from
+  # config/locales/*.rb,yml are auto loaded.
   #config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}')]
-  # TODO: fix this! - Organize locale files according to Rails directory structure
+  # TODO: fix this! - Organize locale files according to Rails directory
+  # structure
   # |-defaults
   # |---es.rb
   # |---en.rb
@@ -98,7 +107,8 @@ Rails::Initializer.run do |config|
   # |---books
   # |-----es.rb
   # |-----en.rb
-  #config.i18n.load_path += Dir[File.join(RAILS_ROOT, 'config', 'locales', '**', '*.{rb,yml}')]
+  #config.i18n.load_path += Dir[File.join(RAILS_ROOT, 'config', 'locales',
+  #'**', '*.{rb,yml}')]
   config.i18n.default_locale = :en
   
   # 2009-06-01 Brian Warren

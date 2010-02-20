@@ -1,7 +1,5 @@
 class Admin::AgenciesController < Admin::AdminController
 
-  before_filter :require_user, :except => [:show, :contact, :links]
-
   protect_from_forgery :except => [
     :auto_complete_for_agency_broker_id
   ]
@@ -64,7 +62,7 @@ class Admin::AgenciesController < Admin::AdminController
   # PUT /agencies/1.xml
   def update
     @agency = Agency.find(params[:id])
-
+    
     respond_to do |format|
       if @agency.update_attributes(params[:agency])
         flash[:notice] = 'Agency was successfully updated.'

@@ -30,7 +30,8 @@
 
 <%
 # TODO - caching scheme for glider
-@featured_glider = @featured_listings = Listing.by_agency(@active_agency.id).featured
+@featured_glider = @featured_listings = Listing.by_agency(
+                                          @active_agency.id).featured
 sufficient_agency_images = false
 # Prepend agency to collection of listings so that the first group of
 # images to appear in the glider are agency images
@@ -49,7 +50,8 @@ end
 options = {
   'type' => 'large',
   'size' => 3,
-  'image_width' => 293,
+  #'image_width' => 293,
+  'image_width' => 244,
   'image_height' => 170,
   'images_per_object' => 3,
   'image_placeholders' => true

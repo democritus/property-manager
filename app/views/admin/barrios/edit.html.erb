@@ -1,18 +1,6 @@
 <h1>Editing barrio</h1>
 
-<% labelled_form_for(:admin, @barrio) do |f| %>
-  <%= f.error_messages %>
-
-  <%= render :partial => 'barrio_fields', 
-    :locals => {
-      :f => f,
-      :lists => @lists
-    } %>
-  
-  <div class="row">
-    <%= f.submit 'Update' %>
-  </div>
-<% end %>
+<%= render :partial => 'form' %>
 
 <%= link_to 'Show', admin_barrio_path(@barrio) %> |
 <%= link_to 'Back', admin_barrios_path %>

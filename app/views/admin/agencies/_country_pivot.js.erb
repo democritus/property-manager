@@ -14,8 +14,10 @@ end
     checkboxes_for_multiple_select_html('agency',
       'market',
       ajax[:markets],
-      ajax[:market_ids],
-      :empty => 'No markets found'
+      {
+        :selected_items => ajax[:market_ids],
+        :empty => 'No markets found'
+      }
     )
   ) %>'
 <% end %>
@@ -25,8 +27,10 @@ end
     checkboxes_for_multiple_select_html('agency',
       'partner_agency',
       ajax[:partner_agencies],
-      ajax[:partner_agency_ids],
-      :empty => 'No partner agencies found'
+      {
+        :selected_items => ajax[:partner_agency_ids],
+        :empty => 'No partner agencies found'
+      }
     )
   ) %>'
 <% end %>

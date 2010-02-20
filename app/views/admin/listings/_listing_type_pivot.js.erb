@@ -24,21 +24,27 @@ html[:primary_style] = options_for_select(
 html[:categories] = checkboxes_for_multiple_select_html('listing',
   'category',
   ajax[:categories],
-  ajax[:category_ids],
-  :empty => 'No categories found'
+  {
+    :selected_items => ajax[:category_ids],
+    :empty => 'No categories found'
+  }
 )
 
 html[:styles] = checkboxes_for_multiple_select_html('listing',
   'style',
   ajax[:styles],
-  ajax[:style_ids],
-  :empty => 'No styles found'
+  {
+    :selected_items => ajax[:style_ids],
+    :empty => 'No styles found'
+  }
 )
 html[:features] = checkboxes_for_multiple_select_html('listing',
   'feature',
   ajax[:features],
-  ajax[:feature_ids],
-  :empty => 'No features found'
+  {
+    :selected_items => ajax[:feature_ids],
+    :empty => 'No features found'
+  }
 )
 %>
 <% javascript_tag do %>

@@ -1,6 +1,4 @@
 class Admin::ListingTypesController < Admin::AdminController
-
-  before_filter :require_user
   
   # GET /listing_types
   # GET /listing_types.xml

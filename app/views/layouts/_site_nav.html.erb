@@ -1,121 +1,111 @@
-<div id="site_nav">
-  <% 
-  # TODO: create utility to manage links via database instead of having a
-  # separate include file for each agency
-  %>
+<% content_for :active_agency_for_sale_links do %>
   <%
-  unless @active_agency.subdomain.blank?
-    subdomain_filename_part = '.' + @active_agency.subdomain
-  else
-    subdomain_filename_part = ''
+  case @active_agency.short_name
+    when 'Heredia'
+      %>
+      <li><%= link_to 'Homes in Heredia', listings_options(
+        'categories_name_equals' => 'Homes',
+        'listing_type_name_equals' => 'for sale',
+        'property_barrio_market_name_equals' => 'Heredia') %></li>
+      <%
+    when 'Jacó Beach'
+      %>
+      <li><%= link_to 'Homes in Jacó Beach', listings_options(
+        'categories_name_equals' => 'Homes',
+        'listing_type_name_equals' => 'for sale',
+        'property_barrio_market_name_equals' => 'Heredia') %></li>
+      <%
+    when 'Dominical'
+      %>
+      <li><%= link_to 'Tin Shacks in Dominical', listings_options(
+        'categories_name_equals' => 'Tin Shacks',
+        'listing_type_name_equals' => 'for sale',
+        'property_barrio_market_name_equals' => 'Dominical') %></li>
+      <%
   end
-  partial_name = 'site_nav' + subdomain_filename_part + '.' +
-    @active_agency.domain
-  filename = RAILS_ROOT + '/app/views/layouts/' +
-    '_' + partial_name + '.html.erb'
   %>
-  <% file_missing = true %>
-  <% if File.exists?(filename) %>
-    <%= render :partial => 'layouts/' + partial_name %>
-  <% else %>
+<% end %>
+
+<div id="site_nav">
+  <!-- TODO: create utility to manage agency-specific links via database -->
+  <div class="menu_list">
+    <h3>For Sale</h3>
+    <ul>
+      <li><%= link_to 'All listings', listings_options %></li>
+      <%= yield :active_agency_for_sale_links %>
+      <li><%= link_to 'Beach Homes', listings_options(
+        'categories_name_equals' => 'Homes',
+        'features_name_equals_any' => 'Beach Home') %></li>
+      <li><%= link_to 'Mountain Homes', listings_options(
+        'categories_name_equals' => 'Homes',
+        'features_name_equals_any' => 'Mountain Home') %></li>
+      <li><%= link_to 'Condos', listings_options(
+        'categories_name_equals' => 'Condos') %></li>
+      <li><%= link_to 'Farms & Ranches', listings_options(
+        'categories_name_equals' => 'Farms') %></li>
+      <li><%= link_to 'Lots', listings_options(
+        'categories_name_equals' => 'Lots') %></li>
+    </ul>
+  </div>
+  <div class="menu_list">
+    <h3>For Rent</h3>
+    <ul>
+      <li><%= link_to 'All listings', listings_options(
+        'listing_type_name_equals' => 'for rent') %></li>
+      <li><%= link_to 'Houses', listings_options(
+        'categories_name_equals' => 'Homes',
+          'listing_type_name_equals' => 'for rent') %></li>
+      <li><%= link_to 'Apartments', listings_options(
+        'categories_name_equals' => 'Apartments',
+        'listing_type_name_equals' => 'for rent') %></li>
+    </ul>
+  </div>
+  <%
+  unless @active_agency.master_agency
+    partner_agencies_heading = 'Partner agencies'
+    partner_agencies = @active_agency.partner_agencies.reject {
+      |agency| agency.id == @active_agency.id }
+  else
+    partner_agencies_heading = 'Agencies'
+    partner_agencies = all_agencies.reject {
+      |agency| agency.id == @active_agency.id }
+  end
+  %>
+  <% unless partner_agencies.empty? %>
     <div class="menu_list">
-      <h3>For Sale</h3>
+      <h3><%= partner_agencies_heading %></h3>
       <ul>
-        <li><%= link_to 'All listings', cacheable_listings_path(
-          agency_country_searchlogic_params
-        ) %></li>
-        <li><%= link_to 'Beach Homes', cacheable_listings_path(
-          agency_country_searchlogic_params.merge(
-            'categories_name_equals' => 'Homes',
-            'listing_type_name_equals' => 'for sale',
-            'features_name_equals_any' => 'Beach Home'
-          )
-        ) %></li>
-        <li><%= link_to 'Mountain Homes', cacheable_listings_path(
-          agency_country_searchlogic_params.merge(
-            'categories_name_equals' => 'Homes',
-            'listing_type_name_equals' => 'for sale',
-            'features_name_equals_any' => 'Mountain Home'
-          )
-        ) %></li>
-        <li><%= link_to 'Condos', cacheable_listings_path(
-          agency_country_searchlogic_params.merge(
-            'categories_name_equals' => 'Condos',
-            'listing_type_name_equals' => 'for sale'
-          )
-        ) %></li>
-        <li><%= link_to 'Farms & Ranches', cacheable_listings_path(
-          agency_country_searchlogic_params.merge(
-            'categories_name_equals' => 'Farms',
-            'listing_type_name_equals' => 'for sale'
-          )
-        ) %></li>
-        <li><%= link_to 'Lots', cacheable_listings_path(
-          agency_country_searchlogic_params.merge(
-            'categories_name_equals' => 'Lots',
-            'listing_type_name_equals' => 'for sale'
-          )
-        ) %></li>
-      </ul>
-    </div>
-    <div class="menu_list">
-      <h3>For Rent</h3>
-      <ul>
-        <li><%= link_to 'All listings', cacheable_listings_path(
-          agency_country_searchlogic_params.merge(
-            'listing_type_name_equals' => 'for rent'
-          )
-        ) %></li>
-        <li><%= link_to 'Houses', cacheable_listings_path(
-          agency_country_searchlogic_params.merge(
-            'categories_name_equals' => 'Homes',
-            'listing_type_name_equals' => 'for rent'
-          )
-        ) %></li>
-        <li><%= link_to 'Apartments', cacheable_listings_path(
-          agency_country_searchlogic_params.merge(
-            'categories_name_equals' => 'Apartments',
-            'listing_type_name_equals' => 'for rent'
-          )
-        ) %></li>
+        <% partner_agencies.each do |agency| %>
+          <%
+          next if agency.id == @active_agency.id
+          agency_host = [ agency.subdomain,
+            domain_with_environment(agency.domain)
+          ].reject {
+            |x| x.blank? }.join('.')
+          agency_options = { :host => agency_host }
+          agency_options.merge!( :port => request.port ) unless request.port == 80
+          %>
+          <li><%= link_to agency.short_name.titleize +
+            ' Listings<div class="after_icon"></div>',
+            root_url(agency_options),
+            :target => :_blank,
+            :class => :external_link
+          %></li>
+        <% end %>
       </ul>
     </div>
   <% end %>
   <div class="menu_list">
-    <% unless @active_agency.master_agency %>
-      <% agencies = @active_agency.partner_agencies %>
-      <h3>Partner agencies</h3>
-    <% else %>
-      <% agencies = all_agencies %>
-      <h3>Agencies</h3>
-    <% end %>
-    <ul>
-      <% agencies.each do |agency| %>
-        <%
-        agency_host = [ agency.subdomain,
-          domain_with_environment(agency.domain)
-        ].reject {
-          |x| x.blank? }.join('.')
-        agency_options = { :host => agency_host }
-        agency_options.merge!( :port => request.port ) unless request.port == 80
-        %>
-        <li><%= link_to agency.short_name.titleize +
-          ' Listings<div class="after_icon"></div>',
-          root_url(agency_options),
-          :target => :_blank,
-          :class => :external_link
-        %></li>
-      <% end %>
-    </ul>
-  </div>
-  <div class="menu_list">
     <h3>Other Links</h3>
     <ul>
-      <!--<li><%= link_to 'Contact us', contact_agency_path(@active_agency) %></li>-->
+      <!--<li><%= link_to 'Contact us',
+        contact_agency_path(@active_agency) %></li>-->
       <li><%= link_to 'Contact us', '/contact' %></li>
-      <li><%= link_to @active_agency.country.name + " Real Estate Buyer's Guide",
+      <li><%= link_to @active_agency.country.name +
+        " Real Estate Buyer's Guide",
         country_path(@active_agency.country) %></li>
-      <!--<li><%= link_to 'Useful links', links_agency_path(@active_agency) %></li>-->
+      <!--<li><%= link_to 'Useful links',
+        links_agency_path(@active_agency) %></li>-->
       <li><%= link_to 'Useful links', '/links' %></li>
     </ul>
   </div>

@@ -1,14 +1,9 @@
 class Admin::FeaturesController < Admin::AdminController
-
-  before_filter :require_user
   
   # GET /features
   # GET /features.xml
   def index
     @features = Feature.all
-
-    # Values for selects, checkboxes, and radios
-    @lists = form_list_data
 
     respond_to do |format|
       format.html # index.html.erb
@@ -43,13 +38,12 @@ class Admin::FeaturesController < Admin::AdminController
   # POST /features
   # POST /features.xml
   def create
-    # Enable polymorphic behavior
-    @feature = context_object( :include => :features ).features.build(params[:feature])
+    @feature = Feature.new(params[:feature])
 
     respond_to do |format|
       if @feature.save
         flash[:notice] = 'Feature was successfully created.'
-        format.html { redirect_to :id => nil } # hack to redirect to parent index
+        format.html { redirect_to(admin_feature_url(@feature)) }
       else
         format.html { render :action => "new" }
       end
@@ -78,20 +72,8 @@ class Admin::FeaturesController < Admin::AdminController
     @feature.destroy
 
     respond_to do |format|
-      format.html { redirect_to(features_url) }
+      format.html { redirect_to(admin_features_url) }
       format.xml  { head :ok }
     end
   end
-
-
-  private
-
-  def form_list_data
-    lists = {}
-    lists[:features] = Feature.find(:all).map {
-      |feature| [feature.name, feature.id]
-    }
-    return lists
-  end
-
 end

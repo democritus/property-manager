@@ -1,17 +1,6 @@
 <h1>Editing market</h1>
 
-<% labelled_form_for(:admin, @market) do |f| %>
-  <%= f.error_messages %>
-
-  <%= render :partial => 'market_fields', 
-    :locals => {
-      :f => f
-    } %>
-    
-  <div class="row">
-    <%= f.submit 'Update' %>
-  </div>
-<% end %>
+<%= render :partial => 'form' %>
 
 <%= link_to 'Show', contextual_path(@market) %> |
 <%= link_to 'Back', contextual_collection_path %>

@@ -1,6 +1,5 @@
 class Admin::StyleAssignmentsController < Admin::AdminController
 
-  before_filter :require_user
   before_filter :set_style_assignable
 
   # GET /style_assignments

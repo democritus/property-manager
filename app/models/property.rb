@@ -29,10 +29,10 @@ class Property < ActiveRecord::Base
 
   validates_presence_of :name
   validates_numericality_of :agency_id,
-    :allow_blank => true,
     :only_integer => true,
     :message => "{{value}} must be an integer"
   validates_numericality_of :barrio_id,
+    :allow_blank => true,
     :only_integer => true,
     :message => "{{value}} must be an integer"
   validates_numericality_of :bathroom_number,

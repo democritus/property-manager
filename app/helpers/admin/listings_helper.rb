@@ -5,8 +5,21 @@ module Admin::ListingsHelper
   # Call helper function that set up options and selections for select boxes
   def setup_listing_select_fields
     set_listing_form_list_data
+    represent_inherited_data_in_form
   end
 
+  def represent_inherited_data_in_form
+    return unless @listing.new_record?
+    @listing.name = @property.name
+    @listing.date_available = @property.date_available
+    @listing.description = @property.description
+    @listing.primary_category_id = @property.primary_category_id
+    @listing.primary_style_id = @property.primary_style_id
+    @listing.category_ids = @property.category_ids
+    @listing.style_ids = @property.style_ids
+    @listing.feature_ids = @property.feature_ids
+  end
+  
   def set_listing_form_list_data
     @lists = {}
     @lists[:categories] = Category.find(:all,

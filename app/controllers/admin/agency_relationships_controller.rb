@@ -1,7 +1,4 @@
 class Admin::AgencyRelationshipsController < Admin::AdminController
-
-  before_filter :require_user, :only => [:index, :new, :create, :edit, :update,
-    :destroy]
   
   # GET /agency_relationships
   # GET /agency_relationships.xml

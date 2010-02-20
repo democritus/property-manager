@@ -1,6 +1,6 @@
 <h1>Editing market_image</h1>
 
-<% form_for [@market_imageable, @market_image] do |f| %>
+<% form_for ( [:admin, @market_imageable, @market_image] ) do |f| %>
   <%= f.error_messages %>
   <p>
     <%= link_to(

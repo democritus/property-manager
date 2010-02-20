@@ -1,6 +1,4 @@
 class Admin::CategoriesController < Admin::AdminController
-
-  before_filter :require_user
   
   # GET /categories
   # GET /categories.xml

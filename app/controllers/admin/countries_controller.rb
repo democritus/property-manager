@@ -1,7 +1,5 @@
 class Admin::CountriesController < Admin::AdminController
   
-  before_filter :require_user, :except => :show
-  
   # GET /countries
   # GET /countries.xml
   def index

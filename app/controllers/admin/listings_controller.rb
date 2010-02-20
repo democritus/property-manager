@@ -3,7 +3,6 @@ class Admin::ListingsController < Admin::AdminController
   # Module for translating search parameters into readable string and back again
   include ReadableSearch
   
-  before_filter :require_user, :except => [ :index, :show ]
   before_filter :set_contextual_property
   
   #caches_page :large_glider
@@ -69,7 +68,7 @@ class Admin::ListingsController < Admin::AdminController
   # PUT /listings/1.xml
   def update
     @listing = Listing.find(params[:id])
-
+    
     respond_to do |format|
       if @listing.update_attributes(params[:listing])
         flash[:notice] = 'Listing was successfully updated.'
@@ -101,10 +100,6 @@ class Admin::ListingsController < Admin::AdminController
     listing_type_id = params[:listing_type_id].to_i
     primary_category_id = params[:primary_category_id].to_i
     primary_style_id = params[:primary_style_id].to_i
-    
-    category_ids = params[:category_ids].split(',').map { |x| x.to_i }
-    style_ids = params[:style_ids].split(',').map { |x| x.to_i }
-    feature_ids = params[:feature_ids].split(',').map { |x| x.to_i }
     
     # Fetch currently-checked listing type and associated data
     listing_type = ListingType.find(listing_type_id,
@@ -139,7 +134,17 @@ class Admin::ListingsController < Admin::AdminController
     ajax[:category_ids] = []
     ajax[:style_ids] = []
     ajax[:feature_ids] = []
-    unless listing_id.zero?
+    
+    # If new record, get values from property that should be inherited
+    if listing_id.zero?
+      property = Property.find(params[:property_id])
+      if primary_style_id.zero?
+        ajax[:primary_style_id] = property.primary_style_id
+      end
+      ajax[:category_ids] = property.category_ids
+      ajax[:style_ids] = property.style_ids
+      ajax[:feature_ids] = property.feature_ids
+    else
       listing = Listing.find(listing_id,
         :include => [ :primary_category, :primary_style, :categories,
           :styles, :features ]
@@ -153,13 +158,6 @@ class Admin::ListingsController < Admin::AdminController
         if primary_style_id.zero? && listing.primary_style
           ajax[:primary_style_id] = listing.primary_style.id
         end
-        
-#        # REMOVED - better to get from database
-#        # Use selected values if any are selected (tries to respect user's
-#        # changes on form)
-#        ajax[:category_ids] = category_ids
-#        ajax[:style_ids] = style_ids
-#        ajax[:feature_ids] = feature_ids
         
         # Get selected values from database (discards user's changes on form)
         if listing.categories

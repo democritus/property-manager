@@ -9,7 +9,7 @@ class ApplicationController < ActionController::Base
   include ReadableSearch
   
   #helper :all # include all helpers, all the time
-  helper :layout
+  helper :glider, :layout, :rounded_box
   
   # 2009-03-04 - Brian Warren - Authlogic stuff
   helper_method :current_user_session, :current_user
@@ -22,8 +22,7 @@ class ApplicationController < ActionController::Base
 
   before_filter :set_page_caching_status, :set_active_agency,
     :set_agency_content, :redirect_if_current_agency_not_found, :set_locale,
-    :glide_image_pairs, :set_combined_search_params,
-    :clean_params_for_searchlogic
+    :glide_image_pairs
   
 
   private
@@ -48,7 +47,8 @@ class ApplicationController < ActionController::Base
   def set_locale
     I18n.locale = extract_locale_from_tld
   end
-  # Get locale from top-level domain or return nil if such locale is not available
+  # Get locale from top-level domain or return nil if such locale is not
+  # available
   # You have to put something like:
   #   127.0.0.1 application.com
   #   127.0.0.1 application.it
@@ -158,7 +158,8 @@ class ApplicationController < ActionController::Base
   
   # Handle nested actions
   def context_object( *finder_options )
-    params[:context_type].classify.constantize.find( context_id, *finder_options )
+    params[:context_type].classify.constantize.find(
+      context_id, *finder_options )
   end
   
   def context_id
@@ -251,52 +252,5 @@ class ApplicationController < ActionController::Base
       end
     end
     friendly_id
-  end
-  
-  # Combine readable constraints and searchlogic constraints
-  def set_combined_search_params
-    @combined_search_params = combined_search_params
-  end
-  
-  def combined_search_params
-    readable_string_to_searchlogic_params( params[:search] || '' ).merge!(
-      params[:q] || {} )
-  end
-  
-  # http://rails.barrioearth.com/real_estate/search/all/property/for+sale+or+rent/any+market/any+barrio/under+any+amount/over+any+amount/any+style/any+feature
-  # http://rails.barrioearth.com/real_estate/search/Costa+Rica/Homes/for+sale/Heredia/Santo+Domingo/under+500000+dollars/over+250000+dollars/modern/beach+home,pool
-  
-  # Remove extraneous words from global params so that it reflects the intended
-  # values of a verbose URL
-  def clean_params_for_searchlogic
-    params = @sparse_params
-  end
-  
-  # Sanitize searchlogic params by removing strings indicating default_value and
-  # removing extraneous words that are not actually part of the lookup value
-  # (reverse of "ApplicationHelpter::verbose_params")
-  def sparse_params(parameters = nil)
-    if parameters.nil?
-      parameters = params.dup
-    end
-    LISTING_PARAMS_MAP.each do |param|
-      if parameters[param[:key]]
-        if parameters[param[:key]] == default_value
-          parameters[param[:key]] = nil
-        else
-          case key
-            # Slice off "under " and " dollars"
-            when :ask_amount_less_than_or_equal_to
-              parameters[param[:key]] = parameters[
-                param[:key]].slice(6..-1).slice(0..-9)
-            # Slice off "over " and " dollars"
-            when :ask_amount_greater_than_or_equal_to
-              parameters[param[:key]] = parameters[
-                param[:key]].slice(5..-1).slice(0..-9)
-          end
-        end
-      end
-    end
-    return parameters
   end
 end

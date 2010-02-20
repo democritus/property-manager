@@ -18,10 +18,11 @@ class InformationRequest < ActiveRecord::Base
   attr_accessor :intended_recipient_name
   
   validates_presence_of :message
-  # TODO: fix this
-  #validates_format_of :email,
-  #  :with => /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i,
-  #  :allow_blank
+  validates_presence_of :name
+  validates_presence_of :email
+  validates_format_of :email,
+    :with => /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i,
+    :allow_blank => true
   
   before_save :set_intended_recipient
   

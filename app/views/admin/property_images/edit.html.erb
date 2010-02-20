@@ -1,6 +1,6 @@
 <h1>Editing property_image</h1>
 
-<% form_for(:admin, @property_image) do |f| %>
+<% form_for( [ :admin, @property_imageable, @property_image ] ) do |f| %>
   <%= f.error_messages %>
   <p>
     <%= link_to(

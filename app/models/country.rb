@@ -9,9 +9,12 @@ class Country < ActiveRecord::Base
   has_many :users, :foreign_key => 'nationality_id'
   has_many :zones, :order => 'position ASC'
   
-  # Force ISO2 to be lowercase
+  validates_presence_of :name, :iso2
+  validates_uniqueness_of :name, :iso2
+  
+  # Force ISO2 to be uppercase
   def iso2=(iso2)
-    write_attribute(:iso2, iso2.downcase)
+    write_attribute(:iso2, iso2.upcase)
   end
 end
 

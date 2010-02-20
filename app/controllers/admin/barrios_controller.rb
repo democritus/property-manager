@@ -1,6 +1,5 @@
 class Admin::BarriosController < Admin::AdminController
 
-  before_filter :require_user
   before_filter :set_contextual_market
   
   # GET /barrios

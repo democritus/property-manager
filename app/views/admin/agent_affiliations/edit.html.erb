@@ -1,24 +1,6 @@
-<h1>Editing agent_affiliation</h1>
+<h1>Editing agent affiliation</h1>
 
-<% form_for(:admin, @agent_affiliation) do |f| %>
-  <%= f.error_messages %>
+<%= render :partial => 'form' %>
 
-  <p>
-    <%= f.label :agent_id %><br />
-    <%= f.text_field :agent_id %>
-  </p>
-  <p>
-    <%= f.label :agency_id %><br />
-    <%= f.text_field :agency_id %>
-  </p>
-  <p>
-    <%= f.label :primary_agency %><br />
-    <%= f.text_field :primary_agency %>
-  </p>
-  <p>
-    <%= f.submit 'Update' %>
-  </p>
-<% end %>
-
-<%= link_to 'Show', @agent_affiliation %> |
-<%= link_to 'Back', agent_affiliations_path %>
+<%= link_to 'Show', admin_agent_affiliation_path(@agent_affiliation) %> |
+<%= link_to 'Back', admin_agent_affiliations_path %>

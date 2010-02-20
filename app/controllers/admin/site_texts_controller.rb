@@ -1,6 +1,5 @@
 class Admin::SiteTextsController < Admin::AdminController
 
-  before_filter :require_user
   before_filter :set_contextual_agency
 
   def index

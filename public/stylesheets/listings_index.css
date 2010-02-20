@@ -145,27 +145,30 @@ div.listing_container div.footer ul li {
   cursor: pointer;
 }
 
-#right_margin div.nested_menu div {
-  cursor: default;
-}
-
 #right_margin div.nested_menu div.submenu {
   position: absolute;
   top: 0;
   right: 150px;
   width: 150px;
   background-color: #dddddd;
+  cursor: default;
+  padding-bottom: 0.5em;
+}
+
+#right_margin div.nested_menu div.submenu a {
+  color: #666;
 }
 
 #right_margin div.nested_menu div.submenu div.close_element {
   position: absolute;
-  top: 5px;
-  right: 5px;
+  top: 4px;
+  right: 4px;
   background-color: #f0f0f0;
-  border: 1px solid #ff6666;
-  color: #ff6666;
+  border: 1px solid #ff0000;
+  color: #ff0000;
   font-style: Verdana;
   font-weight: bold;
+  font-size: 80%;
   padding: 1px 2px;
   line-height: 1.0em;
   cursor: pointer;

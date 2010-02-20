@@ -1,7 +1,5 @@
 class Admin::AgencyJurisdictionsController < Admin::AdminController
 
-  before_filter :require_user
-  
   # GET /agency_jurisdictions
   # GET /agency_jurisdictions.xml
   def index

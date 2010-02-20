@@ -1,6 +1,6 @@
 <h1>Editing agency_logo</h1>
 
-<% form_for(:admin, @agency_logo) do |f| %>
+<% form_for( [ :admin, @agency_logoable, @agency_logo ] ) do |f| %>
   <%= f.error_messages %>
   <p>
     <%= link_to(

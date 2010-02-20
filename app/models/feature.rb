@@ -12,4 +12,6 @@ class Feature < ActiveRecord::Base
   has_many :properties, :through => :feature_assignments,
     :source => :feature_assignable,
     :source_type => 'Property'
+    
+  validates_presence_of :name
 end
