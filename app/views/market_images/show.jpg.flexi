@@ -1,0 +1,4 @@
+# Accessed via http://mysite.com/market_images/123.jpg
+@market_image.operate do |image|
+  image.resize '640x480'
+end

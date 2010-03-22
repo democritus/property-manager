@@ -65,6 +65,11 @@ if @listing
     end
   end
 end
+# TODO: add market segment images as placeholder images if no listings exist
+if @mini_glider.length == 0
+  #@mini_glider << @active_agency.market_segment.name
+  @mini_glider += @active_agency.market_segment.market_segment_images
+end
 
 # Set up image glider
 options = {
@@ -82,16 +87,10 @@ glider_left_offset = 11
        
 <div id="header" class="small_header clearfix">
   <%= render :partial => 'layouts/user_bar' %>
-  <div class="logo_area">
-    <div id="small_site_logo">
+  <div id="logo_area">
+    <div id="site_logo">
       <% if @active_agency.agency_logos[0] %>
-        <%= link_to(
-          image_tag(
-            agency_logo_path(@active_agency.agency_logos[0], :format => :png),
-            :border => 0
-          ),
-          root_path
-        ) %>
+        <%= active_agency_logo(@active_agency.agency_logos[0]) %>
       <% else %>
         <%= default_logo %>
       <% end %>

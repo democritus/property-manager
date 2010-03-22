@@ -1,0 +1,27 @@
+<h1>Listing market segments</h1>
+
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Position</th>
+  </tr>
+  <% for market_segment in @market_segments %>
+    <tr>
+      <td><%=h market_segment.name %></td>
+      <td><%=h market_segment.position %></td>
+      <td><%= link_to "Show", contextual_path(market_segment) %></td>
+      <td><%= link_to "Edit", edit_contextual_path(market_segment) %></td>
+      <td><%= link_to "Destroy", contextual_path(market_segment),
+        :confirm => 'Are you sure?', :method => :delete %></td>
+    </tr>
+  <% end %>
+</table>
+
+<br />
+
+<%= link_to 'New market segment', new_contextual_path %>
+<br />
+<% unless params['context_type'].blank? %>
+  <%= link_to 'Back to agency', context_member_path %>
+<% end %>
+

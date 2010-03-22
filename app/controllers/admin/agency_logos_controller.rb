@@ -2,8 +2,6 @@ class Admin::AgencyLogosController < Admin::AdminController
 
   before_filter :set_agency_logoable
   
-  caches_page :show
-  
   # GET /agency_logos
   # GET /agency_logos.xml
   def index

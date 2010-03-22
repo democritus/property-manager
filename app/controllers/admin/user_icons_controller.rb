@@ -2,8 +2,6 @@ class Admin::UserIconsController < Admin::AdminController
 
   before_filter :set_user_iconable
   
-  caches_page :show
-  
   # GET /user_icons
   # GET /user_icons.xml
   def index

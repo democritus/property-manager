@@ -11,7 +11,7 @@ class ListingsController < ApplicationController
     # Record user's search results for the most recent listings index they
     # have viewed
     session[:last_seen_params] = search_params
-
+    
     # Searchlogic filtering
     unless active_agency.master_agency
       @search = Listing.by_agency(active_agency.id).search(search_params)

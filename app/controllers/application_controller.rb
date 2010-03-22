@@ -4,9 +4,11 @@
 class ApplicationController < ActionController::Base
   
   # Module for translating search parameters into readable string and back again
-  include ContextResources
-  include HostHelp
   include ReadableSearch
+  # Module for dealing with nested routes
+  include ContextResources
+  # Module with various host-related methods
+  include HostHelp
   
   #helper :all # include all helpers, all the time
   helper :glider, :layout, :rounded_box

@@ -1,4 +1,4 @@
-Fleximage::Blank.new('279x156').operate do |image|
+Fleximage::Blank.new('230x156').operate do |image|
   image.border :size => 0, :color => 'white'
   image.shadow(
     :color      => 'black',    # or color(0, 0, 0)

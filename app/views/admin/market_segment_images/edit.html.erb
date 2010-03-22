@@ -1,0 +1,47 @@
+<h1>Editing market_segment_image</h1>
+
+<% form_for( [ :admin, @market_segment_imageable, @market_segment_image ] ) do |f| %>
+  <%= f.error_messages %>
+  <p>
+    <%= link_to(
+      image_tag(
+        thumb_market_segment_image_path(@market_segment_image, :format => :jpg),
+        :style => 'border: 0'
+      ),
+      market_segment_image_path(@market_segment_image),
+      :target => :_blank
+    ) %>
+  </p>
+  <p>
+    <%= f.label :image_filename %>
+    <%= f.text_field :image_filename %>
+  </p>
+  <p>
+    <%= f.label :image_width %>
+    <%= f.text_field :image_width %>
+  </p>
+  <p>
+    <%= f.label :image_height %>
+    <%= f.text_field :image_height %>
+  </p>
+  <p>
+    <%= f.label :caption %>
+    <%= f.text_field :caption %>
+  </p>
+  <p>
+    <%= f.label :position %>
+    <%= f.text_field :position %>
+  </p>
+  <p>
+    <%= f.label :visible %>
+    <%= f.check_box :visible %>
+  </p>
+  <p>
+    <%= f.submit 'Update' %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', market_segment_image_path, :target => :_blank %> |
+<%= link_to 'Back',
+  polymorphic_path([:admin, @market_segment_imageable, :market_segment_images]) %>
+

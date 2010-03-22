@@ -1,7 +1,7 @@
 class PropertyImage < Image
   
   acts_as_fleximage do
-    image_directory 'public/images/property_images'
+    image_directory 'public/media/property_images'
     use_creation_date_based_directories true
     image_storage_format :png
     #output_image_jpg_quality 85
@@ -13,7 +13,7 @@ class PropertyImage < Image
     invalid_image_message 'was not a readable image'
     
     # Default path to image if no image uploaded
-    #default_image_path
+    #default_image_path 'public/images/default_property_image.jpg'
     
     # Default image to create if no image uploaded
     #default_image

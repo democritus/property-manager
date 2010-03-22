@@ -1,6 +1,6 @@
 class Zone < ActiveRecord::Base
 
-  has_friendly_id :name, :use_slug => true, :reserved => ['new', 'index']
+  has_friendly_id :name, :use_slug => true, :reserved_words => ['new', 'index']
   
   default_scope :order => 'zones.country_id ASC, zones.name ASC'
 
@@ -9,4 +9,6 @@ class Zone < ActiveRecord::Base
   
   validates_presence_of :name
   validates_uniqueness_of :name, :scope => :country_id
+  validates_format_of :name, :with => /^[a-zA-Z0-9\s]+$/,
+    :message => "may only contain letters and numbers"
 end

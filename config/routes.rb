@@ -1,24 +1,7 @@
 ActionController::Routing::Routes.draw do |map|
+  map.resources :market_segments
 
-  # TODO: Is this the best place to add these routes, or should they be
-  # integrated with resource routes?
-  
-  # Map non-model placeholder image methods (must come before resource routes)
-  map.connect 'property_images/large_glider_placeholder',
-    :controller => :property_images, :action => :large_glider_placeholder
-  map.connect 'property_images/listing_glider_placeholder',
-    :controller => :property_images, :action => :listing_glider_placeholder
-  map.connect 'property_images/mini_glider_placeholder',
-    :controller => :property_images, :action => :mini_glider_placeholder
-  map.connect 'property_images/mini_glider_recent',
-    :controller => :property_images, :action => :mini_glider_recent
-  map.connect 'property_images/mini_glider_suggested',
-    :controller => :property_images, :action => :mini_glider_suggested
-  map.connect 'property_images/mini_glider_similar',
-    :controller => :property_images, :action => :mini_glider_similar
-  map.connect 'agency_images/large_glider_placeholder',
-    :controller => :agency_images, :action => :large_glider_placeholder
-    
+
   # Listings search
   # Cachable search urls compatible with Searchlogic (including pagination)
   bound_params_string = 'real_estate'
@@ -64,13 +47,36 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :market_images,
     :only => [ :show, :thumb ],
     :member => { :thumb => :get }
+  map.resources :market_segment_images,
+    :only => [ :show, :large_glider, :mini_glider, :thumb ],
+    :member => { :large_glider => :get, :mini_glider => :get, :thumb => :get }
+  map.resources :properties,
+    :only => [ :default_thumb, :default_medium ],
+    :collection => { :default_thumb => :get, :default_medium => :get }
   map.resources :property_images,
-    :except => [ :index, :new, :create, :edit, :update, :destroy ],
-    #:only => [ :show, :thumb, :medium, :fullsize, :original, :large_glider,
-    #  :listing_glider, :mini_glider ]
-    :member => { :thumb => :get, :medium => :get, :fullsize => :get,
-      :original => :get, :large_glider => :get, :listing_glider => :get,
-      :mini_glider => :get }
+    :only => [
+      :featured, :show, :thumb, :medium, :fullsize, :original,
+      :large_glider, :large_glider_placeholder, :listing_glider,
+      :listing_glider_placeholder, :mini_glider, :mini_glider_placeholder,
+      :mini_glider_recent, :mini_glider_suggested, :mini_glider_similar
+    ],
+    :collection => {
+      :large_glider_placeholder => :get,
+      :listing_glider_placeholder => :get,
+      :mini_glider_placeholder => :get,
+      :mini_glider_recent => :get,
+      :mini_glider_suggested => :get,
+      :mini_glider_similar => :get
+    },
+    :member => {
+      :thumb => :get,
+      :medium => :get,
+      :fullsize => :get,
+      :original => :get,
+      :large_glider => :get,
+      :listing_glider => :get,
+      :mini_glider => :get
+    }
   map.resources :user_icons,
     :only => [ :show, :small ],
     :member => { :small => :get }
@@ -78,66 +84,59 @@ ActionController::Routing::Routes.draw do |map|
   #
   # Nested routes
   #
-  map.resources :users do |users|
-    users.resources :user_icons,
-      :except => :show,
-      :member => { :small => :get },
-      :requirements => { :context_type => 'users' }
-  end
-  
   map.resources :agencies,
-  :only => [ :show, :contact, :links, :default_logo ],
-  :member => {
-    :contact => :get,
-    :links => :get,
-    :default_logo => :get
-  } do |agencies|
+    :only => [ :show, :contact, :links, :default_logo ],  
+    :collection => { :large_glider_placeholder => :get },
+    :member => {
+      :contact => :get,
+      :links => :get,
+      :default_logo => :get
+    } do |agencies|
     agencies.resources :information_requests,
       :only => :create,
       :requirements => { :context_type => 'agencies' }
   end
   
   map.resources :listings,
-  :as => :real_estate,
-  :only => [ :show, :index ],
-  :member => { :glider_image_swap => :get },
-  :collection => { :featured_glider => :get } do |listings|
+    :as => :real_estate,
+    :only => [ :show, :index ],
+    :member => { :glider_image_swap => :get },
+    :collection => { :featured_glider => :get } do |listings|
     listings.resources :information_requests,
       :only => :create,
       :requirements => { :context_type => 'listings' }
   end
+  
+  map.resources :users do |users|
+    users.resources :user_icons,
+      :only => [ :show, :small ],
+      :member => { :small => :get },
+      :requirements => { :context_type => 'users' }
+  end
     
   # Admin routes
   map.namespace(:admin) do |admin|
-    
     admin.resources :agencies,
-    :new => {
-      :country_pivot => :get,
-      :auto_complete_for_agency_broker_id => :post # TODO: change to :get
-    },
-    :member => {
-      :country_pivot => :get,
-      :auto_complete_for_agency_broker_id => :post # TODO: change to :get
-    } do |agencies|
+      :collection => {
+        :country_pivot => :get,
+        :auto_complete_for_agency_broker_id => :post # TODO: change to :get
+      } do |agencies|
       agencies.resources :agency_images,
         :except => :show,
-        :requirements => { :context_type => 'agencies' },
-        :member => { :thumb => :get }
+        :requirements => { :context_type => 'agencies' }
       agencies.resources :agency_logos,
         :except => :show,
-        :requirements => { :context_type => 'agencies' },
-        :member => { :thumb => :get }
+        :requirements => { :context_type => 'agencies' }
       agencies.resources :agents,
         :requirements => { :context_type => 'agencies' },
-        :new => {
+        :collection => {
           :auto_complete_for_agent_user_id => :post # TODO: change to :get
         }
       agencies.resources :information_requests,
         :only => [ :index, :edit, :update, :destroy ],
         :requirements => { :context_type => 'agencies' }
       agencies.resources :properties,
-        :new => { :barrio_select => :get },
-        :member => { :barrio_select => :get },
+        :collection => { :barrio_select => :get },
         :requirements => { :context_type => 'agencies' }
       agencies.resources :site_texts,
         :requirements => { :context_type => 'agencies' }
@@ -152,6 +151,7 @@ ActionController::Routing::Routes.draw do |map|
     
     admin.resources :countries do |countries|
       countries.resources :markets,
+        :except => [:update, :destroy],
         :requirements => { :context_type => 'countries' }
       countries.resources :provinces,
         :except => [:update, :destroy],
@@ -196,17 +196,21 @@ ActionController::Routing::Routes.draw do |map|
     
     admin.resources :markets, :only => :show do |markets|
       markets.resources :barrios,
-        :member => { :update_places => :get },
-        :new => { :update_places => :get },
+        :collection => { :update_places => :get },
         :requirements => { :context_type => 'markets' }
       markets.resources :market_images,
         :except => :show,
-        :requirements => { :context_type => 'markets' },
-        :member => { :thumb => :get }
+        :requirements => { :context_type => 'markets' }
+    end
+    
+    admin.resources :market_segments do |market_segments|
+      market_segments.resources :market_segment_images,
+        :except => :show,
+        :requirements => { :context_type => 'market_segment' }
     end
     
     admin.resources :properties,
-    :only => :show do |properties|
+      :only => :show do |properties|
       properties.resources :category_assignments,
         :only => [ :index, :edit, :update ],
         :requirements => { :context_type => 'properties' }
@@ -222,9 +226,6 @@ ActionController::Routing::Routes.draw do |map|
         :requirements => { :context_type => 'properties' }
       properties.resources :property_images,
         :except => :show,
-        :member => { :thumb => :get, :medium => :get, :fullsize => :get,
-          :original => :get, :large_glider => :get, :listing_glider => :get,
-          :mini_glider => :get },
         :requirements => { :context_type => 'properties' }
     end
       
@@ -298,9 +299,16 @@ ActionController::Routing::Routes.draw do |map|
   #map.connect ':controller/:action/:id'
   #map.connect ':controller/:action/:id.:format'
     
+  # REMOVED: moved these to resource routes as :collection methods
   # Ajax routes - access these methods directly for ajax calls
-  map.connect 'admin/agencies/:agency_id/properties/barrio_select',
-    :controller => :properties, :action => :barrio_select
+  # TODO: move all ajax routes here as regular routes... no need to have
+  # resource routes using up memory for these
+  #map.connect 'admin/agencies/auto_complete_for_agency_broker_id',
+  #  :controller => :properties, :action => :auto_complete_for_agency_broker_id
+  #map.connect 'admin/agencies/:agency_id/agents/auto_complete_for_agent_user_id',
+  #  :controller => :properties, :action => :auto_complete_for_agent_user_id
+  #map.connect 'admin/agencies/:agency_id/properties/barrio_select',
+  #  :controller => :properties, :action => :barrio_select
     
   # Intercept /contact and re-route to agencies controller
   map.connect 'contact',

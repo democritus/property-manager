@@ -10,7 +10,8 @@ js_checked_zone_id = "$RF('" + form_name + "','zone_id')"
 js_checked_province_id = "$RF('" + form_name + "','province_id')"
       
 onchange_market_province_or_zone = remote_function(
-  :url => { :action => :barrio_select },
+  #:url => { :action => :barrio_select },
+  :url => barrio_select_properties_path,
   :method => :get,
   :with => "'zone_id=' + encodeURIComponent(" + js_checked_zone_id + ")" +
     " + '&province_id=' + encodeURIComponent(" + js_checked_province_id + ")" +

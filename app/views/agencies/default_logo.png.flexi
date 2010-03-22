@@ -1,7 +1,9 @@
 # EX: /agencies/3/default_logo
-site_name = @agency.name.gsub!(/\s/, '\n')
 
-Fleximage::Blank.new('220x109').operate do |image|
+site_name = @agency.name.gsub!(/\s/, '\n') || @agency.name
+site_name.strip!
+
+Fleximage::Blank.new('240x109').operate do |image|
   image.border :size => 0, :color => 'white'
   image.text(site_name,
     :alignment => :center,

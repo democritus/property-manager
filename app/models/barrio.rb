@@ -1,6 +1,6 @@
 class Barrio < ActiveRecord::Base
 
-  has_friendly_id :name, :use_slug => true, :reserved => ['new', 'index']
+  has_friendly_id :name, :use_slug => true, :reserved_words => ['new', 'index']
   
   default_scope :order => 'barrios.country_id ASC, barrios.province_id ASC' +
     ', barrios.name ASC'
@@ -25,6 +25,8 @@ class Barrio < ActiveRecord::Base
     :only_integer => true,
     :message => "{{value}} must be an integer"
   validates_uniqueness_of :name, :scope => :market_id
+  validates_format_of :name, :with => /^[a-zA-Z0-9\s]+$/,
+    :message => "may only contain letters and numbers"
   
   # TODO: figure out if place is in country
   # see APP/config/initializers/custom_validation.rb

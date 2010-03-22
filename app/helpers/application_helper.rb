@@ -6,9 +6,16 @@ module ApplicationHelper
   include HostHelp
   include ReadableSearch
 
+  def active_agency_logo(agency_logo)
+    link_to(
+      image_tag(agency_logo_path(agency_logo, :format => :png)),
+      root_path
+    )
+  end
+  
   def default_logo
     image_html = image_tag(
-      default_logo_agency_path(@active_agency),
+      default_logo_agency_path(@active_agency, :format => :png),
       :border => 0
     )
     link_to image_html, root_path

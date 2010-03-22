@@ -55,7 +55,8 @@ set_agency_form_list_data
   end
   %>
   <%= observe_field(:agency_country_id,
-    :url => { :action => :country_pivot },
+    #:url => { :action => :country_pivot },
+    :url => country_pivot_admin_agencies_path,
     :with => js_with,
     :before => "Element.show('" + spinner_id + "')",
     :complete => "Element.hide('" + spinner_id + "')",
@@ -109,7 +110,8 @@ set_agency_form_list_data
     <%= text_field :agency, :broker_id, :auto_complete => :off %>
     <div class="auto_complete" id="agency_broker_id_auto_complete"></div>
     <%= auto_complete_field :agency_broker_id,
-      :url => { :action => 'auto_complete_for_agency_broker_id' }
+      #:url => { :action => 'auto_complete_for_agency_broker_id' }
+      :url => auto_complete_for_agency_broker_id_admin_agencies_path
       %>
   </div>
     

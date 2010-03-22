@@ -2,6 +2,7 @@ class AgenciesController < ApplicationController
 
   # TODO: re-enable this to test caching
   #caches_page :show, :contact, :links, :default_logo
+  caches_page :default_logo
   
   # GET /agencies/1
   # GET /agencies/1.xml

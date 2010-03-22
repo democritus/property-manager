@@ -45,6 +45,10 @@ module ReadableSearch
     parameters.delete_if {
       |key, value| ! searchlogic_keys.include?(key.to_sym) }
       
+    # TODO: perhaps better to get friendly_id working with Searchlogic instead?
+    # Replace dashes with spaces so that incoming values will match
+    # database values
+    parameters.each { |k, v| parameters[k] = v.to_s.gsub('-', ' ') }
     return listings_params(parameters)
   end
   
@@ -73,6 +77,9 @@ module ReadableSearch
         parameters.merge!(param[:key].to_s => param[:default_value])
       end
     end
+    # TODO: perhaps better to get friendly_id working with Searchlogic instead?
+    parameters.each { |k, v| parameters[k] = v.to_s.gsub(' ', '-') }
+    
     return parameters
   end
   

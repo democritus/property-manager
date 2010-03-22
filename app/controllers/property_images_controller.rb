@@ -1,10 +1,9 @@
 class PropertyImagesController < ApplicationController
   
-  caches_page :show, :thumb, :medium, :fullsize, :original,
-    :listing_glider, :listing_glider_placeholder, :mini_glider,
-    :mini_glider_placeholder, :mini_glider_suggested, :mini_glider_similar,
-    :mini_glider_recent, :large_glider, :large_glider_placeholder
-    #, :featured
+  caches_page :show, :thumb, :medium, :fullsize, :original, :listing_glider,
+    :listing_glider_placeholder, :mini_glider, :mini_glider_placeholder,
+    :mini_glider_suggested, :mini_glider_similar, :mini_glider_recent,
+    :large_glider, :large_glider_placeholder, :featured
   
   # Collection of featured images containing associated listing. This is used
   # for outputting images that link to the listing page, such as the images
@@ -20,14 +19,12 @@ class PropertyImagesController < ApplicationController
   end
 
   # GET /property_images/1
-  # GET /property_images/1.xml
   # GET /property_images/1.jpg
   def show
     @property_image = PropertyImage.find(params[:id])
 
     respond_to do |format|
       format.html # show.html.erb
-      format.xml  { render :xml => @property_image }
       format.jpg  # show.jpg.flexi
     end
   end

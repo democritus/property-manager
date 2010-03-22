@@ -2,8 +2,6 @@ class Admin::MarketImagesController < Admin::AdminController
   
   before_filter :set_market_imageable
   
-  caches_page :show
-  
   # GET /market_images
   # GET /market_images.xml
   def index

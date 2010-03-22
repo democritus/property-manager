@@ -36,13 +36,24 @@ sufficient_agency_images = false
 # Prepend agency to collection of listings so that the first group of
 # images to appear in the glider are agency images
 if @active_agency.agency_images
-  if @active_agency.agency_images.length >= 3
-    sufficient_agency_images = true
+  if @active_agency.agency_images.length > 2
+    splash_name = @active_agency.name
+    splash_object = @active_agency
   end
 end
-if sufficient_agency_images
-  @featured_glider.insert(0, @active_agency.name)
-  @featured_glider.insert(1, @active_agency)
+unless splash_name
+  if @active_agency.market_segment
+    if @active_agency.market_segment.market_segment_images
+      if @active_agency.market_segment.market_segment_images.length > 2
+        splash_name = @active_agency.name
+        splash_object = @active_agency.market_segment
+      end
+    end
+  end
+end
+if splash_name
+  #@featured_glider.insert(0, splash_name)
+  @featured_glider.insert(0, splash_object)
 end
 %>
 <%
@@ -63,17 +74,10 @@ glider_left_offset = 8
 
 <div id="header" class="large_header clearfix">
   <%= render :partial => 'layouts/user_bar' %>
-  <div class="logo_area">
-    <div id="large_site_logo">
-      <!-- TODO: make placeholder logo if no agency photo -->
+  <div id="logo_area">
+    <div id="site_logo">
       <% if @active_agency.agency_logos[0] %>
-        <%= link_to(
-          image_tag(
-            agency_logo_path(@active_agency.agency_logos[0], :format => :png),
-            :border => 0
-          ),
-          root_path
-        ) %>
+        <%= active_agency_logo(@active_agency.agency_logos[0]) %>
       <% else %>
         <%= default_logo %>
       <% end %>
@@ -102,62 +106,92 @@ glider_left_offset = 8
             :onclick => "showContent('contact_skype_contents',
             'toggleable_contact_info')") %>
         </div>
-        <div id="toggleable_contact_info" class="toggleable_content">
+        <div id="toggleable_contact_info" class="toggleable_content">        
           <div style="display: none" id="contact_web_contents"
           class="toggleable_content_item">
-            <div class="top">Contact us via the Web</div>
-            <div class="middle"><%= link_to('Click here to send us a message' +
-              ' using an online form', contact_agency_path(@active_agency)) %>
-            </div>
-            <div class="bottom">
-              <% unless @agency_content[:web_contact_note].blank? %>
-                @agency_content[:web_contact_note]
-              <% end %>
-            </div>
+            <div class="contact_box_t">
+            <div class="contact_box_l">
+            <div class="contact_box_r">
+            <div class="contact_box_b">
+            <div class="contact_box_tl">
+            <div class="contact_box_tr">
+            <div class="contact_box_bl">
+            <div class="contact_box_br">
+            <div class="contact_box">
+              <h3>Contact us via the Web</h3>
+              <div><%= link_to('Click here to send us a message' +
+                ' using an online form',
+                contact_agency_path(@active_agency)) %></div>
+              <div>
+                <% unless @agency_content[:web_contact_note].blank? %>
+                  @agency_content[:web_contact_note]
+                <% end %>
+              </div>
+            </div></div></div></div></div></div></div></div></div>
           </div>
           <div style="display: none" id="contact_phone_contents"
           class="toggleable_content_item">
-            <div class="top">Call us now</div>
-            <div class="middle">
-              <% unless @agency_content[:office_phone_value].blank? %>
-                <div>
-                  <%= @agency_content[:office_phone_label] %>
-                  <%= @agency_content[:office_phone_value] %>
-                </div>
-              <% end %>
-              <% unless @agency_content[:mobile_phone_value].blank? %>
-                <div>
-                  <%= @agency_content[:mobile_phone_label] %>
-                  <%= @agency_content[:mobile_phone_value] %>
-                </div>
-              <% end %>
-            </div>
-            <div class="bottom">
-              <% unless @agency_content[:phone_contact_note].blank? %>
-                <div>
-                  <%= @agency_content[:phone_contact_note] %>
-                </div>
-              <% end %>
-            </div>
+            <div class="contact_box_t">
+            <div class="contact_box_l">
+            <div class="contact_box_r">
+            <div class="contact_box_b">
+            <div class="contact_box_tl">
+            <div class="contact_box_tr">
+            <div class="contact_box_bl">
+            <div class="contact_box_br">
+            <div class="contact_box">          
+              <h3>Call us now</h3>
+              <div>
+                <% unless @agency_content[:office_phone_value].blank? %>
+                  <div>
+                    <%= @agency_content[:office_phone_label] %>
+                    <%= @agency_content[:office_phone_value] %>
+                  </div>
+                <% end %>
+                <% unless @agency_content[:mobile_phone_value].blank? %>
+                  <div>
+                    <%= @agency_content[:mobile_phone_label] %>
+                    <%= @agency_content[:mobile_phone_value] %>
+                  </div>
+                <% end %>
+              </div>
+              <div>
+                <% unless @agency_content[:phone_contact_note].blank? %>
+                  <div>
+                    <%= @agency_content[:phone_contact_note] %>
+                  </div>
+                <% end %>
+              </div>
+            </div></div></div></div></div></div></div></div></div>
           </div>
           <div style="display: none" id="contact_mail_contents"
           class="toggleable_content_item">
-            <div class="top">Contact us by email</div>
-            <%
-            unless @active_agency[:email].blank?
-              agency_email = @active_agency[:email]
-            else
-              if @active_agency.broker
-                agency_email = @active_agency.broker.user.email
+            <div class="contact_box_t">
+            <div class="contact_box_l">
+            <div class="contact_box_r">
+            <div class="contact_box_b">
+            <div class="contact_box_tl">
+            <div class="contact_box_tr">
+            <div class="contact_box_bl">
+            <div class="contact_box_br">
+            <div class="contact_box">
+              <h3>Contact us by email</h3>
+              <%
+              unless @active_agency[:email].blank?
+                agency_email = @active_agency[:email]
+              else
+                if @active_agency.broker
+                  agency_email = @active_agency.broker.user.email
+                end
               end
-            end
-            %>
-            <div class="middle"><%= agency_email %></div>
-            <div class="bottom">
-              <% unless @agency_content[:email_note].blank? %>
-                <%= @agency_content[:email_note] %>
-              <% end %>
-            </div>
+              %>
+              <div><%= agency_email %></div>
+              <div>
+                <% unless @agency_content[:email_note].blank? %>
+                  <%= @agency_content[:email_note] %>
+                <% end %>
+              </div>
+            </div></div></div></div></div></div></div></div></div>
           </div>
           <%
           skype_account = ''
@@ -175,30 +209,40 @@ glider_left_offset = 8
           %>
           <div style="display: none" id="contact_skype_contents"
           class="toggleable_content_item">
-            <div class="top">Skype us!</div>
-            <div class="middle">
-              <!--
-              Skype 'Skype Me™!' button
-              http://www.skype.com/go/skypebuttons
-              -->
-              <%= javascript_include_tag 'skypeCheck.js' %>
-              <% link_to 'skype:' + skype_account + '?call' do %>
-                <%= image_tag 'skype_call_34x34.png',
-                  :alt => "Skype Me™!",
-                  :width => 34,
-                  :height => 34,
-                  :style=> 'border: none;' %>
-              <% end %>
-              <!--
-              REMOVED: copied JavaScript and image to local and ruby-ized
-              HTML (above)
-              <script type="text/javascript" src="http://download.skype.com/share/skypebuttons/js/skypeCheck.js"></script>
-              <a href="skype:barrioearth?call"><img src="http://download.skype.com/share/skypebuttons/buttons/call_blue_transparent_34x34.png" style="border: none;" width="34" height="34" alt="Skype Me™!" /></a>
-              -->
-              <br/>
-              Click the icon above to call <%= @active_agency.short_name %>
-              via Skype</div>
-            <div class="bottom"></div>
+            <div class="contact_box_t">
+            <div class="contact_box_l">
+            <div class="contact_box_r">
+            <div class="contact_box_b">
+            <div class="contact_box_tl">
+            <div class="contact_box_tr">
+            <div class="contact_box_bl">
+            <div class="contact_box_br">
+            <div class="contact_box">
+              <h3>Skype us!</h3>
+              <div>
+                <!--
+                Skype 'Skype Me™!' button
+                http://www.skype.com/go/skypebuttons
+                -->
+                <%= javascript_include_tag 'skypeCheck.js' %>
+                <% link_to 'skype:' + skype_account + '?call' do %>
+                  <%= image_tag 'skype_call_34x34.png',
+                    :alt => "Skype Me™!",
+                    :width => 34,
+                    :height => 34,
+                    :style=> 'border: none;' %>
+                <% end %>
+                <!--
+                REMOVED: copied JavaScript and image to local and ruby-ized
+                HTML (above)
+                <script type="text/javascript" src="http://download.skype.com/share/skypebuttons/js/skypeCheck.js"></script>
+                <a href="skype:barrioearth?call"><img src="http://download.skype.com/share/skypebuttons/buttons/call_blue_transparent_34x34.png" style="border: none;" width="34" height="34" alt="Skype Me™!" /></a>
+                -->
+                <br/>
+                Click the icon above to call <%= @active_agency.short_name %>
+                via Skype</div>
+              <div></div>
+            </div></div></div></div></div></div></div></div></div>
           </div>
         </div>
       </div>

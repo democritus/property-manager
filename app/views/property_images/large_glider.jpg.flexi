@@ -1,6 +1,7 @@
 # Accessed via http://mysite.com/property_images/large_glider/123.jpg
 @property_image.operate do |image|
-  image.resize '265x142', :crop => true
+#  image.resize '265x142', :crop => true
+  image.resize '230x156', :crop => true
   image.border :size => 4, :color => 'white'
   image.shadow
   #image.shadow(

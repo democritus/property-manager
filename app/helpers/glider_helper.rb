@@ -145,6 +145,10 @@ module GliderHelper
             images = object.agency_images
             item_class = ' agency'
             link_path = listings_options # link to all listings for sale
+          elsif parent_model == 'MarketSegment'
+            images = object.market_segment_images
+            item_class = ' agency'
+            link_path = listings_options # link to all listings for sale
           else
             images = object.property_images
           end
@@ -239,12 +243,16 @@ module GliderHelper
       when 'large'
         if image.imageable_type == 'Agency'
           path = large_glider_agency_image_path(image, :format => :jpg)
+        elsif image.imageable_type == 'MarketSegment'
+          path = large_glider_market_segment_image_path(image, :format => :jpg)
         else
           path = large_glider_property_image_path(image, :format => :jpg)
         end
       when 'mini'
         if image.imageable_type == 'Agency'
           path = mini_glider_agency_image_path(image, :format => :jpg)
+        elsif image.imageable_type == 'MarketSegment'
+          path = mini_glider_market_segment_image_path(image, :format => :jpg)
         else
           path = mini_glider_property_image_path(image, :format => :jpg)
         end
@@ -258,20 +266,23 @@ module GliderHelper
     else
       case image
       when 'recent'
-        path = url_for(:controller => 'property_images',
-          :action => 'mini_glider_recent')
+        path = mini_glider_recent_property_images_path(:format => :jpg)
         text_overlay = 'Recently viewed listings'
       when 'suggested'
-        path = url_for(:controller => 'property_images',
-          :action => 'mini_glider_suggested')
+        path = mini_glider_suggested_property_images_path(:format => :jpg)
         text_overlay = 'Featured listings'
       when 'similar'
-        path = url_for(:controller => 'property_images',
-          :action => 'mini_glider_similar')
+        path = mini_glider_similar_property_images_path(:format => :jpg)
         text_overlay = 'Similar listings'
       else
-        path = url_for(:controller => options['placeholder_controller'],
-          :action => "#{options['type']}_glider_placeholder")
+        # TODO: Figure out how to build method name from string
+        path = send("#{options['type']}_glider_placeholder_property_images_path",
+          :format => :jpg)
+        #path = url_for(
+        #  :controller => options['placeholder_controller'],
+        #  :action => "#{options['type']}_glider_placeholder",
+        #  :format => :jpg
+        #)
       end
     end
     

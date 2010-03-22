@@ -2,8 +2,6 @@ class Admin::PropertyImagesController < Admin::AdminController
   
   before_filter :set_property_imageable
   
-  caches_page :show
-  
   # GET /property_images
   # GET /property_images.xml
   def index

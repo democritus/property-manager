@@ -84,9 +84,12 @@ div.glide-window div.glide-item {
 }
 
 div.glide-window div.glide-item img {
-  cursor: pointer;
   display: block;
   border: none;
+}
+
+div.glide-window div.glide-item a img {
+  cursor: pointer;
 }
 
 div.glide-window div.glide-item img.placeholder {
@@ -115,14 +118,14 @@ div.glide-window div.glide-item div.text_overlay_background {
 }
 
 div.glide-window div.glide-item div.text_overlay {
-  top: 17px;
+  top: 16px;
   left: 14px;
   color: #f16422;
   z-index: 100;
 }
 
 div.glide-window div.glide-item div.text_overlay_shadow {
-  top: 16px;
+  top: 15px;
   left: 13px;
   color: #e8e8e8;
   z-index: 90;
@@ -168,7 +171,7 @@ div.glide-window div.agency div.text_overlay_background {
 div.glide-window div.large_listing div.text_overlay,
 div.glide-window div.large_listing div.text_overlay_shadow,
 div.glide-window div.large_listing div.text_overlay_background {
-  width: 835px;
+  width: 683px;
   padding: 0 8px;
   font-family: Helvetica;
   font-size: 20px;
@@ -183,21 +186,21 @@ div.glide-window div.large_listing div.text_overlay_background {
 }
 
 div.glide-window div.large_listing div.text_overlay {
-  top: 18px;
-  left: 15px;
+  top: 19px;
+  left: 16px;
   color: #f16422;
 }
 
 div.glide-window div.large_listing div.text_overlay_shadow {
-  top: 19px;
-  left: 14px;
+  top: 20px;
+  left: 15px;
   color: #ffffff;
 }
 
 div.glide-window div.large_listing div.text_overlay_background {
-  top: 12px;
+  top: 13px;
   left: 12px;
-  width: 851px;
+  width: 709px;
   padding: 7px 0;
   filter: alpha(opacity:0.25);
   KHTMLOpacity: 0.25;

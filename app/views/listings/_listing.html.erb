@@ -2,11 +2,21 @@
   <div class="content clearfix">
     <% # Combine images from Property and Lisitng; merges into @images variable %>
     <% merge_images!(listing) %>
-    <% unless listing.images.blank? %>
       <div class="thumbnail">
-        <%= listing_thumbnail(listing.images[0], listing) %>
+        <% unless listing.images.blank? %>
+          <%= listing_thumbnail(listing.images[0], listing) %>
+        <% else %>      
+          <%= link_to(
+            image_tag(
+              default_thumb_properties_path(:format => :jpg),
+              #url_for(:controller => 'properties',
+              #  :action => 'default_thumb'),
+              :border => 0
+            ),
+            listing_path(listing)
+          ) %>
+        <% end %>      
       </div>
-    <% end %>
     <div class="flowed_content">
       <%= price_div(listing.ask_amount, listing.ask_currency.symbol,
         listing.ask_currency.code) %>

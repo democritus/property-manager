@@ -1,6 +1,6 @@
 <% set_barrio_form_list_data %>
 
-<% labelled_form_for( [ :admin, @barrio ] ) do |f| %>
+<% labelled_form_for( [ :admin, @market, @barrio ] ) do |f| %>
   <%= f.error_messages %>
   
   <div class="row">
@@ -12,7 +12,8 @@
   </div>
 
   <%= observe_field(:barrio_country_id,
-    :url => { :action => :update_places },
+    #:url => { :action => :update_places },
+    :url => update_places_admin_market_barrios_path(@market),
     :with => "'country_id=' + encodeURIComponent($('barrio_country_id').value)",
     :before => "Element.show('spinner')",
     :complete => "Element.hide('spinner')",

@@ -1,5 +1,6 @@
 # TODO: create prettier placeholder image for large_glider images
-Fleximage::Blank.new('265x142').operate do |image|
+#Fleximage::Blank.new('265x142').operate do |image|
+Fleximage::Blank.new('230x156').operate do |image|
   image.border :size => 4, :color => 'white'
   image.shadow
 #  image.text("Virtual Image",

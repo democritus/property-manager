@@ -1,0 +1,71 @@
+/* powered by http://mierendo.com/software/rounded_css_boxes/ */
+.contact_box_tl, .contact_box_t, .contact_box_tr, .contact_box_l,
+.contact_box_r, .contact_box_bl, .contact_box_b, .contact_box_br,
+.contact_box {
+    width: auto;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    position: relative;
+}
+.contact_box_t {
+    /*
+        change this div to layout the whole box (width, height, float, margin, ...)
+        example lines:
+        width: 60%;
+        margin: 7px 35px 0px 1px
+        to change distance to content/text scroll to class ".contact_box" and change the padding
+    */
+    background-color: #dddddd;
+    background-image: url("../images/contact_box_border.png");
+    background-repeat: repeat-x;
+    background-position: top;
+}
+.contact_box_tl {
+    height: 100%;
+    background-image: url("../images/contact_box_topleft.png");
+    background-repeat: no-repeat;
+    background-position: left top;
+}
+.contact_box_tr {
+    height: 100%;
+    background-image: url("../images/contact_box_topright.png");
+    background-repeat: no-repeat;
+    background-position: right top;
+}
+.contact_box_bl {
+    height: 100%;
+    background-image: url("../images/contact_box_bottomleft.png");
+    background-repeat: no-repeat;
+    background-position: left bottom;
+}
+.contact_box_br {
+    height: 100%;
+    background-image: url("../images/contact_box_bottomright.png");
+    background-repeat: no-repeat;
+    background-position: right bottom;
+}
+.contact_box {
+    height: 100%;
+    /* change this if you want to change the distance distance to text/content */
+    padding: 15px;
+}
+
+.contact_box_l {
+    height: 100%;
+    background-image: url("../images/contact_box_border.png");
+    background-repeat: repeat-y;
+    background-position: left;
+}
+.contact_box_r {
+    height: 100%;
+    background-image: url("../images/contact_box_border.png");
+    background-repeat: repeat-y;
+    background-position: right;
+}
+.contact_box_b {
+    height: 100%;
+    background-image: url("../images/contact_box_border.png");
+    background-repeat: repeat-x;
+    background-position: bottom;
+}

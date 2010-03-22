@@ -7,7 +7,11 @@ merge_images!
   <div id="property-overview">
     <div id="main_image_wrapper">
       <div id="main_image">
-        <%= medium_image(@listing.images[0]) %>
+        <% if @listing.images[0] %>
+          <%= medium_image(@listing.images[0]) %>
+        <% else %>
+          <%= image_tag(default_medium_properties_path(:format => :jpg)) %>
+        <% end %>
       </div>
       <%= main_image_spinner %>
     </div>
@@ -50,51 +54,38 @@ merge_images!
     </div>
   </div>
 
-  <div id="image-slides" class="clearfix">
-    <!--
-    <div class="alpha-shadow">
-      <div class="shadow">
-    -->
-        <div id="listing-image-glide">
-          <%
-          # Image Glider
-          
-          # TEST - add more images
-          @listing.images << @listing.images[0]
-          
-          # Set up image glider
-          options = {
-            'type' => 'listing',
-            'size' => 4,
-            'image_width' => 184,
-            'image_height' => 128,
-            'target_id' => 'main_image',
-            'image_placeholders' => true
-          }
-          %>
-          <%= glider_js('listingGlider', @listing.images, options) %>
-          <%= glider_html('listingGlider', @listing.images, options) %>      
+  <%
+  # Image Glider
+  # Only show image glider if at least 4 images exist
+  %>
+  <% unless @listing.images.length < 4 %>
+    <div id="image-slides" class="clearfix">
+      <div class="alpha-shadow">
+        <div class="shadow">
+      <div id="listing-image-glide">
+        <%
+        # Set up image glider
+        options = {
+          'type' => 'listing',
+          'size' => 4,
+          'image_width' => 184,
+          'image_height' => 128,
+          'target_id' => 'main_image',
+          'image_placeholders' => true
+        }
+        %>
+        <%= glider_js('listingGlider', @listing.images, options) %>
+        <%= glider_html('listingGlider', @listing.images, options) %>      
+      </div>
         </div>
-    <!--
       </div>
     </div>
-    -->
-  </div>
+  <% end %>
 
-  <%
-  # TEST - fake features
-  unless 1==2
-  %>
   <div id="features">
     <h3>All features</h3>
     <div class="clearfix">
       <ul style="float: left">
-      <%
-      # test data
-      full_feature_list.push('Hot water', 'Balcony',
-        '$150 monthly maintenance fees', 'Stainless steel appliances',
-        'Option to buy furniture', 'Pool and rancho', 'Bat cave')
-      %>
       <%  full_feature_list.each_with_index do |feature, i| %>
         <% if i == (full_feature_list.length + 1) / 2 %>
           </ul>
@@ -109,7 +100,6 @@ merge_images!
       </ul>
     </div>
   </div>
-  <% end %>
 
   <a name="information_request"></a>
   <div id="information-request">

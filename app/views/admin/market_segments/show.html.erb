@@ -1,0 +1,21 @@
+<% title "Market Segment" %>
+
+<p>
+  <strong>Name:</strong>
+  <%=h @market_segment.name %>
+</p>
+<p>
+  <strong>Position:</strong>
+  <%=h @market_segment.position %>
+</p>
+
+<p>
+  <%= link_to 'Edit', edit_admin_market_segment_path(@market_segment) %> |
+  <%= link_to "Destroy", admin_market_segment_path(@market_segment),
+    :confirm => 'Are you sure?', :method => :delete %> |
+  <%= link_to 'Back', admin_market_segments_path %>
+  <br />
+  <%= link_to 'Images',
+    admin_market_segment_market_segment_images_path(@market_segment) %>
+</p>
+

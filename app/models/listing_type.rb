@@ -1,4 +1,10 @@
 class ListingType < ActiveRecord::Base
+
+  has_friendly_id :name, :reserved_words => ['new', 'index']
+  
+  named_scope :friendly_id_equals, lambda { |friendly_id|
+    { :conditions => { :id => friendly_id } }
+  }
   
   has_many :listings
   has_many :category_assignments, :as => :category_assignable
@@ -9,4 +15,6 @@ class ListingType < ActiveRecord::Base
   has_many :styles, :through => :style_assignments
 
   validates_presence_of :name
+  validates_format_of :name, :with => /^[a-zA-Z0-9\s]+$/,
+    :message => "may only contain letters and numbers"
 end

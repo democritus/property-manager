@@ -22,10 +22,9 @@
 <% end %>
 </table>
 
-<br />
-
-<%= link_to 'New market', new_contextual_path %>
-<br />
-<% unless params['context_type'].blank? %>
-  <%= link_to 'Back to country', context_member_path %>
-<% end %>
+<p>
+  <%= link_to 'New market', new_contextual_path %><br />
+  <% unless params['context_type'].blank? %>
+    <%= link_to 'Back to country', context_member_path %>
+  <% end %>
+</p>

@@ -150,6 +150,20 @@ class AddTestData < ActiveRecord::Migration
     )
     
     
+    MarketSegment.delete_all
+    Market.create(:name => 'Residential')
+
+    Market.create(:name => 'Beach homes')
+
+    Market.create(:name => 'Vacation homes')
+    
+    Market.create(:name => 'Commercial')
+    
+    Market.create(:name => 'Businesses')
+    
+    Market.create(:name => 'Land for sale')
+    
+    
     Zone.delete_all
 
     Zone.create(:country_id => 2,

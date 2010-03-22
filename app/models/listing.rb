@@ -1,6 +1,6 @@
 class Listing < ActiveRecord::Base
 
-  has_friendly_id :name, :use_slug => true, :reserved => ['new', 'index']
+  has_friendly_id :name, :use_slug => true, :reserved_words => ['new', 'index']
   
   # will_paginate options
   cattr_reader :per_page

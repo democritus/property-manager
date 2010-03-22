@@ -32,10 +32,16 @@
   color: red;
 }
 
-#header div.logo_area {
+#logo_area {
+  width: 240px;
   float: left;
   clear: both;
 }
+
+#site_logo {
+  width: 240px;
+}
+
 #contact_icons {
   /*border: 1px dotted red;*/
   position: relative;
@@ -45,7 +51,7 @@
   margin-top: 3px;
   text-align: center;
   */
-  margin-top: 4px;
+  margin-top: 7px;
   margin-left: 1px;
   height: 39px;
 }
@@ -94,7 +100,7 @@
 }
 #contact_icons div.links div.toggleable_content div.toggleable_content_item {
   padding: 0 0 0 0;
-  font-size: 100%;
+  font-size: 85%;
   text-align: center;
   /* Opacity - if used with Effect.Appear, opacity must be set to the same
    * value in JavaScript
@@ -104,25 +110,8 @@
   opacity: 0.95;
   */
 }
-/* different middle bg for stretch */
-#contact_icons div.links div.toggleable_content div.bottom {
-  padding: 0.5em 10px 1.2em 10px;
-  font-size: 85%;
-  font-weight: normal;
-  background: url("../images/bubble.gif") no-repeat bottom;
-}
-#contact_icons div.links div.toggleable_content div.middle {
-  padding: 0.5em 10px;
-  font-size: 100%;
-  font-weight: normal;
-  background: url("../images/bubble_filter.gif") repeat bottom;
-  color: #895412;
-}
-#contact_icons div.links div.toggleable_content div.top {
-  padding: 1.2em 10px 0.5em 10px;
-  font-weight: bold;
-  font-size: 120%;
-  background: url("../images/bubble.gif") no-repeat top;
+#contact_icons div.toggleable_content_item h3 {
+  margin: 0 0 0.25em 0;
 }
 
 #header div.main_panel {
@@ -132,15 +121,6 @@
   position: relative;
   /*height: 165px;*/
   /*overflow: hidden;*/
-}
-#large_site_logo {
-  width: 220px;
-  height: 109px;
-  /*margin: 10px 21px 0px 19px;*/
-  margin: 0px 10px 0px 10px;
-}
-#small_site_logo {
-  margin: 0px 10px 7px 10px;
 }
 
 #feature_glider {
@@ -236,8 +216,8 @@
 }
 #site_nav div.menu_list ul li {
   line-height: 1.2em;
-  margin-top: 0.3em;
-  margin-bottom: 0.6em;
+  margin-top: 0.2em;
+  margin-bottom: 0.4em;
 }
 #site_nav div.menu_list a {
   color: white;

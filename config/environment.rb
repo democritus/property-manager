@@ -47,7 +47,8 @@ Rails::Initializer.run do |config|
   config.gem 'friendly_id',
     :lib     => 'friendly_id',
     :source  => 'http://gems.github.com',
-    :version => '~> 2.2.4'
+    :version => '~> 2.3.3'
+    #:version => '~> 2.2.4'
   config.gem 'mislav-will_paginate',
     :lib     => 'will_paginate',
     :source  => 'http://gems.github.com',
@@ -59,7 +60,7 @@ Rails::Initializer.run do |config|
   config.gem 'searchlogic',
     :lib     => 'searchlogic',
     :source  => 'http://gems.github.com',
-    :version => '~> 2.3.9'
+    :version => '~> 2.4.12'
   config.gem 'subdomain-fu',
     :lib     => 'subdomain-fu',
     :source  => 'http://gems.github.com',

@@ -25,6 +25,7 @@ class CreateDatabaseFromSchema < ActiveRecord::Migration
       # is only used to facilitate associating markets and should not be
       # used to constrain listing results globally
       t.integer  "country_id",                                        :null => false
+      t.integer  "market_segment_id",                                        :null => false
       t.string   "name",        :limit => 64,                         :null => false
       t.string   "short_name",        :limit => 32,                   :null => false
       t.string   "domain",        :limit => 64,                       :null => false
@@ -279,6 +280,17 @@ class CreateDatabaseFromSchema < ActiveRecord::Migration
       t.date     "date_available"
       t.timestamps
     end
+
+    create_table :market_segments,
+      :options => "ENGINE=InnoDB DEFAULT CHARSET=utf8",
+      :force => true do |t|
+      t.string  :name, :limit => 64, :default => "", :null => false
+      t.integer :position
+      t.timestamps
+    end
+
+    add_index :market_segments, ["name"], :name => "name", :unique => true
+    add_index :market_segments, ["position"], :name => "position"
     
     add_index "properties", ["agency_id"], :name => "agency_id"
     add_index "properties", ["barrio_id"], :name => "barrio_id"

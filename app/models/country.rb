@@ -1,6 +1,6 @@
 class Country < ActiveRecord::Base
 
-  has_friendly_id :name, :reserved => ['new', 'index']
+  has_friendly_id :name, :reserved_words => ['new', 'index']
   
   has_many :agencies
   has_many :barrios, :order => 'province_id ASC'
@@ -11,7 +11,9 @@ class Country < ActiveRecord::Base
   
   validates_presence_of :name, :iso2
   validates_uniqueness_of :name, :iso2
-  
+  validates_format_of :name, :with => /^[a-zA-Z0-9\s]+$/,
+    :message => "may only contain letters and numbers"
+    
   # Force ISO2 to be uppercase
   def iso2=(iso2)
     write_attribute(:iso2, iso2.upcase)

@@ -1,7 +1,7 @@
 class AgencyLogo < Image
   
   acts_as_fleximage do
-    image_directory 'public/images/agency_logos'
+    image_directory 'public/media/agency_logos'
     use_creation_date_based_directories false
     image_storage_format :png
     #output_image_jpg_quality 85
@@ -26,5 +26,4 @@ class AgencyLogo < Image
   end
   
   default_scope :include => nil
-  
 end

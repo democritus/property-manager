@@ -6,7 +6,7 @@ class Admin::AgenciesController < Admin::AdminController
   
   # REMOVED: used to include non-admin helpers
   #helper self.name.demodulize.underscore.chomp('_controller').to_sym
-  
+
   # GET /agencies
   # GET /agencies.xml
   def index

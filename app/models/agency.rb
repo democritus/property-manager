@@ -1,9 +1,14 @@
 class Agency < ActiveRecord::Base
 
+  attr_accessible :broker_id, :country_id, :primary_market_segment_id, :name,
+    :short_name, :domain, :subdomain, :descriptions, :master_agency, :email,
+    :skype
+
   has_friendly_id :name, :reserved => ['new', 'index']
   
   belongs_to :broker, :class_name => 'Agent', :foreign_key => :broker_id
   belongs_to :country
+  belongs_to :market_segment
   
   has_many :agency_images, :as => :imageable, :order => 'position ASC'
   has_many :agency_jurisdictions, :order => 'primary_market DESC'
@@ -23,6 +28,8 @@ class Agency < ActiveRecord::Base
   
   validates_presence_of :name, :short_name, :domain
   validates_uniqueness_of :name, :short_name
+  validates_format_of :name, :with => /^[a-zA-Z0-9\s]+$/,
+    :message => "may only contain letters and numbers"
   validates_uniqueness_of :subdomain, :scope => :subdomain,
     :case_sensitive => false,
     :message => 'Subdomain must be unique for given domain'

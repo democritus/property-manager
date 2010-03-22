@@ -1,7 +1,7 @@
 class MarketImage < Image
   
   acts_as_fleximage do
-    image_directory 'public/images/market_images'
+    image_directory 'public/media/market_images'
     use_creation_date_based_directories false
     image_storage_format :png
     #output_image_jpg_quality 85

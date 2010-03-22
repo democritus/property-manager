@@ -2,8 +2,6 @@ class Admin::AgencyImagesController < Admin::AdminController
 
   before_filter :set_agency_imageable
   
-  caches_page :show
-  
   # GET /agency_images
   # GET /agency_images.xml
   def index
