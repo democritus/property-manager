@@ -50,7 +50,7 @@ class Admin::AgentAffiliationsController < Admin::AdminController
       if @agent_affiliation.save
         flash[:notice] = 'AgentAffiliation was successfully created.'
         format.html { redirect_to(
-          polymorphic_url(:admin, [@affiliable, :agent_affiliations])) }
+          polymorphic_url([:admin, @affiliable, :agent_affiliations])) }
       else
         format.html { render :action => "new" }
       end
@@ -66,7 +66,7 @@ class Admin::AgentAffiliationsController < Admin::AdminController
       if @agent_affiliation.update_attributes(params[:agent_affiliation])
         flash[:notice] = 'AgentAffiliation was successfully updated.'
         format.html { redirect_to(
-          polymorphic_url(:admin, [@affiliable, :agent_affiliations])) }
+          polymorphic_url([:admin, @affiliable, :agent_affiliations])) }
       else
         format.html { render :action => "edit" }
       end

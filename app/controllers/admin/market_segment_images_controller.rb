@@ -37,7 +37,7 @@ class Admin::MarketSegmentImagesController < Admin::AdminController
       if @market_segment_image.save
         flash[:notice] = 'MarketSegmentImage was successfully created.'
         format.html { redirect_to(
-          polymorphic_url(:admin, [@market_segment_imageable,
+          polymorphic_url([:admin, @market_segment_imageable,
             :market_segment_images])) }
       else
         format.html { render :action => "new" }
@@ -54,7 +54,7 @@ class Admin::MarketSegmentImagesController < Admin::AdminController
       if @market_segment_image.update_attributes(params[:market_segment_image])
         flash[:notice] = 'MarketSegmentImage was successfully updated.'
         format.html { redirect_to(
-          polymorphic_url(:admin, [@market_segment_imageable,
+          polymorphic_url([:admin, @market_segment_imageable,
             :market_segment_images])) }
       else
         format.html { render :action => "edit" }

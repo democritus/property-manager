@@ -37,7 +37,7 @@ class Admin::AgencyImagesController < Admin::AdminController
       if @agency_image.save
         flash[:notice] = 'AgencyImage was successfully created.'
         format.html { redirect_to(
-          polymorphic_url(:admin, [@agency_imageable, :agency_images])) }
+          polymorphic_url([:admin, @agency_imageable, :agency_images])) }
       else
         format.html { render :action => "new" }
       end
@@ -53,7 +53,7 @@ class Admin::AgencyImagesController < Admin::AdminController
       if @agency_image.update_attributes(params[:agency_image])
         flash[:notice] = 'AgencyImage was successfully updated.'
         format.html { redirect_to(
-          polymorphic_url(:admin, [@agency_imageable, :agency_images])) }
+          polymorphic_url([:admin, @agency_imageable, :agency_images])) }
       else
         format.html { render :action => "edit" }
       end
@@ -68,7 +68,7 @@ class Admin::AgencyImagesController < Admin::AdminController
 
     respond_to do |format|
       format.html { redirect_to(
-        polymorphic_url(:admin, [@agency_imageable, :agency_images])) }
+        polymorphic_url([:admin, @agency_imageable, :agency_images])) }
     end
   end
   

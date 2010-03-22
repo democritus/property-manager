@@ -5,6 +5,7 @@ class Admin::AgencyLogosController < Admin::AdminController
   # GET /agency_logos
   # GET /agency_logos.xml
   def index
+    
     @agency_logos = @agency_logoable.agency_logos
 
     respond_to do |format|
@@ -36,7 +37,7 @@ class Admin::AgencyLogosController < Admin::AdminController
       if @agency_logo.save
         flash[:notice] = 'AgencyLogo was successfully created.'
         format.html { redirect_to(
-          polymorphic_url(:admin, [@agency_logoable, :agency_logos])) }
+          polymorphic_url([:admin, @agency_logoable, :agency_logos])) }
       else
         format.html { render :action => "new" }
       end
@@ -52,7 +53,7 @@ class Admin::AgencyLogosController < Admin::AdminController
       if @agency_logo.update_attributes(params[:agency_logo])
         flash[:notice] = 'AgencyLogo was successfully updated.'
         format.html { redirect_to(
-          polymorphic_url(:admin, [@agency_logoable, :agency_logos])) }
+          polymorphic_url([:admin, @agency_logoable, :agency_logos])) }
       else
         format.html { render :action => "edit" }
       end
@@ -67,7 +68,7 @@ class Admin::AgencyLogosController < Admin::AdminController
 
     respond_to do |format|
       format.html { redirect_to(
-        polymorphic_url(:admin, [@agency_logoable, :agency_logos])) }
+        polymorphic_url([:admin, @agency_logoable, :agency_logos])) }
     end
   end
   

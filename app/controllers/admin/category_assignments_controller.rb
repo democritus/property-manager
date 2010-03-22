@@ -37,7 +37,7 @@ class Admin::CategoryAssignmentsController < Admin::AdminController
     respond_to do |format|
       if @category_assignment.update_attributes(params[:category_assignment])
         flash[:notice] = 'Category Assignment was successfully updated.'
-        format.html { redirect_to(polymorphic_url(:admin, [@category_assignable,
+        format.html { redirect_to(polymorphic_url([:admin, @category_assignable,
           :category_assignments])) }
       else
         format.html { render :action => "edit" }
@@ -52,7 +52,7 @@ class Admin::CategoryAssignmentsController < Admin::AdminController
     @category_assignment.destroy
 
     respond_to do |format|
-      format.html { redirect_to(polymorphic_url(:admin, [@category_assignable,
+      format.html { redirect_to(polymorphic_url([:admin, @category_assignable,
         :category_assignments])) }
     end
   end

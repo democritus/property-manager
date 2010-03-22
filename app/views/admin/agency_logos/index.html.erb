@@ -30,7 +30,7 @@
     <td><%=h agency_logo.visible %></td>
     <td><%= link_to 'Show', agency_logo, :target => :_blank %></td>
     <td><%= link_to 'Edit', edit_polymorphic_path([:admin, @agency_logoable, agency_logo]) %></td>
-    <td><%= link_to 'Destroy', edit_polymorphic_path([:admin, @agency_logoable, agency_logo]), :confirm => 'Are you sure?', :method => :delete %></td>
+    <td><%= link_to 'Destroy', polymorphic_path([:admin, @agency_logoable, agency_logo]), :confirm => 'Are you sure?', :method => :delete %></td>
   </tr>
 <% end %>
 </table>

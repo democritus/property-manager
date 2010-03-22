@@ -37,7 +37,7 @@ class Admin::PropertyImagesController < Admin::AdminController
       if @property_image.save
         flash[:notice] = 'PropertyImage was successfully created.'
         format.html { redirect_to(
-          polymorphic_url(:admin, [@property_imageable, :property_images])) }
+          polymorphic_url([:admin, @property_imageable, :property_images])) }
       else
         format.html { render :action => "new" }
       end
@@ -53,7 +53,7 @@ class Admin::PropertyImagesController < Admin::AdminController
       if @property_image.update_attributes(params[:property_image])
         flash[:notice] = 'PropertyImage was successfully updated.'
         format.html { redirect_to(
-          polymorphic_url(:admin, [@property_imageable, :property_images])) }
+          polymorphic_url([:admin, @property_imageable, :property_images])) }
       else
         format.html { render :action => "edit" }
       end
@@ -71,7 +71,7 @@ class Admin::PropertyImagesController < Admin::AdminController
 
     respond_to do |format|
       format.html { redirect_to(
-        polymorphic_url(:admin, [@property_imageable, :property_images])) }
+        polymorphic_url([:admin, @property_imageable, :property_images])) }
     end
   end
   

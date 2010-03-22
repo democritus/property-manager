@@ -4,7 +4,7 @@ class Agency < ActiveRecord::Base
     :short_name, :domain, :subdomain, :descriptions, :master_agency, :email,
     :skype
 
-  has_friendly_id :name, :reserved => ['new', 'index']
+  has_friendly_id :name, :reserved_words => ['new', 'index']
   
   belongs_to :broker, :class_name => 'Agent', :foreign_key => :broker_id
   belongs_to :country

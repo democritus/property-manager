@@ -2,7 +2,7 @@ class MarketSegment < ActiveRecord::Base
 
   attr_accessible :name, :position
   
-  has_friendly_id :name, :reserved => ['new', 'index']
+  has_friendly_id :name, :reserved_words => ['new', 'index']
   
   has_many :agencies
   has_many :market_segment_images, :as => :imageable, :order => 'position ASC'

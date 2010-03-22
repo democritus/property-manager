@@ -69,6 +69,10 @@ Rails::Initializer.run do |config|
     :lib     => 'db_populate',
     :source  => 'http://gems.github.com',
     :version => '0.2.5'
+  config.gem 'fleximage',
+    :lib     => 'fleximage',
+    :source  => 'http://gems.github.com',
+    :version => '1.0.4'
 
   # Only load the plugins named here, in the order given (default is
   # alphabetical).

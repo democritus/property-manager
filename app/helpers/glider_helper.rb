@@ -188,12 +188,15 @@ module GliderHelper
       end
     end
     
-    panel_count = ((image_count * images_per_object).to_f / size.to_f).ceil
+    #panel_count = ((image_count * images_per_object).to_f / size.to_f).ceil
+    panel_count = (image_count.to_f / size.to_f).ceil
+    
     html = %Q{
       <div class="glide-holder"
       style="width: #{window_width.to_s}px;
       height: #{image_height.to_s}px">\n
     }
+    
     if panel_count > 1
 #      html += %Q{
 #        <div class="scroll-right"

@@ -37,7 +37,7 @@ class Admin::UserIconsController < Admin::AdminController
       if @user_icon.save
         flash[:notice] = 'UserIcon was successfully created.'
         format.html { redirect_to(
-          polymorphic_url(:admin, [@user_iconable, :user_icons])) }
+          polymorphic_url([:admin, @user_iconable, :user_icons])) }
       else
         format.html { render :action => "new" }
       end
@@ -68,7 +68,7 @@ class Admin::UserIconsController < Admin::AdminController
 
     respond_to do |format|
       format.html { redirect_to(
-        polymorphic_url(:admin, [@user_iconable, :user_icons])) }
+        polymorphic_url([:admin, @user_iconable, :user_icons])) }
     end
   end
   

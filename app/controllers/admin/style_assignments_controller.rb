@@ -21,7 +21,7 @@ class Admin::StyleAssignmentsController < Admin::AdminController
     respond_to do |format|
       if @style_assignment.save
         flash[:notice] = 'Style Assignment was successfully created.'
-        format.html { redirect_to(polymorphic_url(:admin, [@style_assignable,
+        format.html { redirect_to(polymorphic_url([:admin, @style_assignable,
           :style_assignments])) }
       else
         format.html { render :action => "new" }
@@ -38,7 +38,7 @@ class Admin::StyleAssignmentsController < Admin::AdminController
       if @style_assignment.update_attributes(params[:style_assignment])
         flash[:notice] = 'Style Assignment was successfully updated.'
 
-        format.html { redirect_to(polymorphic_url(:admin, [@style_assignable,
+        format.html { redirect_to(polymorphic_url([:admin, @style_assignable,
             :style_assignments])) }
       else
         format.html { render :action => "edit" }
@@ -53,7 +53,7 @@ class Admin::StyleAssignmentsController < Admin::AdminController
     @style_assignment.destroy
 
     respond_to do |format|
-      format.html { redirect_to(polymorphic_url(:admin, [@style_assignable,
+      format.html { redirect_to(polymorphic_url([:admin, @style_assignable,
         :style_assignments])) }
     end
   end
