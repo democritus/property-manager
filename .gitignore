@@ -1,0 +1,4 @@
+*.log
+public/media/*
+public/media-backup
+tmp/*
