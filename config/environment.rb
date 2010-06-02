@@ -48,11 +48,10 @@ Rails::Initializer.run do |config|
     :lib     => 'friendly_id',
     :source  => 'http://gems.github.com',
     :version => '~> 2.3.3'
-    #:version => '~> 2.2.4'
-  config.gem 'mislav-will_paginate',
+  config.gem 'will_paginate',
     :lib     => 'will_paginate',
     :source  => 'http://gems.github.com',
-    :version => '~> 2.3.11'
+    :version => '~> 2.3.12'
   config.gem 'authlogic',
     :lib     => 'authlogic',
     :source  => 'http://gems.github.com',

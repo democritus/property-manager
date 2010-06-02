@@ -12,22 +12,65 @@ class Listing < ActiveRecord::Base
   # Pseudo relationship combining Property and Listing images
   attr_accessor :images
   
-  # Scopes
-  default_scope :include => {
-    :property => { :agency => { :broker => { :user => :user_icons } } } }
-  named_scope :with_broker, :include => {
-    :property => { :agency => { :broker => { :user => :user_icons } } } }
-  named_scope :by_agency, lambda {
-    |agency_id| {
-      :include => :property,
-      :conditions => [ 'properties.agency_id = ?', agency_id ]
-    }
-  }
+  # Scopes  
+#  default_scope :include => {
+#    :property => { :agency => { :broker => { :user => :user_icons } } } }
+  named_scope :with_broker,
+    :include => {
+      :property => { :agency => { :broker => { :user => :user_icons } } } }
   named_scope :featured,
     :include => [:property_images, :property],
     :conditions => '`listings`.`listing_type_id` = 1',
     :order => '`listings`.`property_id`',
     :limit => 7
+  # Scopes with complex joins to permit deeper ordering
+  joins_for_advanced_ordering = 'INNER JOIN listing_types' +
+      ' ON listings.listing_type_id = listing_types.id' +
+    ' INNER JOIN properties ON listings.property_id = properties.id' +
+    ' INNER JOIN agencies ON properties.agency_id = agencies.id' +
+    ' INNER JOIN barrios ON properties.barrio_id = barrios.id' +
+    ' INNER JOIN countries ON barrios.country_id = countries.id' +
+    ' INNER JOIN markets ON barrios.market_id = markets.id' +
+    ' INNER JOIN provinces ON barrios.province_id = provinces.id' +
+    ' INNER JOIN zones ON barrios.zone_id = zones.id' +
+    ' LEFT JOIN category_assignments' +
+      ' ON properties.id = category_assignments.category_assignable_id' +
+      ' AND category_assignments.category_assignable_type = \'Property\'' +
+      ' AND category_assignments.primary_category = 1' +
+    ' LEFT JOIN categories primary_category' +
+      ' ON category_assignments.category_id = primary_category.id' +
+    ' LEFT JOIN style_assignments' +
+      ' ON properties.id = style_assignments.style_assignable_id' +
+      ' AND style_assignments.style_assignable_type = \'Property\'' +
+      ' AND style_assignments.primary_style = 1' +
+    ' LEFT JOIN styles primary_style' +
+      ' ON style_assignments.style_id = primary_style.id' +
+    ' LEFT JOIN agents broker ON agencies.broker_id = broker.id' +
+    ' LEFT JOIN users ON broker.user_id = users.id' +
+    ' LEFT JOIN images AS user_icons ON' +
+      ' user_icons.type = \'UserIcon\'' +
+      ' AND user_icons.imageable_type = \'User\'' +
+      ' AND user_icons.imageable_id = users.id'
+#  named_scope :regular_index,
+#    :include => nil,
+#    :joins => joins_for_advanced_ordering
+#  named_scope :by_agency, lambda {
+#    |agency_id| {
+#      :include => nil,
+#      :joins => joins_for_advanced_ordering,
+#      :conditions => [ 'properties.agency_id = ?', agency_id ]
+#    }
+#  }
+  named_scope :regular_index,
+    :include => {
+      :property => { :agency => { :broker => { :user => :user_icons } } } }
+  named_scope :by_agency, lambda {
+    |agency_id| {
+      :include => {
+        :property => { :agency => { :broker => { :user => :user_icons } } } },
+      :conditions => [ 'properties.agency_id = ?', agency_id ]
+    }
+  }
   
   belongs_to :ask_currency,
     :class_name => 'Currency',
@@ -36,18 +79,17 @@ class Listing < ActiveRecord::Base
     :class_name => 'Currency',
     :foreign_key => 'close_currency_id'
   belongs_to :listing_type
-  belongs_to :property, :include => [:agency, :property_images]
-  
+  belongs_to :property
+#  belongs_to :property,
+#    :include => [:agency, :property_images]
   has_one :primary_category, :through => :category_assignments,
     :source => :category,
     :conditions => 'primary_category = 1'
   has_one :primary_style, :through => :style_assignments,
     :source => :style,
     :conditions => 'primary_style = 1'
-    
   has_many :information_requests, :as => :information_requestable,
     :order => 'created_at DESC'
-    
   # This allows images to associated with this listing, in addition to the
   # main images that are associated with the property.
   has_many :property_images, :as => :imageable, :order => 'position ASC'

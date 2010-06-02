@@ -11,7 +11,11 @@ module ReadableSearch
     if parameters.nil?
       parameters = params.dup
     end
-    
+    # Remove Searchlogic ordering since this is duplicated in
+    # order / order_dir params
+    parameters.delete_if {
+      |key, value| key.include?('ascend_by') || key.include?('descend_by') }
+        
     SEARCHLOGIC_PARAMS_MAP.each do |param|
       if parameters[param[:key]]
         # Remove elements set to their defaults
@@ -31,6 +35,7 @@ module ReadableSearch
         end
       end
     end
+    
     return parameters.merge( params[:q] || {} )
   end
   
@@ -40,11 +45,12 @@ module ReadableSearch
     if parameters.nil?
       parameters = params.dup
     end
+    
     # Remove non-Searchlogic elements
     searchlogic_keys = SEARCHLOGIC_PARAMS_MAP.map { |param| param[:key] }
     parameters.delete_if {
       |key, value| ! searchlogic_keys.include?(key.to_sym) }
-      
+    
     # TODO: perhaps better to get friendly_id working with Searchlogic instead?
     # Replace dashes with spaces so that incoming values will match
     # database values

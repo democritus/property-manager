@@ -56,68 +56,85 @@
             # TODO: fix ordering so sorts can be performed on fields from
             # associated tables
             order_by_items = [
-  #            {
-  #              'label' => 'Category',
-  #              'order' => 'primary_category.name'
-  #            },
-  #            {
-  #              'label' => 'Style',
-  #              'order' => 'primary_style.name'
-  #            },
-  #            {
-  #              'label' => 'Country',
-  #              'order' => 'property.barrio.country.name'
-  #            },
-  #            {
-  #              'label' => 'Zone',
-  #              'order' => 'property.barrio.zone.name'
-  #            },
-  #            {
-  #              'label' => 'Province',
-  #              'order' => 'property.barrio.province.name'
-  #            },
-  #            {
-  #              'label' => 'Market',
-  #              'order' => 'property.barrio.market.name'
-  #            },
-  #            {
-  #              'label' => 'Barrio',
-  #              'order' => 'property.barrio.name'
-  #            },
               {
-                'label' => 'Price',
-                'order' => 'ask_amount'
-              },
-  #            {
-  #              'label' => 'Bedrooms',
-  #              'order' => 'property.bedroom_number'
-  #            },
-  #            {
-  #              'label' => 'Construction size',
-  #              'order' => 'property.construction_size'
-  #            },
-  #            {
-  #              'label' => 'Land size',
-  #              'order' => 'property.land_size'
-  #            },
-              {
-                'label' => 'Ref id',
-                'order' => 'id'
+                :label => 'Category',
+                :order => 'property_primary_category_name'
               },
               {
-                'label' => 'Sold',
-                'order' => 'sold'
+                :label => 'Style',
+                :order => 'property_primary_style_name'
               },
               {
-                'label' => 'Date posted',
-                'order' => 'publish_date'
+                :label => 'Country',
+                :order => 'property_barrio_country_name'
+              },
+              {
+                :label => 'Zone',
+                :order => 'property_barrio_zone_name'
+              },
+              {
+                :label => 'Province',
+                :order => 'property_barrio_province_name'
+              },
+              {
+                :label => 'Market',
+                :order => 'property_barrio_market_name'
+              },
+              {
+                :label => 'Barrio',
+                :order => 'property_barrio_name'
+              },
+              {
+                :label => 'Price',
+                :order => 'ask_amount'
+              },
+              {
+                :label => 'Bedrooms',
+                :order => 'property_bedroom_number'
+              },
+              {
+                :label => 'Construction size',
+                :order => 'property_construction_size'
+              },
+              {
+                :label => 'Land size',
+                :order => 'property_land_size'
+              },
+              {
+                :label => 'Ref id',
+                :order => 'id'
+              },
+              {
+                :label => 'Sold',
+                :order => 'sold'
+              },
+              {
+                :label => 'Date posted',
+                :order => 'publish_date'
               }
             ]
             %>
             <% order_by_items.each do |item| %>
-              <li><%= link_to item['label'],
+              <%
+              case item[:order]
+              when 'sold', 'publish_date'
+                order_dir = 'desc'
+              else
+                order_dir = 'asc'
+              end
+              if params[:order] == item[:order]
+                order_dir = 'desc'
+                if params[:order_dir]
+                  order_dir = 'asc' if params[:order_dir].downcase == 'desc'
+                end
+              end
+              %>
+              <li><%= link_to item[:label],
                 listings_options(
-                  @search_params.merge(:order => item['order'])
+                  @search_params.merge(
+                    'order' => item[:order],
+                    'order_dir' => order_dir
+                  )
                 ) %></li>
             <% end %>
           </ul>

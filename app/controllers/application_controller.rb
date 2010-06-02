@@ -11,7 +11,7 @@ class ApplicationController < ActionController::Base
   include HostHelp
   
   #helper :all # include all helpers, all the time
-  helper :glider, :layout, :rounded_box
+  helper :glider, :labeled_form, :layout, :rounded_box
   
   # 2009-03-04 - Brian Warren - Authlogic stuff
   helper_method :current_user_session, :current_user

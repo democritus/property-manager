@@ -114,13 +114,20 @@ class CreateDatabaseFromSchema < ActiveRecord::Migration
 
     add_index "categories", ["name"], :name => "name", :unique => true
 
-    create_table "category_assignments", :options => "ENGINE=InnoDB DEFAULT CHARSET=utf8", :force => true do |t|
-      t.integer "category_id",              :null => false
-      t.boolean  "primary_category",                   :default => false, :null => false
+    create_table :category_assignments,
+      :options => "ENGINE=InnoDB DEFAULT CHARSET=utf8",
+      :force => true do |t|
+      
+      t.integer :category_id,              :null => false
+      t.boolean  :primary_category,                   :default => false, :null => false
       # Polymorphic fields
       t.references :category_assignable, :polymorphic => true
       t.timestamps
     end
+    
+    add_index :category_assignments,
+      [:category_assignable_type, :category_assignable_id, :category_id],
+      :name => "category_assignable__category_id", :unique => true
 
     create_table "countries", :options => "ENGINE=InnoDB DEFAULT CHARSET=utf8", :force => true do |t|
       t.string  "iso2",     :limit => 2,   :default => "", :null => false
@@ -163,25 +170,28 @@ class CreateDatabaseFromSchema < ActiveRecord::Migration
 
     add_index "feature_assignments", ["feature_assignable_type", "feature_assignable_id", "feature_id"], :name => "feature_assignable__feature_id", :unique => true
 
-    create_table "images", :options => "ENGINE=InnoDB DEFAULT CHARSET=utf8", :force => true do |t|
+    create_table :images, :options => "ENGINE=InnoDB DEFAULT CHARSET=utf8",
+      :force => true do |t|
+      
       # Single-table inheritence
-      t.string  "type",     :limit => 32,  :default => "", :null => false
+      t.string  :type,     :limit => 32,  :default => "", :null => false
       
       # Auto-magic fields for Fleximage plugin
-      t.string   "image_filename"
-      t.integer  "image_width"
-      t.integer  "image_height"
+      t.string   :image_filename
+      t.integer  :image_width
+      t.integer  :image_height
       
-      t.string   "caption"
-      t.integer  "position"
-      t.boolean  "visible",                   :default => true, :null => false
+      t.string   :caption
+      t.integer  :position
+      t.boolean  :visible,                   :default => true, :null => false
       
       # Polymorphic fields
       t.references :imageable, :polymorphic => true
       t.timestamps
     end
 
-    add_index "images", ["imageable_type", "imageable_id", "position"], :name => "imageable__position"
+    add_index :images, [:type, :imageable_type, :imageable_id, :position],
+      :name => "type__imageable_type__imageable_id__position"
 
     create_table "information_requests", :options => "ENGINE=InnoDB DEFAULT CHARSET=utf8", :force => true do |t|
       t.string   "recipient_name",      :limit => 64

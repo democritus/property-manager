@@ -3,7 +3,7 @@
   <h2>Contact us</h2>
   <p>Send us your general inquires and/or comments using the following form.</p>
   
-  <% labelled_form_for( [ @agency, @information_request ] ) do |f| %>
+  <% labeled_form_for( [ @agency, @information_request ] ) do |f| %>
     <%= f.error_messages %>
     <%= f.hidden_field :subject, :value => 'Web form submission' %>
     <div class="row">

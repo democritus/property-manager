@@ -10,7 +10,7 @@ setup_market_select_fields
 <% #= debug @lists[:countries] %>
 <% #= debug @market.agency_ids %>
 
-<% labelled_form_for( [ :admin, @country, @market ] ) do |f| %>
+<% labeled_form_for( [ :admin, @country, @market ] ) do |f| %>
   <%= f.error_messages %>
   
   <div class="row">

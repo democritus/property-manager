@@ -1,7 +1,6 @@
 ActionController::Routing::Routes.draw do |map|
   map.resources :market_segments
 
-
   # Listings search
   # Cachable search urls compatible with Searchlogic (including pagination)
   bound_params_string = 'real_estate'

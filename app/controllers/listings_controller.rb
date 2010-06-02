@@ -13,14 +13,37 @@ class ListingsController < ApplicationController
     session[:last_seen_params] = search_params
     
     # Searchlogic filtering
-    unless active_agency.master_agency
-      @search = Listing.by_agency(active_agency.id).search(search_params)
-    else
-      @search = Listing.search(search_params)
+  
+    # TODO: figure out how to pass order by params as searchlogic parameter
+    # instead of this ugly named scope hack
+    unless params[:order].blank?
+      direction = 'ascend_by'
+      if params[:order_dir]
+        if params[:order_dir].downcase == 'desc'
+          direction = 'descend_by'
+        end
+      end
     end
+    unless active_agency.master_agency
+      if direction
+        @search = Listing.by_agency(active_agency.id).send(
+          "#{direction}_#{params[:order]}").search(search_params)
+      else
+        @search = Listing.by_agency(active_agency.id).search(search_params)
+      end
+    else
+      if direction
+        @search = Listing.regular_index.send(
+          "#{direction}_#{params[:order]}").search(search_params)
+      else
+        @search = Listing.regular_index.search(search_params)
+      end
+    end
+    @listings = @search.paginate :page => params[:page]
+#    @listings = @search.paginate :page => params[:page], :order => infer_order
+#    @listings = Listing.by_agency(active_agency.id).paginate :page => params[:page], :order => infer_order
+#    @listings = Listing.by_agency(active_agency.id)
     
-    @listings = @search.paginate :page => params[:page], :order => infer_order
-    #@listings = @search
     
     respond_to do |format|
       format.html # index.html.erb
@@ -72,12 +95,24 @@ class ListingsController < ApplicationController
 
   private
   
-  def infer_order
-    direction = ''
-    unless params[:order_dir].blank?
-      direction = ' ' + params[:order_dir]
+  def order
+    order_params = {}
+    unless params[:order].blank?
+      order = params[:order] + ' IS NULL, ' + params[:order]
+      order_params.merge!('ascend_by_')
+      direction = ''
+      if params[:order_dir]
+        if params[:order_dir].upcase == 'DESC'
+          direction = ' DESC'
+        end
+      end    
+      unless params[:order_dir].blank?
+        direction = ' ' + params[:order_dir]
+      end
+      
+      return order + direction
     end
-    return params[:order] + direction unless params[:order].blank?
+    
     # TODO: create scheme to change order of listings so that the same listings
     # don't always show up at the top of the list
     if search_params.has_key?('property_barrio_country_name_equals')
@@ -110,6 +145,60 @@ class ListingsController < ApplicationController
       end
     end
     order = 'listings.created_at DESC' unless order
+    
+    return order
+  end
+  
+  def infer_order
+    unless params[:order].blank?
+      order = params[:order] + ' IS NULL, ' + params[:order]
+      direction = ''
+      if params[:order_dir]
+        if params[:order_dir].upcase == 'DESC'
+          direction = ' DESC'
+        end
+      end    
+      unless params[:order_dir].blank?
+        direction = ' ' + params[:order_dir]
+      end
+      
+      return order + direction
+    end
+    
+    # TODO: create scheme to change order of listings so that the same listings
+    # don't always show up at the top of the list
+    if search_params.has_key?('property_barrio_country_name_equals')
+      if search_params.has_key?('categories_name_equals')
+        if search_params.has_key?('property_barrio_market_name_equals')
+          if search_params.has_key?('property_barrio_name_equals')
+            order = 'listings.ask_amount'
+          else
+            order = 'barrios.name, listings.ask_amount'
+          end
+        else
+          order = 'markets.name, barrios.name'
+        end
+      else
+        if search_params.has_key?('property_barrio_market_name_equals')
+          if search_params.has_key?('property_barrio_name_equals')
+            order = 'categories.name'
+          else
+            order = 'categories.name, barrios.name'
+          end
+        else
+          order = 'markets.name, barrios.name'
+        end
+      end
+    else
+      if search_params.has_key?('categories_name_equals')
+        order = 'countries.name, markets.name, barrios.name'
+      else
+        order = 'listings.ask_amount'
+      end
+    end
+    order = 'listings.created_at DESC' unless order
+    
+    return order
   end
   
   def add_recent_listing(listing)
