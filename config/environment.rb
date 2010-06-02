@@ -47,11 +47,12 @@ Rails::Initializer.run do |config|
   config.gem 'friendly_id',
     :lib     => 'friendly_id',
     :source  => 'http://gems.github.com',
-    :version => '~> 2.3.3'
+#    :version => '~> 2.3.3'
+    :version => '~> 3.0.4'
   config.gem 'will_paginate',
     :lib     => 'will_paginate',
     :source  => 'http://gems.github.com',
-    :version => '~> 2.3.12'
+    :version => '~> 2.3.14'
   config.gem 'authlogic',
     :lib     => 'authlogic',
     :source  => 'http://gems.github.com',
@@ -59,7 +60,7 @@ Rails::Initializer.run do |config|
   config.gem 'searchlogic',
     :lib     => 'searchlogic',
     :source  => 'http://gems.github.com',
-    :version => '~> 2.4.12'
+    :version => '~> 2.4.19'
   config.gem 'subdomain-fu',
     :lib     => 'subdomain-fu',
     :source  => 'http://gems.github.com',

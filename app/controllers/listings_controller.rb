@@ -16,6 +16,7 @@ class ListingsController < ApplicationController
   
     # TODO: figure out how to pass order by params as searchlogic parameter
     # instead of this ugly named scope hack
+    
     unless params[:order].blank?
       direction = 'ascend_by'
       if params[:order_dir]
@@ -41,8 +42,8 @@ class ListingsController < ApplicationController
     end
     @listings = @search.paginate :page => params[:page]
 #    @listings = @search.paginate :page => params[:page], :order => infer_order
-#    @listings = Listing.by_agency(active_agency.id).paginate :page => params[:page], :order => infer_order
-#    @listings = Listing.by_agency(active_agency.id)
+#    @listings = Listing.by_agency(
+#      active_agency.id).paginate :page => params[:page], :order => infer_order
     
     
     respond_to do |format|

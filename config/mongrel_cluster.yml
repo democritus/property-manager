@@ -2,7 +2,7 @@
 group: mongrel
 address: 127.0.0.1
 log_file: log/mongrel.log
-port: "8000"
+port: "8020"
 cwd: /u/apps/barrioearth.com/current
 environment: production
 user: mongrel

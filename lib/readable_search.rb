@@ -10,12 +10,7 @@ module ReadableSearch
   def listings_params(parameters = nil)
     if parameters.nil?
       parameters = params.dup
-    end
-    # Remove Searchlogic ordering since this is duplicated in
-    # order / order_dir params
-    parameters.delete_if {
-      |key, value| key.include?('ascend_by') || key.include?('descend_by') }
-        
+    end 
     SEARCHLOGIC_PARAMS_MAP.each do |param|
       if parameters[param[:key]]
         # Remove elements set to their defaults
@@ -55,6 +50,7 @@ module ReadableSearch
     # Replace dashes with spaces so that incoming values will match
     # database values
     parameters.each { |k, v| parameters[k] = v.to_s.gsub('-', ' ') }
+    
     return listings_params(parameters)
   end
   
