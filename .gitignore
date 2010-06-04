@@ -1,3 +1,4 @@
 *.log
+public/cache
 public/media/*
 tmp/*
