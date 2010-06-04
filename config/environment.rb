@@ -83,11 +83,22 @@ Rails::Initializer.run do |config|
   # you must remove the Active Record framework.
   # config.frameworks -= [ :active_record, :active_resource, :action_mailer ]
 
+  # 2010-06-04 bsw
+  # Need to include sweepers directory in rails paths
+  config.load_paths += %W( #{RAILS_ROOT}/app/sweepers )
+  
   # Activate observers that should always be running
   # config.active_record.observers = :cacher, :garbage_collector,
   # :forum_observer
   config.active_record.observers = :information_request_observer
-
+  
+  # 2010-06-04 bsw
+  # Add sweepers as observers
+  full_names = Dir["#{RAILS_ROOT}/app/sweepers/*.rb"]
+  config.active_record.observers = full_names.collect do |full_name|
+    File.basename(full_name,'.rb').to_sym
+  end
+  
   # Set Time.zone default to the specified zone and make Active Record
   # auto-convert to this zone.
   # Run "rake -D time" for a list of tasks for finding time zone names.

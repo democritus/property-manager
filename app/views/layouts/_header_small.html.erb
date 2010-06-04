@@ -68,7 +68,11 @@ end
 # TODO: add market segment images as placeholder images if no listings exist
 if @mini_glider.length == 0
   #@mini_glider << @active_agency.market_segment.name
-  @mini_glider += @active_agency.market_segment.market_segment_images
+  if @active_agency.market_segment
+    if @active_agency.market_segment.market_segment_images
+      @mini_glider += @active_agency.market_segment.market_segment_images
+    end
+  end
 end
 
 # Set up image glider

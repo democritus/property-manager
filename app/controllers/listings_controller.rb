@@ -1,7 +1,7 @@
 class ListingsController < ApplicationController
   
   # TODO: re-enable this to test caching
-  #caches_page :index
+  caches_page :index
   
   before_filter :set_search_params
   

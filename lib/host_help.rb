@@ -17,7 +17,7 @@ module HostHelp
     # tld size of 2 means we're tacking on ".dev" in development environment
     # which must be removed
     unless ENV['RAILS_ENV'] == 'development' && SubdomainFu.tld_size > 1
-      return domain_from_url
+      return domain
     end
     domain_parts = domain.split('.')
     return if domain_parts.blank?

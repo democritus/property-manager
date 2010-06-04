@@ -22,7 +22,7 @@ class ApplicationController < ActionController::Base
   # Scrub sensitive parameters from your log
   # filter_parameter_logging :password
 
-  before_filter :set_page_caching_status, :set_active_agency,
+  before_filter :page_caching_active, :set_active_agency,
     :set_agency_content, :redirect_if_current_agency_not_found, :set_locale,
     :glide_image_pairs
   
@@ -33,7 +33,7 @@ class ApplicationController < ActionController::Base
   # javascript into cached page so that certain dynamic things are handled by
   # client-side javascript since Rails is skipped when page caching is on
   # TODO: better way?
-  def set_page_caching_status
+  def page_caching_active
     if perform_caching && caching_allowed
       @page_caching_active = true
     else
@@ -66,7 +66,7 @@ class ApplicationController < ActionController::Base
   # pre-pended to the page cache path. Note that the "caches_page" method
   # called on actions within a controller is affected by this as well
   def cache_page_with_domain(content = nil, options = nil)
-    return unless perform_caching && caching_allowed
+    return unless page_caching_active
     
     path = "/#{request.host}"
     path << case options
