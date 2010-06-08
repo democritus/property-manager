@@ -1,0 +1,18 @@
+# TODO: create prettier placeholder image for mini_glider images
+Fleximage::Blank.new('118x87').operate do |image|
+  image.border :size => 4, :color => 'white'
+  image.shadow(
+    :color      => 'black',    # or color(0, 0, 0)
+    :background => 'white',    # or color(255, 255, 255)
+    :blur       => 8,
+    :offset     => '2x2',
+    :opacity    => 0.75 
+  )
+#  image.text("Virtual Image",
+#    :alignment => :center,
+#    :antialias => true,
+#    :color => 'gray',
+#    :font_size => 16
+#  )
+end
+

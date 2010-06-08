@@ -92,12 +92,14 @@ Rails::Initializer.run do |config|
   # :forum_observer
   config.active_record.observers = :information_request_observer
   
-  # 2010-06-04 bsw
-  # Add sweepers as observers
-  full_names = Dir["#{RAILS_ROOT}/app/sweepers/*.rb"]
-  config.active_record.observers = full_names.collect do |full_name|
-    File.basename(full_name,'.rb').to_sym
-  end
+#  # DISABLED: sweepers used via controller callbacks instead to allow use
+#  # of domain name as part of cache directory path
+#  # 2010-06-04 bsw
+#  # Add sweepers as observers
+#  full_names = Dir["#{RAILS_ROOT}/app/sweepers/*.rb"]
+#  config.active_record.observers = full_names.collect do |full_name|
+#    File.basename(full_name,'.rb').to_sym
+#  end
   
   # Set Time.zone default to the specified zone and make Active Record
   # auto-convert to this zone.

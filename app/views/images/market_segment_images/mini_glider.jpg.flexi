@@ -1,0 +1,26 @@
+# Accessed via http://mysite.com/market_segment_images/123/mini_glider.jpg
+@market_segment_image.operate do |image|
+  image.resize '118x87', :crop => true
+  image.border :size => 4, :color => 'white'
+  image.shadow(
+    :color      => 'black',    # or color(0, 0, 0)
+    :background => 'white',    # or color(255, 255, 255)
+    :blur       => 8,
+    :offset     => '2x2',
+    :opacity    => 0.75 
+  )
+  image.text("barrioearth.com",
+    :alignment => :bottom_right,
+    :offset => '18x18',
+    :antialias => true,
+    :color => 'gray',
+    :font_size => 9
+#   :font => 'path/to/myfont.ttf',
+#   :rotate => -15,
+#   :shadow => {
+#     :blur => 1,
+#     :opacity => 0.5,
+#   }
+  )
+end
+

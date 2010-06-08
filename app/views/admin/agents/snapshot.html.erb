@@ -1,7 +1,7 @@
 <% if agent.user.user_icons %>
   <% if agent.user.user_icons[0] %>
     <%= image_tag(
-      small_user_icon_path(agent.user.user_icons[0],
+      small_images_user_icon_path(agent.user.user_icons[0],
         :format => :jpg),
       :class=> 'agent-photo'
     )

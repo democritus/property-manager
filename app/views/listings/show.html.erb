@@ -10,7 +10,7 @@ merge_images!
         <% if @listing.images[0] %>
           <%= medium_image(@listing.images[0]) %>
         <% else %>
-          <%= image_tag(default_medium_properties_path(:format => :jpg)) %>
+          <%= image_tag(default_medium_images_properties_path(:format => :jpg)) %>
         <% end %>
       </div>
       <%= main_image_spinner %>

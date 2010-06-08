@@ -1,4 +1,0 @@
-# Accessed via http://mysite.com/user_icons/123.png
-@user_icon.operate do |image|
-  image.resize '320x320'
-end

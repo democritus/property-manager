@@ -2,6 +2,8 @@ class Admin::PropertiesController < Admin::AdminController
 
   before_filter :set_contextual_agency
   
+  cache_sweeper :site_sweeper, :only => [ :create, :update, :destroy ]
+  
   # GET /properties
   # GET /properties.xml
   def index

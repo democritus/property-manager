@@ -22,22 +22,30 @@ class ApplicationController < ActionController::Base
   # Scrub sensitive parameters from your log
   # filter_parameter_logging :password
 
-  before_filter :page_caching_active, :set_active_agency,
+  before_filter :test, :set_page_caching_status, :set_active_agency,
     :set_agency_content, :redirect_if_current_agency_not_found, :set_locale,
     :glide_image_pairs
   
 
   private
   
+  def test
+#    debugger
+  end
+  
   # Need variable in view to know if caching is enabled. Used to save
   # javascript into cached page so that certain dynamic things are handled by
   # client-side javascript since Rails is skipped when page caching is on
   # TODO: better way?
+  def set_page_caching_status
+    @page_caching_active = page_caching_active
+  end
+  
   def page_caching_active
     if perform_caching && caching_allowed
-      @page_caching_active = true
+      true
     else
-      @page_caching_active = false
+      false
     end
   end
   
@@ -82,7 +90,7 @@ class ApplicationController < ActionController::Base
           request.path
         end
     end
-
+    
     cache_page_without_domain(content, path)
   end
   alias_method_chain :cache_page, :domain

@@ -245,41 +245,46 @@ module GliderHelper
       case options['type']
       when 'large'
         if image.imageable_type == 'Agency'
-          path = large_glider_agency_image_path(image, :format => :jpg)
+          path = large_glider_images_agency_image_path(image, :format => :jpg)
         elsif image.imageable_type == 'MarketSegment'
-          path = large_glider_market_segment_image_path(image, :format => :jpg)
+          path = large_glider_images_market_segment_image_path(image,
+            :format => :jpg)
         else
-          path = large_glider_property_image_path(image, :format => :jpg)
+          path = large_glider_images_property_image_path(image, :format => :jpg)
         end
       when 'mini'
         if image.imageable_type == 'Agency'
-          path = mini_glider_agency_image_path(image, :format => :jpg)
+          path = mini_glider_images_agency_image_path(image, :format => :jpg)
         elsif image.imageable_type == 'MarketSegment'
-          path = mini_glider_market_segment_image_path(image, :format => :jpg)
+          path = mini_glider_images_market_segment_image_path(image,
+            :format => :jpg)
         else
-          path = mini_glider_property_image_path(image, :format => :jpg)
+          path = mini_glider_images_property_image_path(image, :format => :jpg)
         end
       else # when 'listing'
         if image.imageable_type == 'Agency'
-          path = listing_glider_agency_image_path(image, :format => :jpg)
+          path = listing_glider_images_agency_image_path(image, :format => :jpg)
         else
-          path = listing_glider_property_image_path(image, :format => :jpg)
+          path = listing_glider_images_property_image_path(image,
+            :format => :jpg)
         end
       end
     else
       case image
       when 'recent'
-        path = mini_glider_recent_property_images_path(:format => :jpg)
+        path = mini_glider_recent_images_property_images_path(:format => :jpg)
         text_overlay = 'Recently viewed listings'
       when 'suggested'
-        path = mini_glider_suggested_property_images_path(:format => :jpg)
+        path = mini_glider_suggested_images_property_images_path(
+          :format => :jpg)
         text_overlay = 'Featured listings'
       when 'similar'
-        path = mini_glider_similar_property_images_path(:format => :jpg)
+        path = mini_glider_similar_images_property_images_path(:format => :jpg)
         text_overlay = 'Similar listings'
       else
         # TODO: Figure out how to build method name from string
-        path = send("#{options['type']}_glider_placeholder_property_images_path",
+        path = send(
+          "#{options['type']}_glider_placeholder_images_property_images_path",
           :format => :jpg)
         #path = url_for(
         #  :controller => options['placeholder_controller'],

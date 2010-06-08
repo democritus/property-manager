@@ -1,0 +1,5 @@
+# Accessed via http://mysite.com/agency_logos/thumb.jpg
+@agency_logo.operate do |image|
+  image.resize '120x120'
+end
+

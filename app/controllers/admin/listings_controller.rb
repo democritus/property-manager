@@ -4,7 +4,6 @@ class Admin::ListingsController < Admin::AdminController
   include ReadableSearch
   
   before_filter :set_contextual_property
-  
   #caches_page :large_glider
   
   # GET /listings

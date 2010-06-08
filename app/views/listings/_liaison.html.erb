@@ -22,7 +22,7 @@ my_broker = listing_contact(listing)
         <% if my_broker.user.user_icons[0] %>
           <% link_to(listing_path(listing, :anchor => 'information_request')) do %>
             <%= image_tag(
-              small_user_icon_path(my_broker.user.user_icons[0],
+              small_images_user_icon_path(my_broker.user.user_icons[0],
                 :format => :jpg),
               :class=> 'agent-photo'
             )

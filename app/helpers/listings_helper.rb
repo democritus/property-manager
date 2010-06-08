@@ -171,9 +171,10 @@ module ListingsHelper
       
   def thumbnail(image, link = false)
     unless image.blank?
-      image_html = image_tag(thumb_property_image_path(image, :format => :jpg))
+      image_html = image_tag(thumb_property_image_images_path(image,
+        :format => :jpg))
       if link
-        html = link_to(image_html, property_image_path(image),
+        html = link_to(image_html, property_image_images_path(image),
           :target => :image_viewer)
       else
         html = image_html
@@ -183,7 +184,8 @@ module ListingsHelper
   
   def medium_image(image)
     unless image.blank?
-      return image_tag(medium_property_image_path(image, :format => :jpg))
+      return image_tag(medium_property_image_images_path(image,
+        :format => :jpg))
     end
   end
   
@@ -209,12 +211,13 @@ module ListingsHelper
   
   def listing_thumbnail(image, listing = nil)
     return if image.blank?
-    image_html = image_tag(thumb_property_image_path(image, :format => :jpg))
+    image_html = image_tag(thumb_property_image_images_path(image,
+      :format => :jpg))
     # If listing object exists, link to listing view. Otherwise, link to a
     # larger version of image
     if listing.blank?
       link_to(image_html,
-        property_image_path(image, :format => :html),
+        property_image_images_path(image, :format => :html),
         :target => :image_viewer
       )
     else

@@ -1,8 +1,7 @@
 class AgenciesController < ApplicationController
 
   # TODO: re-enable this to test caching
-  #caches_page :show, :contact, :links, :default_logo
-  caches_page :default_logo
+  caches_page :show, :contact, :links
   
   # GET /agencies/1
   # GET /agencies/1.xml
@@ -55,15 +54,6 @@ class AgenciesController < ApplicationController
       flash[:error] = 'Either an email address or phone number is required.'
     end
     # Send email to broker
-  end
-  
-  # GET /agencies/1/default_logo
-  def default_logo
-    infer_agency
-    
-    respond_to do |format|
-      format.png  # default.png.flexi
-    end
   end
   
   

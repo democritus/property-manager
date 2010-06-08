@@ -1,4 +1,0 @@
-# Accessed via http://mysite.com/agency_logos/123.png
-@agency_logo.operate do |image|
-  image.resize '240x109', :padding => true
-end

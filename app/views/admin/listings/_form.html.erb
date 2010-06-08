@@ -75,12 +75,6 @@ onchange_listing_type = remote_function(
       { :label_text => 'Primary category' } %>
   </div>
 
-  <div id="primary_style_select" class="row">
-    <%= f.select :primary_style_id,
-      @lists[:styles].dup.unshift(['None', '']),
-      { :label_text => 'Primary style' } %>
-  </div>
-
   <div id="category_list" class="row">
     <%= multiple_select_html('listing', 'category',
       @lists[:categories],
@@ -89,6 +83,12 @@ onchange_listing_type = remote_function(
         :empty => 'No categories found'
       }
     ) %>
+  </div>
+
+  <div id="primary_style_select" class="row">
+    <%= f.select :primary_style_id,
+      @lists[:styles].dup.unshift(['None', '']),
+      { :label_text => 'Primary style' } %>
   </div>
 
   <div id="style_list" class="row">

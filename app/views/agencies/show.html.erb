@@ -20,7 +20,8 @@
         <% unless market.market_images.empty? %>
           <%= link_to(
             image_tag(
-              thumb_market_image_path(market.market_images[0], :format => :jpg),
+              thumb_images_market_image_path(market.market_images[0],
+                :format => :jpg),
               :class => 'market_thumb',
               :border => 0
             ),
