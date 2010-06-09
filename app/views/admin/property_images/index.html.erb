@@ -1,6 +1,6 @@
 <% unless params[:context_type] == 'listings' %>
   <% back_to_property_imageable = polymorphic_path(
-    :admin, @property_imageable) %>
+    [ :admin, @property_imageable ]) %>
 <% else %>
   <% back_to_property_imageable = admin_property_listing_path(
     @property_imageable.property, @property_imageable) %>
@@ -22,13 +22,8 @@
 <% @property_images.each do |property_image| %>
   <tr>
     <td>
-      <%= link_to(
-        image_tag(
-          thumb_property_image_path(property_image, :format => :jpg),
-          :style => 'border: 0'
-        ),
-        property_image_path(property_image),
-        :target => :_blank
+      <%= image_tag(
+        thumb_images_property_image_path(property_image, :format => :jpg)
       ) %></td>
     <td><%=h property_image.image_filename %></td>
     <td><%=h property_image.image_width %></td>
@@ -36,7 +31,8 @@
     <td><%=h property_image.caption %></td>
     <td><%=h property_image.position %></td>
     <td><%=h property_image.visible %></td>
-    <td><%= link_to 'Show', property_image, :target => :_blank %></td>
+    <td><%= link_to 'Show', property_image_path(property_image),
+      :target => :_blank %></td>
     <td><%= link_to 'Edit', edit_polymorphic_path(      
       [:admin, @property_imageable, property_image]) %></td>
     <td><%= link_to 'Destroy', polymorphic_path(

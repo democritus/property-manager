@@ -28,14 +28,9 @@ class SiteSweeper < ActionController::Caching::Sweeper
     self.class::sweep(subdirectory)
   end
   
-  def self.image_directories
+  def self.exclude_directories
     [
-      'agency_images',
-      'agency_logos',
-      'market_images',
-      'market_segment_images',
-      'property_images',
-      'user_icons'
+      'images'
     ]
   end
   
@@ -48,7 +43,7 @@ class SiteSweeper < ActionController::Caching::Sweeper
         path = cache_dir + '/' + filename
         unless filename == '.' || filename == '..'
           if File.directory?(path)
-            unless self.image_directories.include?(filename)
+            unless self.exclude_directories.include?(filename)
               #FileUtils.rm_r(Dir.glob(path + '/*')) rescue Errno::ENOENT
               FileUtils.rm_r(path) rescue Errno::ENOENT
               RAILS_DEFAULT_LOGGER.info("Cache directory '#{path}' swept.")

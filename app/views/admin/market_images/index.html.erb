@@ -14,13 +14,8 @@
 <% @market_images.each do |market_image| %>
   <tr>
     <td>
-      <%= link_to(
-        image_tag(
-          thumb_images_market_image_path(market_image, :format => :jpg),
-          :style => 'border: 0'
-        ),
-        market_image_path(market_image),
-        :target => :_blank
+      <%= image_tag(
+        thumb_images_market_image_path(market_image, :format => :jpg)
       ) %></td>
     <td><%=h market_image.image_filename %></td>
     <td><%=h market_image.image_width %></td>
@@ -28,7 +23,8 @@
     <td><%=h market_image.caption %></td>
     <td><%=h market_image.position %></td>
     <td><%=h market_image.visible %></td>
-    <td><%= link_to 'Show', market_image, :target => :_blank %></td>
+    <td><%= link_to 'Show', images_market_image(market_image, :format => :jpg),
+      :target => :_blank %></td>
     <td><%= link_to 'Edit',
       edit_polymorphic_path([:admin, @market_imageable, market_image]) %></td>
     <td><%= link_to 'Destroy',

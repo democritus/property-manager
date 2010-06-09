@@ -28,7 +28,9 @@
     <td><%=h agency_image.caption %></td>
     <td><%=h agency_image.position %></td>
     <td><%=h agency_image.visible %></td>
-    <td><%= link_to 'Show', agency_image, :target => :_blank %></td>
+    <td><%= link_to 'Show',
+      images_agency_image_path(agency_image, :format => :jpg),
+      :target => :_blank %></td>
     <td><%= link_to 'Edit',
       edit_polymorphic_path([:admin, @agency_imageable, agency_image]) %></td>
     <td><%= link_to 'Destroy',

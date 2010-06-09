@@ -30,7 +30,7 @@ module ListingsHelper
     title = @listing.name
     title += ' ' + primary_category unless primary_category.blank?
     title += ' in ' +  location_text unless location_text.blank?
-    unless @listing.property.barrio.country.name.blank?
+    if @listing.property.barrio
       title += ', ' + @listing.property.barrio.country.name
     end
   end
@@ -76,10 +76,12 @@ module ListingsHelper
     else
       barrio_name = ''
     end
-    if listing.property.barrio.market
-      market_name = listing.property.barrio.market.name
-    else
-      market_name = ''
+    if listing.property.barrio
+      if listing.property.barrio.market
+        market_name = listing.property.barrio.market.name
+      else
+        market_name = ''
+      end
     end
     location_formatted(barrio_name, market_name)
   end
@@ -171,10 +173,10 @@ module ListingsHelper
       
   def thumbnail(image, link = false)
     unless image.blank?
-      image_html = image_tag(thumb_property_image_images_path(image,
+      image_html = image_tag(thumb_images_property_image_path(image,
         :format => :jpg))
       if link
-        html = link_to(image_html, property_image_images_path(image),
+        html = link_to(image_html, property_images_image_path(image),
           :target => :image_viewer)
       else
         html = image_html
@@ -184,7 +186,7 @@ module ListingsHelper
   
   def medium_image(image)
     unless image.blank?
-      return image_tag(medium_property_image_images_path(image,
+      return image_tag(medium_images_property_image_path(image,
         :format => :jpg))
     end
   end
@@ -211,13 +213,13 @@ module ListingsHelper
   
   def listing_thumbnail(image, listing = nil)
     return if image.blank?
-    image_html = image_tag(thumb_property_image_images_path(image,
+    image_html = image_tag(thumb_images_property_image_path(image,
       :format => :jpg))
     # If listing object exists, link to listing view. Otherwise, link to a
     # larger version of image
     if listing.blank?
       link_to(image_html,
-        property_image_images_path(image, :format => :html),
+        images_property_image_path(image, :format => :html),
         :target => :image_viewer
       )
     else

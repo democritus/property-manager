@@ -81,5 +81,5 @@
   admin_property_feature_assignments_path(@property) %> |
 <%= link_to 'Associated styles',
   admin_property_style_assignments_path(@property) %> |
-<%= link_to 'Edit', edit_contextual_path(@property) %> |
-<%= link_to 'Back', contextual_collection_path %>
+<%= link_to 'Edit', edit_admin_agency_property_path(@property.agency, @property) %> |
+<%= link_to 'Back', admin_agency_properties_path(@property.agency) %>

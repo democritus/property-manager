@@ -6,7 +6,6 @@ class Images::AgencyLogosController < Images::ImagesController
     @agency_logo = AgencyLogo.find(params[:id])
 
     respond_to do |format|
-      format.html # show.html.erb
       format.png  # show.png.flexi
     end
   end

@@ -26,7 +26,7 @@ module ApplicationHelper
   end
   
   # Sensible defaults for links pointing to listings index page
-  def listings_options(params_to_overwrite = {})
+  def listings_options( params_to_overwrite = {} )
     parameters = { :controller => :listings, :action => :index }
     # Constrain "all listings" by agency's primary country by default
     # Having a link with the country name is better for search engines

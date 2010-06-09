@@ -25,7 +25,9 @@ module AssignablePseudoFields
     end
     
     def primary_category_id=(primary_category_id)
-      write_attribute(:primary_category_id, primary_category_id.to_i)
+      unless primary_category_id.blank?
+        write_attribute(:primary_category_id, primary_category_id.to_i)
+      end
     end
         
     def primary_style_id
@@ -43,7 +45,9 @@ module AssignablePseudoFields
     end
     
     def primary_style_id=(primary_style_id)
-      write_attribute(:primary_style_id, primary_style_id.to_i)
+      unless primary_style_id.blank?
+        write_attribute(:primary_style_id, primary_style_id.to_i)
+      end
     end
     
     
@@ -52,7 +56,9 @@ module AssignablePseudoFields
     def add_primary_category_to_category_ids
       unless self.primary_category_id.blank?
         new_ids = self.category_ids || []
-        new_ids << self.primary_category_id
+        unless new_ids.include?(self.primary_category_id)
+          new_ids << self.primary_category_id
+        end
         self.category_ids = new_ids
       end
     end
@@ -78,7 +84,9 @@ module AssignablePseudoFields
     def add_primary_style_to_style_ids
       unless self.primary_style_id.blank?
         new_ids = self.style_ids || []
-        new_ids << self.primary_style_id
+        unless new_ids.include?(self.primary_style_id)
+          new_ids << self.primary_style_id
+        end
         self.style_ids = new_ids
       end
     end

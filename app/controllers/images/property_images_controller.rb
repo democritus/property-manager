@@ -18,13 +18,11 @@ class Images::PropertyImagesController < Images::ImagesController
     end
   end
 
-  # GET /property_images/1
   # GET /property_images/1.jpg
   def show
     @property_image = PropertyImage.find(params[:id])
 
     respond_to do |format|
-      format.html # show.html.erb
       format.jpg  # show.jpg.flexi
     end
   end

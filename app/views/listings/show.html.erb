@@ -242,22 +242,34 @@ merge_images!
     -->
     <%
     static_params = {
-      :property_barrio_country_name_equals => @listing.property.barrio.country.name,
       :listing_type_name_equals => @listing.listing_type.name
     }
+    if @listing.property.barrio
+      static_params.merge!(
+        :property_barrio_country_name_equals => @listing.property.barrio.country.name
+      )
+    end
+    category_in_market = ''
     if @listing.primary_category
       static_params.merge!(
         :categories_name_equals => @listing.primary_category.name
       )
-      category_in_market = 'More ' + @listing.primary_category.name.downcase +
-        ' in ' + @listing.property.barrio.market.name + '...'
+      if @listing.property.barrio
+        category_in_market = 'More ' + @listing.primary_category.name.downcase +
+          ' in ' + @listing.property.barrio.market.name + '...'
+      end
     else
-      category_in_market = 'More properties in ' +
-        @listing.property.barrio.market.name + '...'
+      if @listing.property.barrio
+        category_in_market = 'More properties in ' +
+          @listing.property.barrio.market.name + '...'
+      end
     end
-    market_params = static_params.merge(
-      :property_barrio_market_name_equals => @listing.property.barrio.market.name
-    )
+    market_params = {}
+    if @listing.property.barrio
+      market_params = static_params.merge(
+        :property_barrio_market_name_equals => @listing.property.barrio.market.name
+      )
+    end
     %>
     <div class="menu_list">
       <h2>Find similar listings</h2>
@@ -299,24 +311,26 @@ merge_images!
         <% end %>
       <% end %>
       </ul>
-      <h3>Barrio</h3>
-      <ul>
-      <% @listing.property.barrio.market.barrios.each do |barrio| %>
-        <% unless barrio.id == @listing.property.barrio.id %>
-          <li>
-            <%= link_to(barrio.name,
-              listings_options(
-                market_params.merge(
-                  :property_barrio_name_equals => barrio.name
+      <% if @listing.property.barrio %>
+        <h3>Barrio</h3>
+        <ul>
+        <% @listing.property.barrio.market.barrios.each do |barrio| %>
+          <% unless barrio.id == @listing.property.barrio.id %>
+            <li>
+              <%= link_to(barrio.name,
+                listings_options(
+                  market_params.merge(
+                    :property_barrio_name_equals => barrio.name
+                  )
                 )
-              )
-            ) %>
-          </li>
-        <% else %>
-          <%= barrio.name %>
+              ) %>
+            </li>
+          <% else %>
+            <%= barrio.name %>
+          <% end %>
         <% end %>
+        </ul>
       <% end %>
-      </ul>
     </div>
   </div>
 <% end %>

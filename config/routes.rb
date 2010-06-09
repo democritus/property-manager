@@ -38,51 +38,10 @@ ActionController::Routing::Routes.draw do |map|
   
   # Shallow routes - member routes (with id) accessed directly, other
   # routes are nested
-
-#  # REMOVED: images moved to "Images" namespace
-#  map.resources :agency_images,
-#    :only => [ :show, :thumb, :large_glider, :mini_glider ],
-#    :member => { :thumb => :get, :large_glider => :get, :mini_glider => :get }
-#  map.resources :agency_logos,
-#    :only => [ :show, :thumb ],
-#    :member => { :thumb => :get }
-#  map.resources :market_images,
-#    :only => [ :show, :thumb ],
-#    :member => { :thumb => :get }
-#  map.resources :market_segment_images,
-#    :only => [ :show, :large_glider, :mini_glider, :thumb ],
-#    :member => { :large_glider => :get, :mini_glider => :get, :thumb => :get }
-#  map.resources :properties,
-#    :only => [ :default_thumb, :default_medium ],
-#    :collection => { :default_thumb => :get, :default_medium => :get }
-#  map.resources :property_images,
-#    :only => [
-#      :featured, :show, :thumb, :medium, :fullsize, :original,
-#      :large_glider, :large_glider_placeholder, :listing_glider,
-#      :listing_glider_placeholder, :mini_glider, :mini_glider_placeholder,
-#      :mini_glider_recent, :mini_glider_suggested, :mini_glider_similar
-#    ],
-#    :collection => {
-#      :large_glider_placeholder => :get,
-#      :listing_glider_placeholder => :get,
-#      :mini_glider_placeholder => :get,
-#      :mini_glider_recent => :get,
-#      :mini_glider_suggested => :get,
-#      :mini_glider_similar => :get
-#    },
-#    :member => {
-#      :thumb => :get,
-#      :medium => :get,
-#      :fullsize => :get,
-#      :original => :get,
-#      :large_glider => :get,
-#      :listing_glider => :get,
-#      :mini_glider => :get
-#    }
-#  map.resources :user_icons,
-#    :only => [ :show, :small ],
-#    :member => { :small => :get }
-
+  map.resources :property_images,
+    :only => [ :featured, :show, :fullsize, :original ],
+    :member => { :featured => :get, :fullsize => :get, :original => :get }
+    
   #
   # Nested routes
   #

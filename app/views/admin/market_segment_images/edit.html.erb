@@ -3,13 +3,9 @@
 <% form_for( [ :admin, @market_segment_imageable, @market_segment_image ] ) do |f| %>
   <%= f.error_messages %>
   <p>
-    <%= link_to(
-      image_tag(
-        thumb_images_market_segment_image_path(@market_segment_image, :format => :jpg),
-        :style => 'border: 0'
-      ),
-      market_segment_image_path(@market_segment_image),
-      :target => :_blank
+    <%= image_tag(
+      thumb_images_market_segment_image_path(@market_segment_image,
+        :format => :jpg)
     ) %>
   </p>
   <p>
@@ -41,7 +37,6 @@
   </p>
 <% end %>
 
-<%= link_to 'Show', market_segment_image_path, :target => :_blank %> |
 <%= link_to 'Back',
   polymorphic_path([:admin, @market_segment_imageable, :market_segment_images]) %>
 

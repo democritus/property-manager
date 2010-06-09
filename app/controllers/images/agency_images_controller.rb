@@ -2,15 +2,11 @@ class Images::AgencyImagesController < Images::ImagesController
   
   caches_page :show, :thumb, :large_glider, :large_glider_placeholder
 
-  # GET /agency_images/1
-  # GET /agency_images/1.xml
   # GET /agency_images/1.png
   def show
     @agency_image = AgencyImage.find(params[:id])
 
     respond_to do |format|
-      format.html # show.html.erb
-      format.xml  { render :xml => @agency_image }
       format.jpg  # show.jpg.flexi
     end
   end

@@ -35,8 +35,11 @@
           %>
           <%= highlighted_items.join(' / ') %>
         </div>
-        <%= location_formatted(listing.property.barrio.name,
-          listing.property.barrio.market.name) %>
+        
+        <% if listing.property.barrio %>
+          <%= location_formatted(listing.property.barrio.name,
+            listing.property.barrio.market.name) %>
+        <% end %>
       </div>
       <ul class="info_list horizontal clearfix">
         <% unless listing.property.construction_size.blank? %>
