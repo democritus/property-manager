@@ -1,5 +1,4 @@
 ActionController::Routing::Routes.draw do |map|
-  map.resources :market_segments
 
   # Listings search
   # Cachable search urls compatible with Searchlogic (including pagination)
@@ -180,6 +179,12 @@ ActionController::Routing::Routes.draw do |map|
       properties.resources :property_images,
         :except => :show,
         :requirements => { :context_type => 'properties' }
+    end
+    
+    admin.resources :provinces, :only => :show do |markets|
+      markets.resources :cantons,
+        :collection => { :update_places => :get },
+        :requirements => { :context_type => 'provinces' }
     end
     
     admin.resources :users do |users|

@@ -10,6 +10,6 @@ class Zone < ActiveRecord::Base
   
   validates_presence_of :name
   validates_uniqueness_of :name, :scope => :country_id
-  validates_format_of :name, :with => /^[a-zA-Z0-9\s]+$/,
-    :message => "may only contain letters and numbers"
+#  validates_format_of :name, :with => /^[a-zA-Z0-9\s]+$/,
+#    :message => "may only contain letters and numbers"
 end

@@ -2,6 +2,15 @@
 if barrios.empty?
   barrios = ['No records found', '']
 end
+if cantons.empty?
+  cantons = ['No records found', '']
+end
 %>
-<%= label @property, :barrio_id %>
-<%= select @property, :barrio_id, barrios, { :label_text => 'Barrio' } %>
+<div class="row">
+  <%= label @property, :canton_id %>
+  <%= select @property, :canton_id, cantons, { :label_text => 'Canton' } %>
+</div>
+<div class="row">
+  <%= label @property, :barrio_id %>
+  <%= select @property, :barrio_id, barrios, { :label_text => 'Barrio' } %>
+</div>

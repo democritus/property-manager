@@ -84,9 +84,13 @@ setup_property_fields
         </div>
       <% end %>
     </div>
-    <div id="barrio_select">
-      <%= f.select :barrio_id, @lists[:barrios],
-        { :label_text => 'Barrio' } %>
+  </div>
+  <div id="barrio_select">
+    <div class="row">
+      <%= f.select :canton_id, @lists[:cantons], { :label_text => 'Canton' } %>
+    </div>
+    <div class="row">
+      <%= f.select :barrio_id, @lists[:barrios], { :label_text => 'Barrio' } %>
     </div>
   </div>
   <div class="row">

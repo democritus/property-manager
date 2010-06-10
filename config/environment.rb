@@ -14,6 +14,7 @@ SEARCHLOGIC_PARAMS_MAP = [
   { :key => :property_barrio_market_name_equals,
     :default_value => 'any market' },
   { :key => :property_barrio_name_equals, :default_value => 'any barrio' },
+  { :key => :property_canton_name_equals, :default_value => 'any canton' },
   { :key => :ask_amount_less_than_or_equal_to,
     :default_value => 'under any amount' },
   { :key => :ask_amount_greater_than_or_equal_to,

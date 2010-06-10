@@ -13,6 +13,6 @@ class Style < ActiveRecord::Base
     :source => :style_assignable,
     :source_type => 'Property'
   
-  validates_format_of :name, :with => /^[a-zA-Z0-9\s]+$/,
-    :message => "may only contain letters and numbers"
+#  validates_format_of :name, :with => /^[a-zA-Z0-9\s]+$/,
+#    :message => "may only contain letters and numbers"
 end

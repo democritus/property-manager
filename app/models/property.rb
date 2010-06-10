@@ -4,6 +4,7 @@ class Property < ActiveRecord::Base
   
   belongs_to :agency
   belongs_to :barrio, :include => true
+  belongs_to :canton, :include => true
   
   has_one :primary_category, :through => :category_assignments,
     :source => :category,
@@ -28,8 +29,8 @@ class Property < ActiveRecord::Base
     :order => 'style_assignments.primary_style DESC'
 
   validates_presence_of :name
-  validates_format_of :name, :with => /^[a-zA-Z0-9\s]+$/,
-    :message => "may only contain letters and numbers"
+#  validates_format_of :name, :with => /^[a-zA-Z0-9\s]+$/,
+#    :message => "may only contain letters and numbers"
   validates_numericality_of :agency_id,
     :only_integer => true,
     :message => "{{value}} must be an integer"

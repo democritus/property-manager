@@ -28,6 +28,10 @@
   <%=h @barrio.position %>
 </p>
 
+<p>
+  <strong>Cached Slug:</strong>
+  <%=h @barrio.cached_slug %>
+</p>
 
 <%= link_to 'Edit', edit_admin_market_barrio_path(@market, @barrio) %> |
 <%= link_to 'Back', admin_market_barrios_path(@market) %>

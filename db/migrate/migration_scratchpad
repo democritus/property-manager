@@ -1,3 +1,6 @@
+script/generate nifty_scaffold -p --skip-migration Canton country_id:integer province_id:integer name:string position:integer cached_slug:string
+validates_same_parent(:province_id, :country)
+
 #
 # How to redo slugs:
 #

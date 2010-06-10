@@ -15,6 +15,6 @@ class ListingType < ActiveRecord::Base
   has_many :styles, :through => :style_assignments
 
   validates_presence_of :name
-  validates_format_of :name, :with => /^[a-zA-Z0-9\s]+$/,
-    :message => "may only contain letters and numbers"
+#  validates_format_of :name, :with => /^[a-zA-Z0-9\s]+$/,
+#    :message => "may only contain letters and numbers"
 end

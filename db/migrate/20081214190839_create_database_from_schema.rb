@@ -119,15 +119,20 @@ class CreateDatabaseFromSchema < ActiveRecord::Migration
     
     create_table :cantons, :options => "ENGINE=InnoDB DEFAULT CHARSET=utf8",
     :force => true do |t|
+
+      # REDUNDANT - country_id is also in `markets` table, but kept here so
+      # that queries aren't as deep and for indexing
+      t.integer :country_id, :null => false
+      
       t.integer :province_id, :null => false
       t.string  :name, :null => false
       t.integer :position
       t.string   :cached_slug
     end
 
-    add_index :cantons, [:province_id, :position],
-      :name => "province_id__position"
-    add_index :cantons, [:name], :name => "name", :unique => true
+    add_index :cantons, [:country_id, :province_id, :position],
+      :name => "country_id__province_id__position"
+    add_index :cantons, [:country_id, :province_id, :name], :name => "country_id__province_id__name", :unique => true
     add_index :cantons, [:cached_slug], :name => "cached_slug"
 
     create_table :categories, :options => "ENGINE=InnoDB DEFAULT CHARSET=utf8",

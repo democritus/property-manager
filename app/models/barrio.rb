@@ -11,7 +11,6 @@ class Barrio < ActiveRecord::Base
   belongs_to :province
   belongs_to :market
   belongs_to :canton
-  
   has_many :properties
  
   validates_numericality_of :country_id,
@@ -33,15 +32,21 @@ class Barrio < ActiveRecord::Base
     :allow_nil => true
   validates_uniqueness_of :name, :scope => :market_id
   validates_uniqueness_of :name, :scope => :canton_id
-  validates_format_of :name, :with => /^[a-zA-Z0-9\s]+$/,
-    :message => "may only contain letters and numbers"
+#  validates_format_of :name, :with => /^[a-zA-Z0-9\s]+$/,
+#    :message => "may only contain letters and numbers"
   
   # TODO: figure out if place is in country
   # see APP/config/initializers/custom_validation.rb
-  #validates_place_belongs_to_country :zone_id
-  #validates_place_belongs_to_country :province_id
-  #validates_place_belongs_to_country :market_id
-  #validate :zone_must_be_in_country
+  # Country ID and Province ID are redundant in barrios table for indexing
+  # and easier queries. These validations ensure that selected values agree
+  # with values in parent
+  validates_same_parent(:zone_id, :country)
+  validates_same_parent(:province_id, :country)
+  validates_same_parent(:market_id, :country)
+  validates_same_parent(:canton_id, :country)
+  validates_same_parent(:canton_id, :province)
+  
+  #
   #def zone_must_be_in_country
   #  debugger
   #  if zone_id && country_id

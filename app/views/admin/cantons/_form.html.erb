@@ -1,0 +1,65 @@
+<% form_for @canton do |f| %>
+  <%= f.error_messages %>
+  <p>
+    <%= f.label :country_id %><br />
+    <%= f.text_field :country_id %>
+  </p>
+  <p>
+    <%= f.label :province_id %><br />
+    <%= f.text_field :province_id %>
+  </p>
+  <p>
+    <%= f.label :name %><br />
+    <%= f.text_field :name %>
+  </p>
+  <p>
+    <%= f.label :position %><br />
+    <%= f.text_field :position %>
+  </p>
+  <p>
+    <%= f.label :cached_slug %><br />
+    <%= f.text_field :cached_slug %>
+  </p>
+  <p><%= f.submit "Submit" %></p>
+<% end %>
+
+
+<% set_canton_form_list_data %>
+
+<% labeled_form_for( [ :admin, @province, @canton ] ) do |f| %>
+  <%= f.error_messages %>
+  
+  <div class="row">
+    <%= f.text_field :name %>
+  </div>
+
+  <div class="row">
+    <%= f.select :country_id, @lists[:countries] %>
+  </div>
+
+  <%= observe_field(:canton_country_id,
+    #:url => { :action => :update_places },
+    :url => update_places_admin_province_cantons_path(@province),
+    :with => "'country_id=' + encodeURIComponent($('canton_country_id').value)",
+    :before => "Element.show('spinner')",
+    :complete => "Element.hide('spinner')",
+    :method => :get,
+    :update => 'update_places'
+  ) %>
+
+  <!-- Placeholder for JavaScript returned from AJAX call "update_places" -->
+  <div id="update_places">
+  </div>
+
+  <div class="row">
+    <%= f.select :province_id, @lists[:provinces] %>
+  </div>
+
+  <div class="row">
+    <%= f.text_field :position %>
+  </div>
+  
+  <div class="row">
+    <%= f.submit 'Submit' %>
+  </div>
+<% end %>

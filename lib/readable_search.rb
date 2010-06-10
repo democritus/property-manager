@@ -94,6 +94,7 @@ module ReadableSearch
     country = nil
     category = nil
     listing_type = nil
+    canton = nil
     barrio = nil
     market = nil
     ask_amount_maximum = nil
@@ -110,6 +111,8 @@ module ReadableSearch
           listing_type = value
         when :property_barrio_name_equals
           barrio = value
+        when :property_canton_name_equals
+          canton = value
         when :property_barrio_market_name_equals
           market = value
         when :ask_amount_less_than_or_equal_to
@@ -156,6 +159,9 @@ module ReadableSearch
         else
           readable_string += delimiter + 'in' + spacer + market
         end
+      end
+      if canton
+        readable_string += delimiter + 'in' + spacer + canton
       end
     end
     if ask_amount_maximum

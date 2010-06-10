@@ -2,88 +2,54 @@ class Admin::BarriosController < Admin::AdminController
 
   before_filter :set_contextual_market
   
-  # GET /barrios
-  # GET /barrios.xml
   def index
     if @market
       @barrios = @market.barrios
     else
-      @barrios = Agent.all
-    end
-
-    respond_to do |format|
-      format.html # index.html.erb
+      @barrios = Barrio.all
     end
   end
-
-  # GET /barrios/1
-  # GET /barrios/1.xml
+  
   def show
     @barrio = Barrio.find(params[:id])
-
-    respond_to do |format|
-      format.html # show.html.erb
-    end
   end
 
-  # GET /barrios/new
-  # GET /barrios/new.xml
   def new
     @barrio = Barrio.new
-    
-    respond_to do |format|
-      format.html # new.html.erb
-    end
   end
 
-  # GET /barrios/1/edit
   def edit
     @barrio = Barrio.find(params[:id])
   end
 
-  # POST /barrios
-  # POST /barrios.xml
   def create
     if @market
       @barrio = @market.barrios.build(params[:barrio])
     else
       @barrio = Barrio.new(params[:barrio])
     end
-
-    respond_to do |format|
-      if @barrio.save
-        flash[:notice] = 'Barrio was successfully created.'
-        format.html { redirect_to(context_url) }
-      else
-        format.html { render :action => "new" }
-      end
+    if @barrio.save
+      flash[:notice] = 'Barrio was successfully created.'
+      redirect_to(context_url)
+    else
+      render :new
     end
   end
 
-  # PUT /barrios/1
-  # PUT /barrios/1.xml
   def update
     @barrio = Barrio.find(params[:id])
-
-    respond_to do |format|
-      if @barrio.update_attributes(params[:barrio])
-        flash[:notice] = 'Barrio was successfully updated.'
-        format.html { redirect_to(context_url) }
-      else
-        format.html { render :action => "edit" }
-      end
+    if @barrio.update_attributes(params[:barrio])
+      flash[:notice] = 'Barrio was successfully updated.'
+      redirect_to(context_url)
+    else
+      render :edit
     end
   end
 
-  # DELETE /barrios/1
-  # DELETE /barrios/1.xml
   def destroy
     @barrio = Barrio.find(params[:id])
     @barrio.destroy
-
-    respond_to do |format|
-      format.html { redirect_to(market_barrio_url(@barrio.market, @barrio)) }
-    end
+    redirect_to(market_barrio_url(@barrio.market, @barrio)) }
   end
   
   # AJAX target for constraining provinces, zones, and markets by country
@@ -106,8 +72,14 @@ class Admin::BarriosController < Admin::AdminController
         :conditions => conditions,
         :select => 'id, name'
       ).map { |market| [market.name, market.id] }
+      lists[:cantons] = Canton.find(:all,
+        :include => nil,
+        :conditions => conditions.merge(
+          :province_id => params[:province_id]
+        ),
+        :select => 'id, name'
+      ).map { |canton| [canton.name, canton.id] }
     end
-    
     render :partial => 'update_places',
       :layout => false,
       :locals => { :lists => lists }
@@ -123,7 +95,7 @@ class Admin::BarriosController < Admin::AdminController
     end
   end
 
-  # Allow nested access /countries/1/barrios/1 or not nested access /barrios/1
+  # Allow nested access /markets/1/barrios/1 or not nested access /barrios/1
   def context_url
     if params[:context_type] == 'markets'
       admin_market_url(@market)
@@ -132,4 +104,3 @@ class Admin::BarriosController < Admin::AdminController
     end
   end
 end
-

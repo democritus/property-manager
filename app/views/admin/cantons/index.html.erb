@@ -1,0 +1,29 @@
+<% title "Cantons" %>
+
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Country</th>
+    <th>Province</th>
+    <th>Position</th>
+    <th>Cached Slug</th>
+  </tr>
+  <% for canton in @cantons %>
+    <tr>
+      <td><%=h canton.name %></td>
+      <td><%=h canton.country_id %></td>
+      <td><%=h canton.province_id %></td>
+      <td><%=h canton.position %></td>
+      <td><%=h canton.cached_slug %></td>
+      <td><%= link_to 'Show',
+        admin_province_canton_path(@province, canton) %></td>
+      <td><%= link_to 'Edit',
+        edit_admin_province_canton_path(@province, canton) %></td>
+      <td><%= link_to 'Destroy',
+        admin_province_canton_path(@province, canton),
+        :confirm => 'Are you sure?', :method => :delete %></td>
+    </tr>
+  <% end %>
+</table>
+
+<p><%= link_to "New Canton", new_admin_province_canton_path(@province) %></p>

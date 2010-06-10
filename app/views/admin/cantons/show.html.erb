@@ -1,0 +1,25 @@
+<% title "Canton" %>
+
+<p>
+  <strong>Country:</strong>
+  <%=h @canton.country_id %>
+</p>
+<p>
+  <strong>Province:</strong>
+  <%=h @canton.province_id %>
+</p>
+<p>
+  <strong>Name:</strong>
+  <%=h @canton.name %>
+</p>
+<p>
+  <strong>Position:</strong>
+  <%=h @canton.position %>
+</p>
+<p>
+  <strong>Cached Slug:</strong>
+  <%=h @canton.cached_slug %>
+</p>
+
+<%= link_to 'Edit', edit_admin_province_canton_path(@province, @canton) %> |
+<%= link_to 'Back', admin_province_cantons_path(@province) %>

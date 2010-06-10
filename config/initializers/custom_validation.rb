@@ -11,21 +11,21 @@ ActiveRecord::Base.class_eval do
   end
   
   # TODO: figure out how to validate that place belongs to selected country
-  def self.validates_place_belongs_to_country(attr_name)
-    key = attribute.to_s
-    # ??? How to get attribute values from record
-    return unless self.send(attribute) && self.country_id
-    model_name = attribute.humanize.constantize
-    place = model_name.find(:first,
+  def self.validates_same_parent(
+    child_key, parent_name, child_name = nil )
+    
+    child_name = child_key.humanize
+    parent_key = "#{parent_name}_id".to_sym
+    
+    result = child_name.constantize.find(:first,
       :include => nil,
       :conditions => [
-        'id = :x AND country_id = :y',
-        [self.send(attribute), self.country_id]
+        "id = :x AND #{parent_key} = :y",
+        { :x => self.send(child_key), :y => self.send(parent_key) }
       ]
     )
-    unless place
-      errors.add(model_name, ' is not located within the selected country')
+    unless result
+      errors.add(child_name, " is not associated with selected #{parent_name}")
     end
   end
 end
-

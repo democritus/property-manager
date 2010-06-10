@@ -11,8 +11,8 @@ class Country < ActiveRecord::Base
   
   validates_presence_of :name, :iso2
   validates_uniqueness_of :name, :iso2
-  validates_format_of :name, :with => /^[a-zA-Z0-9\s]+$/,
-    :message => "may only contain letters and numbers"
+#  validates_format_of :name, :with => /^[a-zA-Z0-9\s]+$/,
+#    :message => "may only contain letters and numbers"
     
   # Force ISO2 to be uppercase
   def iso2=(iso2)

@@ -8,6 +8,7 @@
     <th>Province</th>
     <th>Market</th>
     <th>Position</th>
+    <th>Cached Slug</th>
   </tr>
 
 <% @barrios.each do |barrio| %>
@@ -18,6 +19,7 @@
     <td><%=h barrio.province.name %></td>
     <td><%=h barrio.market.name %></td>
     <td><%=h barrio.position %></td>
+    <td><%=h barrio.cached_slug %></td>
     <td><%= link_to 'Show',
       admin_market_barrio_path(@market, barrio) %></td>
     <td><%= link_to 'Edit',

@@ -27,7 +27,7 @@ module Admin::BarriosHelper
       @lists[:zones] = [['Please select country', '']]
       @lists[:provinces] = [['Please select country', '']]
       @lists[:markets] = [['Please select country', '']]
-    end    
+    end
     return @lists
   end  
 end

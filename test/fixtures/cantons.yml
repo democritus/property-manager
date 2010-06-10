@@ -1,0 +1,13 @@
+one:
+  country_id: 1
+  province_id: 1
+  name: MyString
+  position: 1
+  cached_slug: MyString
+
+two:
+  country_id: 1
+  province_id: 1
+  name: MyString
+  position: 1
+  cached_slug: MyString

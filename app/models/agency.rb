@@ -28,8 +28,8 @@ class Agency < ActiveRecord::Base
   
   validates_presence_of :name, :short_name, :domain
   validates_uniqueness_of :name, :short_name
-  validates_format_of :name, :with => /^[a-zA-Z0-9\s]+$/,
-    :message => "may only contain letters and numbers"
+#  validates_format_of :name, :with => /^[a-zA-Z0-9\s]+$/,
+#    :message => "may only contain letters and numbers"
   validates_uniqueness_of :subdomain, :scope => :subdomain,
     :case_sensitive => false,
     :message => 'Subdomain must be unique for given domain'
