@@ -10,13 +10,11 @@ class Barrio < ActiveRecord::Base
   belongs_to :zone
   belongs_to :province
   belongs_to :market
+  belongs_to :canton
   
   has_many :properties
  
   validates_numericality_of :country_id,
-    :only_integer => true,
-    :message => "{{value}} must be an integer"
-  validates_numericality_of :market_id,
     :only_integer => true,
     :message => "{{value}} must be an integer"
   validates_numericality_of :zone_id,
@@ -25,7 +23,16 @@ class Barrio < ActiveRecord::Base
   validates_numericality_of :province_id,
     :only_integer => true,
     :message => "{{value}} must be an integer"
+  validates_numericality_of :market_id,
+    :only_integer => true,
+    :message => "{{value}} must be an integer",
+    :allow_nil => true
+  validates_numericality_of :canton_id,
+    :only_integer => true,
+    :message => "{{value}} must be an integer",
+    :allow_nil => true
   validates_uniqueness_of :name, :scope => :market_id
+  validates_uniqueness_of :name, :scope => :canton_id
   validates_format_of :name, :with => /^[a-zA-Z0-9\s]+$/,
     :message => "may only contain letters and numbers"
   

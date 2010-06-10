@@ -192,6 +192,73 @@ i = 0
   i += 1
 end
 
+Barrio.delete_all
+i = 0
+[
+  { :name => 'Aves de Paraiso', :zone_name => 'Central Valley', :province_name => 'Heredia', :market_name => 'Heredia', :canton_name => 'San Rafael' }
+].each do |record|
+  zone = Zone.find(:first,
+    :joins => :country,
+    :conditions => [
+      'countries.iso2 = :iso2' +
+      ' AND zones.name = :zone_name' +
+      {
+        :iso2 => record[:iso2],
+        :zone_name => record[:zone_name],
+      }
+    ],
+    :select => 'countries.id, zones.id'
+  )
+  next unless zone
+  province = Province.find(:first,
+    :conditions => [
+      'provinces.country_id = :country_id' +
+      ' AND provinces.name = :province_name' +
+      {
+        :country_id => zone.country_id,
+        :province_name => record[:province_name],
+      }
+    ],
+    :select => 'provinces.id'
+  )
+  next unless province
+  market = Market.find(:first,
+    :conditions => [
+      'markets.country_id = :country_id' +
+      ' AND markets.name = :market_name' +
+      {
+        :country_id => zone.country_id,
+        :market_name => record[:market_name],
+      }
+    ],
+    :select => 'markets.id'
+  )
+  canton = Canton.find(:first,
+    :conditions => [
+      'cantons.province_id = :province_id' +
+      ' AND cantons.name = :canton_name' +
+      {
+        :province_id => province.id,
+        :canton_name => record[:canton_name],
+      }
+    ],
+    :select => 'provinces.id'
+  )
+  record.merge!(:position => i + 1) unless record[:position]
+  record.merge!(:country_id => zone.country_id)
+  record.merge!(:zone_id => zone.id)
+  record.merge!(:province_id => province.id)
+  record.merge!(:market_id => market.id) if market
+  record.merge!(:canton_id => canton.id) if canton
+  record.delete(:iso2)
+  key_value_hash = {}
+  record.each_pair do |key, value|
+    key_value_hash.merge!(key => value)
+  end
+  Barrio.create!(key_value_hash)
+  i += 1
+end
+
 Agency.delete_all
 i = 0
 [

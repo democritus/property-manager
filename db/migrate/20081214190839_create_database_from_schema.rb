@@ -84,14 +84,14 @@ class CreateDatabaseFromSchema < ActiveRecord::Migration
       #t.integer "parent_id"
       #t.integer "children_count",               :default => 0,  :null => false
 
-      t.integer :market_id
-      
       # REDUNDANT - country_id is also in `markets` table, but kept here so
       # that queries aren't as deep and for indexing
       t.integer :country_id, :null => false
       
       t.integer :zone_id, :null => false
       t.integer :province_id, :null => false
+      t.integer :market_id
+      t.integer :canton_id
       t.string  :name, :null => false
       t.integer :position
       t.string   :cached_slug
@@ -110,6 +110,10 @@ class CreateDatabaseFromSchema < ActiveRecord::Migration
       :name => "country_id__market_id__name", :unique => true
     add_index :barrios, [:country_id, :market_id, :position],
       :name => "country_id__market_id__position"
+    add_index :barrios, [:country_id, :canton_id, :name],
+      :name => "country_id__canton_id__name", :unique => true
+    add_index :barrios, [:country_id, :canton_id, :position],
+      :name => "country_id__canton_id__position"
     #add_index "barrios", ["parent_id"], :name => "parent_id"
     add_index :barrios, [:cached_slug], :name => "cached_slug"
     
