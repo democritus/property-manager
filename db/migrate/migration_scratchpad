@@ -1,0 +1,18 @@
+#
+# How to redo slugs:
+#
+rake friendly_id:redo_slugs MODEL=NameOfModel
+
+
+# TODO:
+- Site should work with a single agency (master agency) without domain or
+subdomain specified so that admin can choose
+- Site should work with agency NOT associated with market segment so that admin
+can choose
+
+- Seed data needed:
+  - Markets in CR
+  - Market segment images grabbed (via Fleximage-enhanced create) from static directory
+  
+
+- What to do with canton/barrio?

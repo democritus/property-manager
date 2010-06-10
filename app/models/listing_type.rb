@@ -1,6 +1,6 @@
 class ListingType < ActiveRecord::Base
 
-  has_friendly_id :name, :reserved_words => ['new', 'index']
+  has_friendly_id :name
   
   named_scope :friendly_id_equals, lambda { |friendly_id|
     { :conditions => { :id => friendly_id } }

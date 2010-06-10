@@ -6,6 +6,8 @@ class User < ActiveRecord::Base
   #  c.my_config_option = my_value
   #end # block optional
 
+  has_friendly_id :login, :use_slug => true, :approximate_ascii => true
+  
   belongs_to :nationality,
     :class_name => 'Country'
     

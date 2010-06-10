@@ -47,7 +47,6 @@ Rails::Initializer.run do |config|
   config.gem 'friendly_id',
     :lib     => 'friendly_id',
     :source  => 'http://gems.github.com',
-#    :version => '~> 2.3.3'
     :version => '~> 3.0.4'
   config.gem 'will_paginate',
     :lib     => 'will_paginate',

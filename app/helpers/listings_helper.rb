@@ -172,15 +172,14 @@ module ListingsHelper
   end
       
   def thumbnail(image, link = false)
-    unless image.blank?
-      image_html = image_tag(thumb_images_property_image_path(image,
-        :format => :jpg))
-      if link
-        html = link_to(image_html, property_images_image_path(image),
-          :target => :image_viewer)
-      else
-        html = image_html
-      end
+    return if image.blank?
+    image_html = image_tag(thumb_images_property_image_path(image,
+      :format => :jpg))
+    if link
+      html = link_to(image_html, fullsize_property_image_path(image),
+        :target => :image_viewer)
+    else
+      html = image_html
     end
   end
   

@@ -1,6 +1,6 @@
 class Feature < ActiveRecord::Base
 
-  has_friendly_id :name, :reserved_words => ['new', 'index']
+  has_friendly_id :name, :use_slug => true, :approximate_ascii => true
 
   has_many :feature_assignments
   has_many :listings, :through => :feature_assignments,

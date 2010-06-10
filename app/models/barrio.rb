@@ -1,6 +1,7 @@
 class Barrio < ActiveRecord::Base
 
-  has_friendly_id :name, :use_slug => true, :reserved_words => ['new', 'index']
+  has_friendly_id :name, :use_slug => true, :approximate_ascii => true,
+    :scope => :country
   
   default_scope :order => 'barrios.country_id ASC, barrios.province_id ASC' +
     ', barrios.name ASC'

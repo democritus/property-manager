@@ -1,6 +1,7 @@
 class Zone < ActiveRecord::Base
 
-  has_friendly_id :name, :use_slug => true, :reserved_words => ['new', 'index']
+  has_friendly_id :name, :use_slug => true, :approximate_ascii => true,
+    :scope => :country
   
   default_scope :order => 'zones.country_id ASC, zones.name ASC'
 

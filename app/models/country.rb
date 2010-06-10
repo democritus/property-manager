@@ -1,6 +1,6 @@
 class Country < ActiveRecord::Base
 
-  has_friendly_id :name, :reserved_words => ['new', 'index']
+  has_friendly_id :name, :use_slug => true, :approximate_ascii => true
   
   has_many :agencies
   has_many :barrios, :order => 'province_id ASC'
