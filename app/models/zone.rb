@@ -6,7 +6,7 @@ class Zone < ActiveRecord::Base
   default_scope :order => 'zones.country_id ASC, zones.name ASC'
 
   belongs_to :country  
-  has_many :barrios, :order => 'position ASC'
+  has_many :cantons, :order => 'position ASC'
   
   validates_presence_of :name
   validates_uniqueness_of :name, :scope => :country_id

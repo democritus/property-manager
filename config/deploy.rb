@@ -14,7 +14,7 @@ server "luna.qlogicinc.com", :app, :web, :db, :primary => true # alternative syn
 #role :db,  "your slave db-server here"
 
 # What does this do? Need to figure out how to auto-create config/mongrel.yml from these parameters
-set :mongrel_port, "8020"
+set :mongrel_port, "8000"
 set :mongrel_nodes, "2"
 
 # Deploying with git seems to require: default_run_options[:pty] = true

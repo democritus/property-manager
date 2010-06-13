@@ -11,17 +11,17 @@ ActiveRecord::Base.class_eval do
   end
   
   # TODO: figure out how to validate that place belongs to selected country
-  def self.validates_same_parent(
-    child_key, parent_name, child_name = nil )
-    
-    child_name = child_key.humanize
+  def self.validates_same_parent( child_key, parent_name, child_name = nil )
+    child_name = child_key.to_s.humanize
+    child_id = self.send(child_key)
     parent_key = "#{parent_name}_id".to_sym
-    
+    parent_id = self.send(parent_key)
+    return if child_id.blank? || parent_id.blank?
     result = child_name.constantize.find(:first,
       :include => nil,
       :conditions => [
         "id = :x AND #{parent_key} = :y",
-        { :x => self.send(child_key), :y => self.send(parent_key) }
+        { :x => child_id, :y => parent_id }
       ]
     )
     unless result

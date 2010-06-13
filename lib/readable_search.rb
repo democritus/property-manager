@@ -103,7 +103,7 @@ module ReadableSearch
     features = nil
     parameters.each_pair do |key, value|
       case key.to_sym
-        when :property_barrio_country_name_equals
+        when :property_barrio_canton_province_country_name_equals
           country = value
         when :categories_name_equals
           category = value
@@ -111,7 +111,7 @@ module ReadableSearch
           listing_type = value
         when :property_barrio_name_equals
           barrio = value
-        when :property_canton_name_equals
+        when :property_barrio_canton_name_equals
           canton = value
         when :property_barrio_market_name_equals
           market = value

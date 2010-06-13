@@ -116,7 +116,7 @@ class ListingsController < ApplicationController
     
     # TODO: create scheme to change order of listings so that the same listings
     # don't always show up at the top of the list
-    if search_params.has_key?('property_barrio_country_name_equals')
+    if search_params.has_key?('property_barrio_canton_province_country_name_equals')
       if search_params.has_key?('categories_name_equals')
         if search_params.has_key?('property_barrio_market_name_equals')
           if search_params.has_key?('property_barrio_name_equals')
@@ -168,7 +168,7 @@ class ListingsController < ApplicationController
     
     # TODO: create scheme to change order of listings so that the same listings
     # don't always show up at the top of the list
-    if search_params.has_key?('property_barrio_country_name_equals')
+    if search_params.has_key?('property_barrio_canton_province_country_name_equals')
       if search_params.has_key?('categories_name_equals')
         if search_params.has_key?('property_barrio_market_name_equals')
           if search_params.has_key?('property_barrio_name_equals')

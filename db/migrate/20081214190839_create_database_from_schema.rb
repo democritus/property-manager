@@ -7,15 +7,15 @@ class CreateDatabaseFromSchema < ActiveRecord::Migration
       # a new lookup table will need to be created. Note that this country
       # is only used to facilitate associating markets and should not be
       # used to constrain listing results globally
-      t.integer  :country_id, :null => false
+      t.integer  :country_id
+      t.integer  :broker_id
+      t.integer  :market_segment_id
       t.string   :name, :null => false
       t.string   :short_name, :null => false
-      t.integer  :market_segment_id
       t.string   :domain
       t.string   :subdomain
       t.string   :email
       t.string   :skype
-      t.integer  :broker_id
       t.text     :description
       t.boolean  :master_agency, :default => false, :null => false
       t.integer  :position
@@ -32,6 +32,7 @@ class CreateDatabaseFromSchema < ActiveRecord::Migration
     add_index :agencies, [:domain, :subdomain], :name => "domain__subdomain",
       :unique => true
 
+
     create_table :agency_jurisdictions,
       :options => "ENGINE=InnoDB DEFAULT CHARSET=utf8", :force => true do |t|
       t.integer :market_id, :null => false
@@ -45,6 +46,7 @@ class CreateDatabaseFromSchema < ActiveRecord::Migration
       :name => "agency_id__market_id", :unique => true
     add_index :agency_jurisdictions, [:market_id, :agency_id],
       :name => "market_id__agency_id"
+
     
     create_table :agency_relationships,
       :options => "ENGINE=InnoDB DEFAULT CHARSET=utf8", :force => true do |t|
@@ -56,6 +58,7 @@ class CreateDatabaseFromSchema < ActiveRecord::Migration
     add_index :agency_relationships, [:agency_id, :partner_id],
       :name => "agency_id__partner_id", :unique => true
 
+
     create_table :agents, :options => "ENGINE=InnoDB DEFAULT CHARSET=utf8",
       :force => true do |t|
       t.integer  :user_id, :null => false
@@ -64,6 +67,7 @@ class CreateDatabaseFromSchema < ActiveRecord::Migration
     end
 
     add_index :agents, [:user_id], :name => "user_id", :unique => true
+
 
     create_table :agent_affiliations,
       :options => "ENGINE=InnoDB DEFAULT CHARSET=utf8", :force => true do |t|
@@ -78,62 +82,45 @@ class CreateDatabaseFromSchema < ActiveRecord::Migration
     add_index :agent_affiliations, [:agent_id, :agency_id],
       :name => "agent_id__agency_id"
 
+
     create_table :barrios, :options => "ENGINE=InnoDB DEFAULT CHARSET=utf8",
       :force => true do |t|
-      # REMOVED - maybe needed in the future? - act as tree
-      #t.integer "parent_id"
-      #t.integer "children_count",               :default => 0,  :null => false
-
-      # REDUNDANT - country_id is also in `markets` table, but kept here so
-      # that queries aren't as deep and for indexing
-      t.integer :country_id, :null => false
-      
-      t.integer :zone_id, :null => false
-      t.integer :province_id, :null => false
+      t.integer :canton_id, :null => false
       t.integer :market_id
-      t.integer :canton_id
       t.string  :name, :null => false
       t.integer :position
       t.string   :cached_slug
       t.timestamps
     end
 
-    add_index :barrios, [:country_id, :province_id, :name],
-      :name => "country_id__province__id_name"
-    add_index :barrios, [:country_id, :province_id, :position],
-      :name => "country_id__province_id__position"
-    add_index :barrios, [:country_id, :zone_id, :name],
-      :name => "country_id__zone_id__name"
-    add_index :barrios, [:country_id, :zone_id, :position],
-      :name => "country_id__zone_id__position"
-    add_index :barrios, [:country_id, :market_id, :name],
-      :name => "country_id__market_id__name", :unique => true
-    add_index :barrios, [:country_id, :market_id, :position],
-      :name => "country_id__market_id__position"
-    add_index :barrios, [:country_id, :canton_id, :name],
-      :name => "country_id__canton_id__name", :unique => true
-    add_index :barrios, [:country_id, :canton_id, :position],
-      :name => "country_id__canton_id__position"
-    #add_index "barrios", ["parent_id"], :name => "parent_id"
+    add_index :barrios, [:canton_id, :name], :name => "canton_id__name",
+      :unique => true
+    add_index :barrios, [:canton_id, :position], :name => "canton_id__position"
+    add_index :barrios, [:market_id, :name], :name => "canton_id__name",
+      :unique => true
+    add_index :barrios, [:market_id, :position], :name => "canton_id__position"
     add_index :barrios, [:cached_slug], :name => "cached_slug"
     
+    
     create_table :cantons, :options => "ENGINE=InnoDB DEFAULT CHARSET=utf8",
-    :force => true do |t|
-
-      # REDUNDANT - country_id is also in `markets` table, but kept here so
-      # that queries aren't as deep and for indexing
-      t.integer :country_id, :null => false
-      
+    :force => true do |t|      
       t.integer :province_id, :null => false
+      t.integer :zone_id, :null => false
       t.string  :name, :null => false
       t.integer :position
       t.string   :cached_slug
     end
 
-    add_index :cantons, [:country_id, :province_id, :position],
-      :name => "country_id__province_id__position"
-    add_index :cantons, [:country_id, :province_id, :name], :name => "country_id__province_id__name", :unique => true
+    add_index :cantons, [:province_id, :position],
+      :name => "province_id__position"
+    add_index :cantons, [:province_id, :name], :name => "province_id__name",
+      :unique => true
+    add_index :cantons, [:zone_id, :position],
+      :name => "zone_id__position"
+    add_index :cantons, [:zone_id, :name], :name => "zone_id__name",
+      :unique => true
     add_index :cantons, [:cached_slug], :name => "cached_slug"
+
 
     create_table :categories, :options => "ENGINE=InnoDB DEFAULT CHARSET=utf8",
       :force => true do |t|
@@ -147,6 +134,7 @@ class CreateDatabaseFromSchema < ActiveRecord::Migration
     add_index :categories, [:name], :name => "name", :unique => true
     add_index :categories, [:position], :name => "position"
     add_index :categories, [:cached_slug], :name => "cached_slug"
+
 
     create_table :category_assignments,
       :options => "ENGINE=InnoDB DEFAULT CHARSET=utf8",
@@ -162,10 +150,12 @@ class CreateDatabaseFromSchema < ActiveRecord::Migration
       [:category_assignable_type, :category_assignable_id, :category_id],
       :name => "category_assignable__category_id", :unique => true
 
+
     create_table :countries, :options => "ENGINE=InnoDB DEFAULT CHARSET=utf8",
       :force => true do |t|
       t.string  :iso2, :limit => 2, :null => false
       t.string  :name, :null => false
+      t.integer :currency_id
       t.integer :position
       t.string   :cached_slug
       t.timestamps
@@ -175,6 +165,7 @@ class CreateDatabaseFromSchema < ActiveRecord::Migration
     add_index :countries, [:name], :name => "name", :unique => true
     add_index :countries, [:position], :name => "position"
     add_index :countries, [:cached_slug], :name => "cached_slug"
+
 
     create_table :currencies, :options => "ENGINE=InnoDB DEFAULT CHARSET=utf8",
       :force => true do |t|
@@ -190,6 +181,7 @@ class CreateDatabaseFromSchema < ActiveRecord::Migration
     add_index :currencies, [:symbol], :name => "symbol"
     add_index :currencies, [:position], :name => "position"
 
+
     create_table :features, :options => "ENGINE=InnoDB DEFAULT CHARSET=utf8",
       :force => true do |t|
       t.string  :name, :null => false
@@ -203,6 +195,7 @@ class CreateDatabaseFromSchema < ActiveRecord::Migration
     add_index :features, [:position], :name => "position"
     add_index :features, [:cached_slug], :name => "cached_slug"
 
+
     create_table :feature_assignments,
       :options => "ENGINE=InnoDB DEFAULT CHARSET=utf8", :force => true do |t|
       t.integer :feature_id, :null => false
@@ -215,6 +208,7 @@ class CreateDatabaseFromSchema < ActiveRecord::Migration
     add_index :feature_assignments,
       [:feature_assignable_type, :feature_assignable_id, :feature_id],
       :name => "feature_assignable__feature_id", :unique => true
+
 
     create_table :images, :options => "ENGINE=InnoDB DEFAULT CHARSET=utf8",
       :force => true do |t|
@@ -238,6 +232,7 @@ class CreateDatabaseFromSchema < ActiveRecord::Migration
 
     add_index :images, [:type, :imageable_type, :imageable_id, :position],
       :name => "type__imageable_type__imageable_id__position"
+
 
     create_table :information_requests,
       :options => "ENGINE=InnoDB DEFAULT CHARSET=utf8", :force => true do |t|
@@ -265,6 +260,7 @@ class CreateDatabaseFromSchema < ActiveRecord::Migration
     add_index :information_requests, [:phone], :name => "phone"
     add_index :information_requests, [:created_at], :name => "created_at"
 
+
     create_table :listing_types,
       :options => "ENGINE=InnoDB DEFAULT CHARSET=utf8", :force => true do |t|
       t.string :name, :null => false
@@ -276,6 +272,7 @@ class CreateDatabaseFromSchema < ActiveRecord::Migration
     add_index :listing_types, [:name], :name => "name", :unique => true
     add_index :listing_types, [:cached_slug], :name => "cached_slug"
     add_index :listing_types, [:position], :name => "position"
+
 
     create_table :listings, :options => "ENGINE=InnoDB DEFAULT CHARSET=utf8",
       :force => true do |t|
@@ -310,18 +307,15 @@ class CreateDatabaseFromSchema < ActiveRecord::Migration
       :name => "property_id__name", :unique => true
     add_index :listings, [:cached_slug], :name => "cached_slug"
 
+
     # Markets are arbitrarily designated the administrator. They consist of
-    # groups of barrios. They are not associated with zones, or
-    # provinces because they could potentially overlap these borders
+    # groups of barrios. They are not associated with zones, provinces, or
+    # cantons because they could potentially overlap these borders
     create_table :markets, :options => "ENGINE=InnoDB DEFAULT CHARSET=utf8",
       :force => true do |t|
-      t.string  :name, :null => false
-      
-      # REDUNDANT - country_id is also in `barrios` table, but kept here for
-      # indexing purposes
+      t.string   :name, :null => false
       t.integer  :country_id, :null => false
-      
-      t.integer :position
+      t.integer  :position
       t.text     :description
       t.text     :news
       t.string   :cached_slug
@@ -334,12 +328,12 @@ class CreateDatabaseFromSchema < ActiveRecord::Migration
       :name => "country_id__position"
     add_index :markets, [:cached_slug], :name => "cached_slug"
 
+
     create_table :properties, :options => "ENGINE=InnoDB DEFAULT CHARSET=utf8",
       :force => true do |t|
       t.string   :name, :null => false
-      t.text     :description
       t.integer  :agency_id
-      t.integer  :barrio_id
+      t.integer  :barrio_id, :null => false
       t.integer  :bedroom_number, :limit => 3
       t.decimal  :bathroom_number, :precision => 3, :scale => 1
       t.integer  :construction_size
@@ -349,11 +343,13 @@ class CreateDatabaseFromSchema < ActiveRecord::Migration
       t.integer  :year_built
       t.integer  :stories, :limit => 2
       t.date     :date_available
+      t.text     :description
       t.timestamps
     end
     
     add_index :properties, [:agency_id], :name => "agency_id"
     add_index :properties, [:barrio_id], :name => "barrio_id"
+
 
     create_table :market_segments,
       :options => "ENGINE=InnoDB DEFAULT CHARSET=utf8",
@@ -367,6 +363,7 @@ class CreateDatabaseFromSchema < ActiveRecord::Migration
     add_index :market_segments, [:name], :name => "name", :unique => true
     add_index :market_segments, [:position], :name => "position"
     add_index :market_segments, [:cached_slug], :name => "cached_slug"
+
 
     create_table :provinces, :options => "ENGINE=InnoDB DEFAULT CHARSET=utf8",
       :force => true do |t|
@@ -383,6 +380,7 @@ class CreateDatabaseFromSchema < ActiveRecord::Migration
       :name => "country_id__position"
     add_index :provinces, [:cached_slug], :name => "cached_slug"
     
+    
     create_table :site_texts,
       :options => "ENGINE=InnoDB DEFAULT CHARSET=utf8", :force => true do |t|
       t.integer :agency_id, :null => false
@@ -392,6 +390,7 @@ class CreateDatabaseFromSchema < ActiveRecord::Migration
     end
     
     add_index :site_texts, [:agency_id, :name], :name => "agency_id__name"
+
 
     create_table :styles, :options => "ENGINE=InnoDB DEFAULT CHARSET=utf8",
       :force => true do |t|
@@ -405,6 +404,7 @@ class CreateDatabaseFromSchema < ActiveRecord::Migration
     add_index :styles, [:name], :name => "name", :unique => true
     add_index :styles, [:position], :name => "position"
     add_index :styles, [:cached_slug], :name => "cached_slug"
+
 
     create_table :style_assignments,
       :options => "ENGINE=InnoDB DEFAULT CHARSET=utf8", :force => true do |t|
@@ -420,6 +420,7 @@ class CreateDatabaseFromSchema < ActiveRecord::Migration
     add_index :style_assignments,
       [:style_assignable_type, :style_assignable_id, :style_id],
       :name => "style_assignable__style_id", :unique => true
+
 
     create_table :users, :options => "ENGINE=InnoDB DEFAULT CHARSET=utf8",
       :force => true do |t|
@@ -480,6 +481,7 @@ class CreateDatabaseFromSchema < ActiveRecord::Migration
     
     add_index :users, [:persistence_token], :name => "persistence_token"
     add_index :users, [:last_request_at], :name => "last_request_at"
+
 
     create_table :zones, :options => "ENGINE=InnoDB DEFAULT CHARSET=utf8",
       :force => true do |t|

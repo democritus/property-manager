@@ -1,5 +1,6 @@
 class Currency < ActiveRecord::Base
 
+  has_many :countries
   has_many :listings_for_sale,
     :class_name => 'Listing',
     :foreign_key => 'ask_currency_id'

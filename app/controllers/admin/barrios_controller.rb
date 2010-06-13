@@ -53,7 +53,7 @@ class Admin::BarriosController < Admin::AdminController
   end
   
   # AJAX target for constraining provinces, zones, and markets by country
-  def update_places
+  def update_provinces_and_markets
     lists = {}
     unless params[:country_id].blank?
       conditions = { :country_id => params[:country_id] }
@@ -62,16 +62,22 @@ class Admin::BarriosController < Admin::AdminController
         :conditions => conditions,
         :select => 'id, name'
       ).map { |province| [province.name, province.id] }
-      lists[:zones] = Zone.find(:all,
-        :include => nil,
-        :conditions => conditions,
-        :select => 'id, name'
-      ).map { |zone| [zone.name, zone.id] }
       lists[:markets] = Market.find(:all,
         :include => nil,
         :conditions => conditions,
         :select => 'id, name'
       ).map { |market| [market.name, market.id] }
+    end
+    render :partial => 'update_provinces_and_markets',
+      :layout => false,
+      :locals => { :lists => lists }
+  end
+  
+  # AJAX target for constraining provinces, zones, and markets by country
+  def update_cantons
+    lists = {}
+    unless params[:province_id].blank?
+      conditions = { :province_id => params[:province_id] }
       lists[:cantons] = Canton.find(:all,
         :include => nil,
         :conditions => conditions.merge(
@@ -80,7 +86,7 @@ class Admin::BarriosController < Admin::AdminController
         :select => 'id, name'
       ).map { |canton| [canton.name, canton.id] }
     end
-    render :partial => 'update_places',
+    render :partial => 'update_cantons',
       :layout => false,
       :locals => { :lists => lists }
   end

@@ -1,0 +1,8 @@
+<% unless lists.empty? %>
+  <% javascript_tag do %>
+    $('province_id').innerHTML=
+      '<%= escape_javascript(options_for_select(lists[:provinces])) %>';
+    $('barrio_market_id').innerHTML=
+      '<%= escape_javascript(options_for_select(lists[:markets])) %>';
+  <% end %>
+<% end %>

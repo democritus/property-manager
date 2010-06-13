@@ -12,7 +12,7 @@
   <% @agency.markets.each do |market| %>
     <%
     options = listings_options(
-      'property_barrio_country_name_equals' => market.country.name,
+      'property_barrio_canton_province_country_name_equals' => market.country.name,
       'property_barrio_market_name_equals' => market.name )
     %>
     <div class="market_snapshot" class="clearfix">
@@ -40,7 +40,7 @@
             <% market.barrios.each do |barrio| %>
               <%
               barrio_list << link_to (barrio.name, listings_options(
-                'property_barrio_country_name_equals' => market.country.name,
+                'property_barrio_canton_province_country_name_equals' => market.country.name,
                 'property_barrio_market_name_equals' => market.name,
                 'property_barrio_name_equals' => barrio.name
               ))
@@ -58,14 +58,14 @@
             'Properties for rent in ' + market.name,
             listings_options(
               'listing_type_name_equals' => 'for rent',
-              'property_barrio_country_name_equals' => market.country.name,
+              'property_barrio_canton_province_country_name_equals' => market.country.name,
               'property_barrio_market_name_equals' => market.name
             )
           ) %></div>
           <div><%= link_to(
             'Properties for sale in ' + market.name,
             listings_options(
-              'property_barrio_country_name_equals' => market.country.name,
+              'property_barrio_canton_province_country_name_equals' => market.country.name,
               'property_barrio_market_name_equals' => market.name
             )
           ) %></div>

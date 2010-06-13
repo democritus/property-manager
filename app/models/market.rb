@@ -6,8 +6,6 @@ class Market < ActiveRecord::Base
   default_scope :order => 'markets.country_id ASC, markets.name ASC'
   
   belongs_to :country
-  
-  #has_many :administrators, :through => :market_administrations
   has_many :agencies, :through => :agency_jurisdictions, 
     :order => 'agency_jurisdictions.primary_agency DESC'
   has_many :agency_jurisdictions, :order => 'primary_agency DESC'
@@ -78,3 +76,5 @@ class Market < ActiveRecord::Base
     end
   end
 end
+
+include RedundantAssociationFidelity

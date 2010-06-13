@@ -93,7 +93,13 @@ ActionController::Routing::Routes.draw do |map|
       agencies.resources :site_texts,
         :requirements => { :context_type => 'agencies' }
     end
-  
+    
+    admin.resources :cantons, :only => :show do |cantons|
+      markets.resources :barrios,
+        :collection => { :update_places => :get },
+        :requirements => { :context_type => 'provinces' }
+    end
+    
     admin.resources :categories,
       :currencies,
       :features,

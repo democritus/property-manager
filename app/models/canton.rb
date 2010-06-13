@@ -1,19 +1,21 @@
 class Canton < ActiveRecord::Base
 
-  attr_accessible :country_id, :province_id, :name, :position, :cached_slug
-
-  belongs_to :country
-  belongs_to :province
-  has_many :properties
+  attr_accessible :province_id, :zone_id, :name, :position, :cached_slug
   
-  validates_numericality_of :country_id,
+  has_friendly_id :name, :use_slug => true, :approximate_ascii => true,
+    :scope => :province
+
+  belongs_to :province
+  belongs_to :zone
+  has_many :barrios, :order => 'position ASC'
+  
+  validates_numericality_of :province_id,
     :only_integer => true,
     :message => "{{value}} must be an integer"
-  validates_numericality_of :province_id,
+  validates_numericality_of :zone_id,
     :only_integer => true,
     :message => "{{value}} must be an integer"
   validates_uniqueness_of :name, :scope => :province_id
 #  validates_format_of :name, :with => /^[a-zA-Z0-9\s]+$/,
 #    :message => "may only contain letters and numbers"
-  validates_same_parent(:province_id, :country)
 end

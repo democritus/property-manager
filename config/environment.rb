@@ -8,19 +8,46 @@ require File.join(File.dirname(__FILE__), 'boot')
 
 # Constants needed for routing
 SEARCHLOGIC_PARAMS_MAP = [
-  { :key => :property_barrio_country_name_equals, :default_value => 'all' },
-  { :key => :categories_name_equals, :default_value => 'property' },
-  { :key => :listing_type_name_equals, :default_value => 'for sale or rent' },
-  { :key => :property_barrio_market_name_equals,
-    :default_value => 'any market' },
-  { :key => :property_barrio_name_equals, :default_value => 'any barrio' },
-  { :key => :property_canton_name_equals, :default_value => 'any canton' },
-  { :key => :ask_amount_less_than_or_equal_to,
-    :default_value => 'under any amount' },
-  { :key => :ask_amount_greater_than_or_equal_to,
-    :default_value => 'over any amount' },
-  { :key => :styles_name_equals, :default_value => 'any style' },
-  { :key => :features_name_equals_any, :default_value => 'any feature' }
+  {
+    :key => :property_barrio_canton_province_country_name_equals,
+    :default_value => 'all'
+  },
+  {
+    :key => :categories_name_equals,
+    :default_value => 'property'
+  },
+  { 
+    :key => :listing_type_name_equals,
+    :default_value => 'for sale or rent'
+  },
+  { 
+    :key => :property_barrio_market_name_equals,
+    :default_value => 'any market'
+  },
+  { 
+    :key => :property_barrio_name_equals,
+    :default_value => 'any barrio'
+  },
+  { 
+    :key => :property_barrio_canton_name_equals,
+    :default_value => 'any canton'
+  },
+  { 
+    :key => :ask_amount_less_than_or_equal_to,
+    :default_value => 'under any amount'
+  },
+  { 
+    :key => :ask_amount_greater_than_or_equal_to,
+    :default_value => 'over any amount'
+  },
+  { 
+    :key => :styles_name_equals,
+    :default_value => 'any style'
+  },
+  { 
+    :key => :features_name_equals_any,
+    :default_value => 'any feature'
+  }
 ]
 PAGINATE_PARAMS_MAP = [
   { :key => :page, :default_value => '1' },

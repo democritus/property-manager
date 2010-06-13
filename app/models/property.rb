@@ -4,7 +4,6 @@ class Property < ActiveRecord::Base
   
   belongs_to :agency
   belongs_to :barrio, :include => true
-  belongs_to :canton, :include => true
   
   has_one :primary_category, :through => :category_assignments,
     :source => :category,
@@ -12,7 +11,6 @@ class Property < ActiveRecord::Base
   has_one :primary_style, :through => :style_assignments,
     :source => :style,
     :conditions => 'primary_style = 1'
-      
   has_many :listings
   has_many :property_images, :as => :imageable, :order => 'position ASC'
   has_many :category_assignments, :as => :category_assignable, 

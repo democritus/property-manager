@@ -406,14 +406,14 @@ module ListingsHelper
   end
   
   def country_filter
-    if @search_params[:property_barrio_country_name_equals]
+    if @search_params[:property_barrio_canton_province_country_name_equals]
       has_filter = true
     end
     if has_filter
       html = '<li>' +
         link_to('All countries', listings_options(
           @search_params.merge(
-            :property_barrio_country_name_equals => nil,
+            :property_barrio_canton_province_country_name_equals => nil,
             :property_barrio_market_name_equals => nil,
             :property_barrio_name_equals => nil
           )
@@ -426,7 +426,7 @@ module ListingsHelper
           html += '<li>' +
             link_to(country.name.capitalize, listings_options(
               @search_params.merge(
-                :property_barrio_country_name_equals => country.name
+                :property_barrio_canton_province_country_name_equals => country.name
               )
             )) + '</li>'
         end
@@ -449,14 +449,14 @@ module ListingsHelper
             :property_barrio_name_equals => nil
           )
         )) + '</li>'
-    elsif @search_params[:property_barrio_country_name_equals]        
+    elsif @search_params[:property_barrio_canton_province_country_name_equals]        
       markets = []
       unless @active_agency.master_agency
         if @active_agency.markets
           @active_agency.markets.each do |market|
             # TODO: allow for non-standard characters
             if market.country.name.downcase == @search_params[
-            :property_barrio_country_name_equals].downcase
+            :property_barrio_canton_province_country_name_equals].downcase
               markets << market
             end
           end
@@ -466,7 +466,7 @@ module ListingsHelper
           :joins => :country,
           :conditions => [
             'countries.name = ?',
-            params[:property_barrio_country_name_equals]
+            params[:property_barrio_canton_province_country_name_equals]
           ]
         )
       end
@@ -496,9 +496,9 @@ module ListingsHelper
         link_to('All barrios', listings_options(
           @search_params.merge(:property_barrio_name_equals => nil)
         )) + '</li>'
-    elsif @search_params[:property_barrio_country_name_equals] &&
+    elsif @search_params[:property_barrio_canton_province_country_name_equals] &&
     @search_params[:property_barrio_market_name_equals]
-      country_name = @search_params[:property_barrio_country_name_equals]
+      country_name = @search_params[:property_barrio_canton_province_country_name_equals]
       market_name = @search_params[:property_barrio_market_name_equals]
       barrios = Barrio.find(:all,
         :joins => [:market, :country],

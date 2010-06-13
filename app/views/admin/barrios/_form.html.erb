@@ -1,5 +1,29 @@
 <% set_barrio_form_list_data %>
 
+<%= observe_field(:country_id,
+  :url => { :action => :update_provinces_and_markets },
+  :with => "'country_id=' + encodeURIComponent($('country_id').value)",
+  :before => "Element.show('spinner')",
+  :complete => "Element.hide('spinner')",
+  :method => :get,
+  :update => 'update_provinces_and_markets'
+) %>
+
+<%= observe_field(:province_id,
+  :url => { :action => :update_cantons },
+  :with => "'country_id=' + encodeURIComponent($('province_id').value)",
+  :before => "Element.show('spinner')",
+  :complete => "Element.hide('spinner')",
+  :method => :get,
+  :update => 'update_cantons'
+) %>
+
+<!-- Placeholder for JavaScript returned from AJAX -->
+<div id="update_provinces_and_markets">
+</div>
+<div id="update_cantons">
+</div>
+
 <% labeled_form_for( [ :admin, @market, @barrio ] ) do |f| %>
   <%= f.error_messages %>
   
@@ -8,33 +32,23 @@
   </div>
 
   <div class="row">
-    <%= f.select :country_id, @lists[:countries] %>
-  </div>
-
-  <%= observe_field(:barrio_country_id,
-    #:url => { :action => :update_places },
-    :url => update_places_admin_market_barrios_path(@market),
-    :with => "'country_id=' + encodeURIComponent($('barrio_country_id').value)",
-    :before => "Element.show('spinner')",
-    :complete => "Element.hide('spinner')",
-    :method => :get,
-    :update => 'update_places'
-  ) %>
-
-  <!-- Placeholder for JavaScript returned from AJAX call "update_places" -->
-  <div id="update_places">
+    <%= label_tag :country_id, 'Country' %>
+    <%= select_tag :country_id, options_for_select(@lists[:countries],
+      params[:country_id]) %>
   </div>
 
   <div class="row">
-    <%= f.select :zone_id, @lists[:zones] %>
-  </div>
-
-  <div class="row">
-    <%= f.select :province_id, @lists[:provinces] %>
+    <%= label_tag :province_id, 'Province' %>
+    <%= select_tag :province_id, options_for_select(@lists[:provinces],
+      params[:province_id]) %>
   </div>
 
   <div class="row">
     <%= f.select :market_id, @lists[:markets] %>
+  </div>
+
+  <div class="row">
+    <%= f.select :canton_id, @lists[:cantons] %>
   </div>
 
   <div class="row">

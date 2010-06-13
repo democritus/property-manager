@@ -246,7 +246,7 @@ merge_images!
     }
     if @listing.property.barrio
       static_params.merge!(
-        :property_barrio_country_name_equals => @listing.property.barrio.country.name
+        :property_barrio_canton_province_country_name_equals => @listing.property.barrio.country.name
       )
     end
     category_in_market = ''

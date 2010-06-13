@@ -20,6 +20,25 @@ module Admin::ListingsHelper
     @listing.feature_ids = @property.feature_ids
   end
   
+  def currency_list
+    # If current agency is associated with a country, check to see if the
+    # country has a primary currency. If so, it should appear first in list.
+    if @active_agency
+      unless @active_agency.country_id.blank?
+        country = Country.find_by_id(@active_agency.country_id)
+        unless country.currency_id.blank?
+          order = 'id = ' + country.currency_id + ' DESC'
+      end
+    end
+    options = {
+      :include => nil,
+      :select => 'id, code, symbol'
+    }
+    options.merge( :order => order ) if order
+    Currency.find( :all, options ).map {
+      |currency| [currency.code + ' ' + currency.symbol, currency.id] }
+  end
+  
   def set_listing_form_list_data
     @lists = {}
     @lists[:categories] = Category.find(:all,
@@ -27,11 +46,7 @@ module Admin::ListingsHelper
       :select => 'id, name'
     ).map {
       |category| [category.name, category.id] }
-    @lists[:currencies] = Currency.find(:all,
-      :include => nil,
-      :select => 'id, code, symbol'
-    ).map {
-      |currency| [currency.code + ' ' + currency.symbol, currency.id] }
+    @lists[:currencies] = currency_list
     #@lists[:styles] = Style.find(:all,
     #  :include => nil,
     #  :select => 'id, name'

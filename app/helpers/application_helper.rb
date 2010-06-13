@@ -32,7 +32,7 @@ module ApplicationHelper
     # Having a link with the country name is better for search engines
     unless @active_agency.country.name.blank?
       parameters.merge!(
-        'property_barrio_country_name_equals' => @active_agency.country.name
+        'property_barrio_canton_province_country_name_equals' => @active_agency.country.name
       )
     end
     parameters.merge!('listing_type_name_equals' => 'for sale')

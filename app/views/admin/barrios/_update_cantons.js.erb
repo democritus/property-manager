@@ -1,0 +1,6 @@
+<% unless lists.empty? %>
+  <% javascript_tag do %>
+    $('barrio_canton_id').innerHTML=
+      '<%= escape_javascript(options_for_select(lists[:cantons])) %>';
+  <% end %>
+<% end %>
