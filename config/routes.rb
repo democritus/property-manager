@@ -96,7 +96,11 @@ ActionController::Routing::Routes.draw do |map|
     
     admin.resources :cantons, :only => :show do |cantons|
       markets.resources :barrios,
-        :collection => { :update_places => :get },
+        :collection => {
+          :update_provinces => :get,
+          :update_markets => :get,
+          :update_cantons => :get
+        },
         :requirements => { :context_type => 'provinces' }
     end
     
@@ -153,9 +157,6 @@ ActionController::Routing::Routes.draw do |map|
     end
     
     admin.resources :markets, :only => :show do |markets|
-      markets.resources :barrios,
-        :collection => { :update_places => :get },
-        :requirements => { :context_type => 'markets' }
       markets.resources :market_images,
         :except => :show,
         :requirements => { :context_type => 'markets' }
@@ -189,7 +190,7 @@ ActionController::Routing::Routes.draw do |map|
     
     admin.resources :provinces, :only => :show do |markets|
       markets.resources :cantons,
-        :collection => { :update_places => :get },
+        :collection => { :update_provinces => :get },
         :requirements => { :context_type => 'provinces' }
     end
     

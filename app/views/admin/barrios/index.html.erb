@@ -4,9 +4,8 @@
   <tr>
     <th>Name</th>
     <th>Country</th>
-    <th>Zone</th>
-    <th>Province</th>
     <th>Market</th>
+    <th>Canton</th>
     <th>Position</th>
     <th>Cached Slug</th>
   </tr>
@@ -15,17 +14,16 @@
   <tr>
     <td><%=h barrio.name %></td>
     <td><%=h barrio.country.name %></td>
-    <td><%=h barrio.zone.name %></td>
-    <td><%=h barrio.province.name %></td>
     <td><%=h barrio.market.name %></td>
+    <td><%=h barrio.canton.name %></td>
     <td><%=h barrio.position %></td>
     <td><%=h barrio.cached_slug %></td>
     <td><%= link_to 'Show',
-      admin_market_barrio_path(@market, barrio) %></td>
+      admin_canton_barrio_path(@canton, barrio) %></td>
     <td><%= link_to 'Edit',
-      edit_admin_market_barrio_path(@market, barrio) %></td>
+      edit_admin_canton_barrio_path(@canton, barrio) %></td>
     <td><%= link_to 'Destroy',
-      admin_market_barrio_path(@market, barrio),
+      admin_canton_barrio_path(@canton, barrio),
       :confirm => 'Are you sure?', :method => :delete %></td>
   </tr>
 <% end %>
@@ -33,4 +31,4 @@
 
 <br />
 
-<%= link_to 'New barrio', new_admin_market_barrio_path(@market) %>
+<%= link_to 'New barrio', new_admin_canton_barrio_path(@canton) %>

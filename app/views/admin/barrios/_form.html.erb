@@ -1,12 +1,21 @@
 <% set_barrio_form_list_data %>
 
 <%= observe_field(:country_id,
-  :url => { :action => :update_provinces_and_markets },
+  :url => { :action => :update_provinces },
   :with => "'country_id=' + encodeURIComponent($('country_id').value)",
   :before => "Element.show('spinner')",
   :complete => "Element.hide('spinner')",
   :method => :get,
-  :update => 'update_provinces_and_markets'
+  :update => 'update_provinces'
+) %>
+
+<%= observe_field(:country_id,
+  :url => { :action => :update_markets },
+  :with => "'country_id=' + encodeURIComponent($('country_id').value)",
+  :before => "Element.show('spinner')",
+  :complete => "Element.hide('spinner')",
+  :method => :get,
+  :update => 'update_markets'
 ) %>
 
 <%= observe_field(:province_id,
@@ -19,7 +28,9 @@
 ) %>
 
 <!-- Placeholder for JavaScript returned from AJAX -->
-<div id="update_provinces_and_markets">
+<div id="update_provinces">
+</div>
+<div id="update_markets">
 </div>
 <div id="update_cantons">
 </div>

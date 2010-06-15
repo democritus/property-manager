@@ -5,6 +5,24 @@ class Property < ActiveRecord::Base
   belongs_to :agency
   belongs_to :barrio, :include => true
   
+  # TEST - can I do this to simplify finding geographical associations for
+  # a property?
+  has_one :country, :finder_sql => 'SELECT countries.* from properties' +
+    ' INNER JOIN barrios ON properties.barrio_id = barrios.id ' +
+    ' INNER JOIN cantons ON barrios.canton_id = cantons.id ' +
+    ' INNER JOIN provinces ON cantons.province_id = provinces.id ' +
+    ' INNER JOIN countries ON provinces.country_id = countries.id ' +
+    ' LIMIT 1'
+  has_one :province, :finder_sql => 'SELECT provinces.* from properties' +
+    ' INNER JOIN barrios ON properties.barrio_id = barrios.id ' +
+    ' INNER JOIN cantons ON barrios.canton_id = cantons.id ' +
+    ' INNER JOIN provinces ON cantons.province_id = provinces.id '
+    ' LIMIT 1'
+  has_one :canton, :finder_sql => 'SELECT cantons.* from properties' +
+    ' INNER JOIN barrios ON properties.barrio_id = barrios.id ' +
+    ' INNER JOIN cantons ON barrios.canton_id = cantons.id ' +
+    ' LIMIT 1'
+  
   has_one :primary_category, :through => :category_assignments,
     :source => :category,
     :conditions => 'primary_category = 1'

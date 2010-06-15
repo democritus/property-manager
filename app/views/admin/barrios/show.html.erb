@@ -9,18 +9,13 @@
 </p>
 
 <p>
-  <b>Zone:</b>
-  <%=h @barrio.zone.name %>
-</p>
-
-<p>
-  <b>Province:</b>
-  <%=h @barrio.province.name %>
-</p>
-
-<p>
   <b>Market:</b>
   <%=h @barrio.market.name %>
+</p>
+
+<p>
+  <b>Canton:</b>
+  <%=h @barrio.canton.name %>
 </p>
 
 <p>
@@ -33,5 +28,5 @@
   <%=h @barrio.cached_slug %>
 </p>
 
-<%= link_to 'Edit', edit_admin_market_barrio_path(@market, @barrio) %> |
-<%= link_to 'Back', admin_market_barrios_path(@market) %>
+<%= link_to 'Edit', edit_admin_canton_barrio_path(@canton, @barrio) %> |
+<%= link_to 'Back', admin_canton_barrios_path(@canton) %>

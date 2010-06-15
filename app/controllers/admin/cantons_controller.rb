@@ -1,5 +1,7 @@
 class Admin::CantonsController < Admin::AdminController
 
+  include UpdatePlaces # AJAX to update form select lists
+  
   before_filter :set_contextual_province
   
   def index
@@ -50,22 +52,6 @@ class Admin::CantonsController < Admin::AdminController
     @canton = Canton.find(params[:id])
     @canton.destroy
     redirect_to(province_canton_url(@canton.province, @canton)) }
-  end
-  
-  # AJAX target for constraining provinces by country
-  def update_places
-    lists = {}
-    unless params[:country_id].blank?
-      conditions = { :country_id => params[:country_id] }
-      lists[:provinces] = Province.find(:all,
-        :include => nil,
-        :conditions => conditions,
-        :select => 'id, name'
-      ).map { |province| [province.name, province.id] }
-    end
-    render :partial => 'update_places',
-      :layout => false,
-      :locals => { :lists => lists }
   end
 
 

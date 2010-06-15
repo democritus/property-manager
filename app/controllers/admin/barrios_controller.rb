@@ -1,10 +1,12 @@
 class Admin::BarriosController < Admin::AdminController
 
-  before_filter :set_contextual_market
+  include UpdatePlaces # AJAX to update form select lists
+
+  before_filter :set_contextual_canton
   
   def index
-    if @market
-      @barrios = @market.barrios
+    if @canton
+      @barrios = @canton.barrios
     else
       @barrios = Barrio.all
     end
@@ -23,8 +25,8 @@ class Admin::BarriosController < Admin::AdminController
   end
 
   def create
-    if @market
-      @barrio = @market.barrios.build(params[:barrio])
+    if @canton
+      @barrio = @canton.barrios.build(params[:barrio])
     else
       @barrio = Barrio.new(params[:barrio])
     end
@@ -49,62 +51,23 @@ class Admin::BarriosController < Admin::AdminController
   def destroy
     @barrio = Barrio.find(params[:id])
     @barrio.destroy
-    redirect_to(market_barrio_url(@barrio.market, @barrio)) }
-  end
-  
-  # AJAX target for constraining provinces, zones, and markets by country
-  def update_provinces_and_markets
-    lists = {}
-    unless params[:country_id].blank?
-      conditions = { :country_id => params[:country_id] }
-      lists[:provinces] = Province.find(:all,
-        :include => nil,
-        :conditions => conditions,
-        :select => 'id, name'
-      ).map { |province| [province.name, province.id] }
-      lists[:markets] = Market.find(:all,
-        :include => nil,
-        :conditions => conditions,
-        :select => 'id, name'
-      ).map { |market| [market.name, market.id] }
-    end
-    render :partial => 'update_provinces_and_markets',
-      :layout => false,
-      :locals => { :lists => lists }
-  end
-  
-  # AJAX target for constraining provinces, zones, and markets by country
-  def update_cantons
-    lists = {}
-    unless params[:province_id].blank?
-      conditions = { :province_id => params[:province_id] }
-      lists[:cantons] = Canton.find(:all,
-        :include => nil,
-        :conditions => conditions.merge(
-          :province_id => params[:province_id]
-        ),
-        :select => 'id, name'
-      ).map { |canton| [canton.name, canton.id] }
-    end
-    render :partial => 'update_cantons',
-      :layout => false,
-      :locals => { :lists => lists }
+    redirect_to(canton_barrio_url(@barrio.canton, @barrio)) }
   end
 
 
   private
 
   # If nested, set parent instance variable
-  def set_contextual_market
-    if params[:context_type] == 'markets'
-      @market = context_object( :include => :barrios )
+  def set_contextual_canton
+    if params[:context_type] == 'cantons'
+      @canton = context_object( :include => :barrios )
     end
   end
 
-  # Allow nested access /markets/1/barrios/1 or not nested access /barrios/1
+  # Allow nested access /cantons/1/barrios/1 or not nested access /barrios/1
   def context_url
-    if params[:context_type] == 'markets'
-      admin_market_url(@market)
+    if params[:context_type] == 'cantons'
+      admin_canton_url(@canton)
     else
       admin_barrio_url(@barrio)
     end

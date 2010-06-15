@@ -1,62 +1,6 @@
 class AddTestData < ActiveRecord::Migration
 
   def self.up
-    Agency.delete_all
-    Agency.create(
-      :name => 'Default Agency',
-      :short_name => 'Default',
-      :master_agency => true
-    )
-    
-    Category.delete_all
-
-    Category.create(:name => 'Homes',
-      :user_defined => false
-    )
-
-    Category.create(:name => 'Condos',
-      :user_defined => false
-    )
-
-    Category.create(:name => 'Apartments',
-      :user_defined => false
-    )
-
-    Category.create(:name => 'Hotels',
-      :user_defined => false
-    )
-
-    Category.create(:name => 'Tin Shacks',
-      :user_defined => true
-    )
-
-
-    Country.delete_all
-
-    Country.create(:name => 'United States',
-      :iso2 => 'us'
-      #:position =>
-    )
-
-    Country.create(:name => 'Costa Rica',
-      :iso2 => 'cr'
-      #:position =>
-    )
-
-
-    Currency.delete_all
-
-    Currency.create(:name => 'United States of America Dollars',
-      :code => 'USD',
-      :symbol => '$'
-    )
-
-    Currency.create(:name => 'Euros',
-      :code => 'EUR',
-      :symbol => '€'
-    )
-
-
     Feature.delete_all
 
     Feature.create(:name => 'Hot water',
@@ -141,6 +85,62 @@ class AddTestData < ActiveRecord::Migration
     ListingType.create(:name => 'for rent'
     )
 
+
+
+
+Market.delete_all
+i = 0
+[
+  { :name => 'San Rafael de la Montaña', :iso2 => 'CR' }
+].each do |record|
+  country = Country.find_by_iso2(record[:iso2],
+    :select => [ :id ]
+  )
+  next unless country
+  record.merge!(:country_id => country.id)
+  record.merge!(:position => i + 1) unless record[:position]
+  record.delete(:iso2)
+  key_value_hash = {}
+  record.each_pair do |key, value|
+    key_value_hash.merge!(key => value)
+  end
+  Market.create!(key_value_hash)
+  i += 1
+end
+
+Barrio.delete_all
+i = 0
+[
+  { :name => 'Aves de Paraiso', :iso2 => 'CR', :market_name => 'San Rafael de la Montaña', :canton_name => 'San Rafael' }
+].each do |record|
+  canton = Canton.find(:first,
+    :joins => [ :province => :country ],
+    :conditions => [
+      'country.iso2 = :iso2, cantons.name = :canton_name',
+      { :iso2 => record[:iso2], :canton_name => record[:canton_name] }
+    ],
+    :select => 'cantons.id'
+  )
+  next unless canton
+  market = Market.find(:first,
+    :joins => [ :province => :country ],
+    :conditions => [
+      'country.iso2 = :iso2, markets.name = :market_name',
+      { :iso2 => record[:iso2], :market_name => record[:market_name] }
+    ],
+    :select => 'markets.id'
+  )
+  record.merge!(:position => i + 1) unless record[:position]
+  record.merge!(:market_id => market.id) if market
+  record.merge!(:canton_id => canton.id) if canton
+  record.delete(:iso2)
+  key_value_hash = {}
+  record.each_pair do |key, value|
+    key_value_hash.merge!(key => value)
+  end
+  Barrio.create!(key_value_hash)
+  i += 1
+end
 
     Market.delete_all
     Market.create(:name => 'Heredia',
