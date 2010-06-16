@@ -3,7 +3,9 @@
 require 'open-uri'
 Country.delete_all
 countries = []
-open("http://openconcept.ca/sites/openconcept.ca/files/country_code_drupal_0.txt") do |countries|
+url = 'http://openconcept.ca/sites/openconcept.ca/files/' +
+  'country_code_drupal_0.txt'
+open(url) do |countries|
   countries.read.each_line do |country|
     iso2, name = country.chomp.split("|").strip
     case iso2
@@ -17,7 +19,12 @@ open("http://openconcept.ca/sites/openconcept.ca/files/country_code_drupal_0.txt
       nationality = name
       currency_code = nil
     end
-    countries << { :name => name, :iso2 => iso2, :nationality => nationality, :currency_code => currency_code }
+    countries << {
+      :name => name,
+      :iso2 => iso2,
+      :nationality => nationality,
+      :currency_code => currency_code
+    }
   end
 end
 countries.each do |record|
@@ -42,8 +49,13 @@ end
 #Country.delete_all
 #i = 0
 #[
-#  { :name => 'Costa Rica', :iso2 => 'CR', :nationality => 'Costarricense', :currency_code => 'CRC' },
-#  { :name => 'United States', :iso2 => 'US', :nationality => 'American', :currency_code => 'USD' }
+#  {
+#    :name => 'Costa Rica',
+#    :iso2 => 'CR', :nationality => 'Costarricense', :currency_code => 'CRC'
+#  },
+#  {
+#    :name => 'United States',
+#    :iso2 => 'US', :nationality => 'American', :currency_code => 'USD' }
 #].each do |record|
 #  currency = Currency.find_by_currency_code(record[:currency_code],
 #    :select => [ :id ]
@@ -64,12 +76,29 @@ end
 Zone.delete_all
 i = 0
 [
-  { :name => 'North Pacific', :iso2 => 'CR' },
-  { :name => 'Central Pacific', :iso2 => 'CR' },
-  { :name => 'South Pacific', :iso2 => 'CR' },
-  { :name => 'Caribbean', :iso2 => 'CR' },
-  { :name => 'Central Valley', :iso2 => 'CR' },
-  { :name => 'Northern Plains', :iso2 => 'CR' }
+  {
+    :name => 'North Pacific',
+    :iso2 => 'CR'
+  },
+  {
+    :name => 'Central Pacific',
+    :iso2 => 'CR'
+  },
+  {
+    :name => 'South Pacific',
+    :iso2 => 'CR'
+  },
+  {
+    :name => 'Caribbean',
+    :iso2 => 'CR'
+  },
+  {
+    :name => 'Central Valley',
+    :iso2 => 'CR'
+  },
+  {
+    :name => 'Northern Plains',
+    :iso2 => 'CR' }
 ].each do |record|
   country = Country.find_by_iso2(record[:iso2],
     :select => [ :id ]
@@ -89,13 +118,34 @@ end
 Province.delete_all
 i = 0
 [
-  { :name => 'Alajuela', :iso2 => 'CR' },
-  { :name => 'Cartago', :iso2 => 'CR' },
-  { :name => 'Ganacaste', :iso2 => 'CR' },
-  { :name => 'Heredia', :iso2 => 'CR' },
-  { :name => 'Limón', :iso2 => 'CR' },
-  { :name => 'Puntarenas', :iso2 => 'CR' },
-  { :name => 'San José', :iso2 => 'CR' }
+  {
+    :name => 'Alajuela',
+    :iso2 => 'CR'
+  },
+  {
+    :name => 'Cartago',
+    :iso2 => 'CR'
+  },
+  {
+    :name => 'Ganacaste',
+    :iso2 => 'CR'
+  },
+  {
+    :name => 'Heredia',
+    :iso2 => 'CR'
+  },
+  {
+    :name => 'Limón',
+    :iso2 => 'CR'
+  },
+  {
+    :name => 'Puntarenas',
+    :iso2 => 'CR'
+  },
+  {
+    :name => 'San José',
+    :iso2 => 'CR'
+  }
 ].each do |record|
   country = Country.find_by_iso2(record[:iso2],
     :select => [ :id ]
@@ -115,99 +165,504 @@ end
 Canton.delete_all
 i = 0
 [
-  { :name => 'Alajuela', :province_name => 'Alajuela', :zone_name => 'Central Valley', :iso2 => 'CR' },
-  { :name => 'San Ramón', :province_name => 'Alajuela', :zone_name => 'Central Valley', :iso2 => 'CR' },
-  { :name => 'Grecia', :province_name => 'Alajuela', :zone_name => 'Central Valley', :iso2 => 'CR' },
-  { :name => 'San Mateo', :province_name => 'Alajuela', :zone_name => 'Northern Plains', :iso2 => 'CR' },
-  { :name => 'Atenas', :province_name => 'Alajuela', :zone_name => 'Central Valley', :iso2 => 'CR' },
-  { :name => 'Naranjo', :province_name => 'Alajuela', :zone_name => 'Central Valley', :iso2 => 'CR' },
-  { :name => 'Palmares', :province_name => 'Alajuela', :zone_name => 'Central Valley', :iso2 => 'CR' },
-  { :name => 'Poás', :province_name => 'Alajuela', :zone_name => 'Central Valley', :iso2 => 'CR' },
-  { :name => 'Orotina', :province_name => 'Alajuela', :zone_name => 'Central Valley', :iso2 => 'CR' },
-  { :name => 'San Carlos', :province_name => 'Alajuela', :zone_name => 'Northern Plains', :iso2 => 'CR' },
-  { :name => 'Alfaro Ruiz', :province_name => 'Alajuela', :zone_name => 'Central Valley', :iso2 => 'CR' },
-  { :name => 'Valverde Vega', :province_name => 'Alajuela', :zone_name => 'Central Valley', :iso2 => 'CR' },
-  { :name => 'Upala', :province_name => 'Alajuela', :zone_name => 'Northern Plains', :iso2 => 'CR' },
-  { :name => 'Los Chiles', :province_name => 'Alajuela', :zone_name => 'Northern Plains', :iso2 => 'CR' },
-  { :name => 'Guatuso', :province_name => 'Alajuela', :zone_name => 'Northern Plains', :iso2 => 'CR' },
+  {
+    :name => 'Alajuela',
+    :province_name => 'Alajuela',
+    :zone_name => 'Central Valley',
+    :iso2 => 'CR'
+  },
+  {
+    :name => 'San Ramón',
+    :province_name => 'Alajuela',
+    :zone_name => 'Central Valley',
+    :iso2 => 'CR'
+  },
+  {
+    :name => 'Grecia',
+    :province_name => 'Alajuela',
+    :zone_name => 'Central Valley',
+    :iso2 => 'CR'
+  },
+  {
+    :name => 'San Mateo',
+    :province_name => 'Alajuela',
+    :zone_name => 'Northern Plains',
+    :iso2 => 'CR'
+  },
+  {
+    :name => 'Atenas',
+    :province_name => 'Alajuela',
+    :zone_name => 'Central Valley',
+    :iso2 => 'CR'
+  },
+  {
+    :name => 'Naranjo',
+    :province_name => 'Alajuela',
+    :zone_name => 'Central Valley',
+    :iso2 => 'CR'
+  },
+  {
+    :name => 'Palmares',
+    :province_name => 'Alajuela',
+    :zone_name => 'Central Valley',
+    :iso2 => 'CR'
+  },
+  {
+    :name => 'Poás',
+    :province_name => 'Alajuela',
+    :zone_name => 'Central Valley',
+    :iso2 => 'CR'
+  },
+  {
+    :name => 'Orotina',
+    :province_name => 'Alajuela',
+    :zone_name => 'Central Valley',
+    :iso2 => 'CR'
+  },
+  {
+    :name => 'San Carlos',
+    :province_name => 'Alajuela',
+    :zone_name => 'Northern Plains',
+    :iso2 => 'CR'
+  },
+  {
+    :name => 'Alfaro Ruiz',
+    :province_name => 'Alajuela',
+    :zone_name => 'Central Valley',
+    :iso2 => 'CR'
+  },
+  {
+    :name => 'Valverde Vega',
+    :province_name => 'Alajuela',
+    :zone_name => 'Central Valley',
+    :iso2 => 'CR'
+  },
+  {
+    :name => 'Upala',
+    :province_name => 'Alajuela',
+    :zone_name => 'Northern Plains',
+    :iso2 => 'CR'
+  },
+  {
+    :name => 'Los Chiles',
+    :province_name => 'Alajuela',
+    :zone_name => 'Northern Plains',
+    :iso2 => 'CR'
+  },
+  {
+    :name => 'Guatuso',
+    :province_name => 'Alajuela',
+    :zone_name => 'Northern Plains',
+    :iso2 => 'CR'
+  },
   
-  { :name => 'Cartago', :province_name => 'Cartago', :zone_name => 'Central Valley', :iso2 => 'CR' },
-  { :name => 'Paraíso', :province_name => 'Cartago', :zone_name => 'Central Valley', :iso2 => 'CR' },
-  { :name => 'La Unión', :province_name => 'Cartago', :zone_name => 'Central Valley', :iso2 => 'CR' },
-  { :name => 'Jiménez', :province_name => 'Cartago', :zone_name => 'Central Valley', :iso2 => 'CR' },
-  { :name => 'Turrialba', :province_name => 'Cartago', :zone_name => 'Central Valley', :iso2 => 'CR' },
-  { :name => 'Alvarado', :province_name => 'Cartago', :zone_name => 'Central Valley', :iso2 => 'CR' },
-  { :name => 'Oreamno', :province_name => 'Cartago', :zone_name => 'Central Valley', :iso2 => 'CR' },
-  { :name => 'El Guarco', :province_name => 'Cartago', :zone_name => 'Central Valley', :iso2 => 'CR' },
+  {
+    :name => 'Cartago',
+    :province_name => 'Cartago',
+    :zone_name => 'Central Valley',
+    :iso2 => 'CR'
+  },
+  {
+    :name => 'Paraíso',
+    :province_name => 'Cartago',
+    :zone_name => 'Central Valley',
+    :iso2 => 'CR'
+  },
+  {
+    :name => 'La Unión',
+    :province_name => 'Cartago',
+    :zone_name => 'Central Valley',
+    :iso2 => 'CR'
+  },
+  {
+    :name => 'Jiménez',
+    :province_name => 'Cartago',
+    :zone_name => 'Central Valley',
+    :iso2 => 'CR'
+  },
+  {
+    :name => 'Turrialba',
+    :province_name => 'Cartago',
+    :zone_name => 'Central Valley',
+    :iso2 => 'CR'
+  },
+  {
+    :name => 'Alvarado',
+    :province_name => 'Cartago',
+    :zone_name => 'Central Valley',
+    :iso2 => 'CR'
+  },
+  {
+    :name => 'Oreamno',
+    :province_name => 'Cartago',
+    :zone_name => 'Central Valley',
+    :iso2 => 'CR'
+  },
+  {
+    :name => 'El Guarco',
+    :province_name => 'Cartago',
+    :zone_name => 'Central Valley',
+    :iso2 => 'CR'
+  },
   
-  { :name => 'Liberia', :province_name => 'Ganacaste', :zone_name => 'North Pacific', :iso2 => 'CR' },
-  { :name => 'Nicoya', :province_name => 'Ganacaste', :zone_name => 'North Pacific', :iso2 => 'CR' },
-  { :name => 'Santa Cruz', :province_name => 'Ganacaste', :zone_name => 'North Pacific', :iso2 => 'CR' },
-  { :name => 'Bagaces', :province_name => 'Ganacaste', :zone_name => 'North Pacific', :iso2 => 'CR' },
-  { :name => 'Carrillo', :province_name => 'Ganacaste', :zone_name => 'North Pacific', :iso2 => 'CR' },
-  { :name => 'Cañas', :province_name => 'Ganacaste', :zone_name => 'North Pacific', :iso2 => 'CR' },
-  { :name => 'Abangares', :province_name => 'Ganacaste', :zone_name => 'North Pacific', :iso2 => 'CR' },
-  { :name => 'Tilarán', :province_name => 'Ganacaste', :zone_name => 'North Pacific', :iso2 => 'CR' },
-  { :name => 'Nandayure', :province_name => 'Ganacaste', :zone_name => 'North Pacific', :iso2 => 'CR' },
-  { :name => 'La Cruz', :province_name => 'Ganacaste', :zone_name => 'North Pacific', :iso2 => 'CR' },
-  { :name => 'Hajancha', :province_name => 'Ganacaste', :zone_name => 'North Pacific', :iso2 => 'CR' },
+  {
+    :name => 'Liberia',
+    :province_name => 'Ganacaste',
+    :zone_name => 'North Pacific',
+    :iso2 => 'CR'
+  },
+  {
+    :name => 'Nicoya',
+    :province_name => 'Ganacaste',
+    :zone_name => 'North Pacific',
+    :iso2 => 'CR'
+  },
+  {
+    :name => 'Santa Cruz',
+    :province_name => 'Ganacaste',
+    :zone_name => 'North Pacific',
+    :iso2 => 'CR'
+  },
+  {
+    :name => 'Bagaces',
+    :province_name => 'Ganacaste',
+    :zone_name => 'North Pacific',
+    :iso2 => 'CR'
+  },
+  {
+    :name => 'Carrillo',
+    :province_name => 'Ganacaste',
+    :zone_name => 'North Pacific',
+    :iso2 => 'CR'
+  },
+  {
+    :name => 'Cañas',
+    :province_name => 'Ganacaste',
+    :zone_name => 'North Pacific',
+    :iso2 => 'CR'
+  },
+  {
+    :name => 'Abangares',
+    :province_name => 'Ganacaste',
+    :zone_name => 'North Pacific',
+    :iso2 => 'CR'
+  },
+  {
+    :name => 'Tilarán',
+    :province_name => 'Ganacaste',
+    :zone_name => 'North Pacific',
+    :iso2 => 'CR'
+  },
+  {
+    :name => 'Nandayure',
+    :province_name => 'Ganacaste',
+    :zone_name => 'North Pacific',
+    :iso2 => 'CR'
+  },
+  {
+    :name => 'La Cruz',
+    :province_name => 'Ganacaste',
+    :zone_name => 'North Pacific',
+    :iso2 => 'CR'
+  },
+  {
+    :name => 'Hajancha',
+    :province_name => 'Ganacaste',
+    :zone_name => 'North Pacific',
+    :iso2 => 'CR'
+  },
   
-  { :name => 'Heredia', :province_name => 'Heredia', :zone_name => 'Central Valley', :iso2 => 'CR' },
-  { :name => 'Barva', :province_name => 'Heredia', :zone_name => 'Central Valley', :iso2 => 'CR' },
-  { :name => 'Santo Domingo', :province_name => 'Heredia', :zone_name => 'Central Valley', :iso2 => 'CR' },
-  { :name => 'Santa Bárbara', :province_name => 'Heredia', :zone_name => 'Central Valley', :iso2 => 'CR' },
-  { :name => 'San Rafael', :province_name => 'Heredia', :zone_name => 'Central Valley', :iso2 => 'CR' },
-  { :name => 'San Isidro', :province_name => 'Heredia', :zone_name => 'Central Valley', :iso2 => 'CR' },
-  { :name => 'Belén', :province_name => 'Heredia', :zone_name => 'Central Valley', :iso2 => 'CR' },
-  { :name => 'Flores', :province_name => 'Heredia', :zone_name => 'Central Valley', :iso2 => 'CR' },
-  { :name => 'San Pablo', :province_name => 'Heredia', :zone_name => 'Central Valley', :iso2 => 'CR' },
-  { :name => 'Sarapiquí', :province_name => 'Heredia', :zone_name => 'Northern Plains', :iso2 => 'CR' },
+  {
+    :name => 'Heredia',
+    :province_name => 'Heredia',
+    :zone_name => 'Central Valley',
+    :iso2 => 'CR'
+  },
+  {
+    :name => 'Barva',
+    :province_name => 'Heredia',
+    :zone_name => 'Central Valley',
+    :iso2 => 'CR'
+  },
+  {
+    :name => 'Santo Domingo',
+    :province_name => 'Heredia',
+    :zone_name => 'Central Valley',
+    :iso2 => 'CR'
+  },
+  {
+    :name => 'Santa Bárbara',
+    :province_name => 'Heredia',
+    :zone_name => 'Central Valley',
+    :iso2 => 'CR'
+  },
+  {
+    :name => 'San Rafael',
+    :province_name => 'Heredia',
+    :zone_name => 'Central Valley',
+    :iso2 => 'CR'
+  },
+  {
+    :name => 'San Isidro',
+    :province_name => 'Heredia',
+    :zone_name => 'Central Valley',
+    :iso2 => 'CR'
+  },
+  {
+    :name => 'Belén',
+    :province_name => 'Heredia',
+    :zone_name => 'Central Valley',
+    :iso2 => 'CR'
+  },
+  {
+    :name => 'Flores',
+    :province_name => 'Heredia',
+    :zone_name => 'Central Valley',
+    :iso2 => 'CR'
+  },
+  {
+    :name => 'San Pablo',
+    :province_name => 'Heredia',
+    :zone_name => 'Central Valley',
+    :iso2 => 'CR'
+  },
+  {
+    :name => 'Sarapiquí',
+    :province_name => 'Heredia',
+    :zone_name => 'Northern Plains',
+    :iso2 => 'CR'
+  },
   
-  { :name => 'Limón', :province_name => 'Limón', :zone_name => 'Caribbean', :iso2 => 'CR' },
-  { :name => 'Pococí', :province_name => 'Limón', :zone_name => 'Caribbean', :iso2 => 'CR' },
-  { :name => 'Siquirres', :province_name => 'Limón', :zone_name => 'Caribbean', :iso2 => 'CR' },
-  { :name => 'Talamanca', :province_name => 'Limón', :zone_name => 'Caribbean', :iso2 => 'CR' },
-  { :name => 'Matina', :province_name => 'Limón', :zone_name => 'Caribbean', :iso2 => 'CR' },
-  { :name => 'Guácimo', :province_name => 'Limón', :zone_name => 'Caribbean', :iso2 => 'CR' },
+  {
+    :name => 'Limón',
+    :province_name => 'Limón',
+    :zone_name => 'Caribbean',
+    :iso2 => 'CR'
+  },
+  {
+    :name => 'Pococí',
+    :province_name => 'Limón',
+    :zone_name => 'Caribbean',
+    :iso2 => 'CR'
+  },
+  {
+    :name => 'Siquirres',
+    :province_name => 'Limón',
+    :zone_name => 'Caribbean',
+    :iso2 => 'CR'
+  },
+  {
+    :name => 'Talamanca',
+    :province_name => 'Limón',
+    :zone_name => 'Caribbean',
+    :iso2 => 'CR'
+  },
+  {
+    :name => 'Matina',
+    :province_name => 'Limón',
+    :zone_name => 'Caribbean',
+    :iso2 => 'CR'
+  },
+  {
+    :name => 'Guácimo',
+    :province_name => 'Limón',
+    :zone_name => 'Caribbean',
+    :iso2 => 'CR'
+  },
   
-  { :name => 'Puntarenas', :province_name => 'Puntarenas', :zone_name => 'Central Pacific', :iso2 => 'CR' },
-  { :name => 'Esparza', :province_name => 'Puntarenas', :zone_name => 'Central Pacific', :iso2 => 'CR' },
-  { :name => 'Buenos Aires', :province_name => 'Puntarenas', :zone_name => 'South Pacific', :iso2 => 'CR' },
-  { :name => 'Montes de Oro', :province_name => 'Puntarenas', :zone_name => 'Central Pacific', :iso2 => 'CR' },
-  { :name => 'Osa', :province_name => 'Puntarenas', :zone_name => 'South Pacific', :iso2 => 'CR' },
-  { :name => 'Aguirre', :province_name => 'Puntarenas', :zone_name => 'Central Pacific', :iso2 => 'CR' },
-  { :name => 'Golfito', :province_name => 'Puntarenas', :zone_name => 'South Pacific', :iso2 => 'CR' },
-  { :name => 'Coto Brus', :province_name => 'Puntarenas', :zone_name => 'South Pacific', :iso2 => 'CR' },
-  { :name => 'Parrita', :province_name => 'Puntarenas', :zone_name => 'Central Pacific', :iso2 => 'CR' },
-  { :name => 'Corredores', :province_name => 'Puntarenas', :zone_name => 'South Pacific', :iso2 => 'CR' },
-  { :name => 'Garabito', :province_name => 'Puntarenas', :zone_name => 'Central Pacific', :iso2 => 'CR' },
+  {
+    :name => 'Puntarenas',
+    :province_name => 'Puntarenas',
+    :zone_name => 'Central Pacific',
+    :iso2 => 'CR'
+  },
+  {
+    :name => 'Esparza',
+    :province_name => 'Puntarenas',
+    :zone_name => 'Central Pacific',
+    :iso2 => 'CR'
+  },
+  {
+    :name => 'Buenos Aires',
+    :province_name => 'Puntarenas',
+    :zone_name => 'South Pacific',
+    :iso2 => 'CR'
+  },
+  {
+    :name => 'Montes de Oro',
+    :province_name => 'Puntarenas',
+    :zone_name => 'Central Pacific',
+    :iso2 => 'CR'
+  },
+  {
+    :name => 'Osa',
+    :province_name => 'Puntarenas',
+    :zone_name => 'South Pacific',
+    :iso2 => 'CR'
+  },
+  {
+    :name => 'Aguirre',
+    :province_name => 'Puntarenas',
+    :zone_name => 'Central Pacific',
+    :iso2 => 'CR'
+  },
+  {
+    :name => 'Golfito',
+    :province_name => 'Puntarenas',
+    :zone_name => 'South Pacific',
+    :iso2 => 'CR'
+  },
+  {
+    :name => 'Coto Brus',
+    :province_name => 'Puntarenas',
+    :zone_name => 'South Pacific',
+    :iso2 => 'CR'
+  },
+  {
+    :name => 'Parrita',
+    :province_name => 'Puntarenas',
+    :zone_name => 'Central Pacific',
+    :iso2 => 'CR'
+  },
+  {
+    :name => 'Corredores',
+    :province_name => 'Puntarenas',
+    :zone_name => 'South Pacific',
+    :iso2 => 'CR'
+  },
+  {
+    :name => 'Garabito',
+    :province_name => 'Puntarenas',
+    :zone_name => 'Central Pacific',
+    :iso2 => 'CR'
+  },
   
-  { :name => 'San José', :province_name => 'San José', :zone_name => 'Central Valley', :iso2 => 'CR' },
-  { :name => 'Escazú', :province_name => 'San José', :zone_name => 'Central Valley', :iso2 => 'CR' },
-  { :name => 'Desamparados', :province_name => 'San José', :zone_name => 'Central Valley', :iso2 => 'CR' },
-  { :name => 'Puriscal', :province_name => 'San José', :zone_name => 'Central Valley', :iso2 => 'CR' },
-  { :name => 'Tarrazú', :province_name => 'San José', :zone_name => 'Central Pacific', :iso2 => 'CR' },
-  { :name => 'Aserrí', :province_name => 'San José', :zone_name => 'Central Valley', :iso2 => 'CR' },
-  { :name => 'Mora', :province_name => 'San José', :zone_name => 'Central Valley', :iso2 => 'CR' },
-  { :name => 'Goicoechea', :province_name => 'San José', :zone_name => 'Central Valley', :iso2 => 'CR' },
-  { :name => 'Santa Ana', :province_name => 'San José', :zone_name => 'Central Valley', :iso2 => 'CR' },
-  { :name => 'Alajuelita', :province_name => 'San José', :zone_name => 'Central Valley', :iso2 => 'CR' },
-  { :name => 'Vázquez de Coronado', :province_name => 'San José', :zone_name => 'Central Valley', :iso2 => 'CR' },
-  { :name => 'Acosta', :province_name => 'San José', :zone_name => 'Central Valley', :iso2 => 'CR' },
-  { :name => 'Tibás', :province_name => 'San José', :zone_name => 'Central Valley', :iso2 => 'CR' },
-  { :name => 'Moravia', :province_name => 'San José', :zone_name => 'Central Valley', :iso2 => 'CR' },
-  { :name => 'Montes de Oca', :province_name => 'San José', :zone_name => 'Central Valley', :iso2 => 'CR' },
-  { :name => 'Turrubares', :province_name => 'San José', :zone_name => 'Central Pacific', :iso2 => 'CR' },
-  { :name => 'Dota', :province_name => 'San José', :zone_name => 'Central Pacific', :iso2 => 'CR' },
-  { :name => 'Curridabat', :province_name => 'San José', :zone_name => 'Central Valley', :iso2 => 'CR' },
-  { :name => 'Pérez Zeledón', :province_name => 'San José', :zone_name => 'Central Pacific', :iso2 => 'CR' },
-  { :name => 'León Cortés', :province_name => 'San José', :zone_name => 'Central Valley', :iso2 => 'CR' }
+  {
+    :name => 'San José',
+    :province_name => 'San José',
+    :zone_name => 'Central Valley',
+    :iso2 => 'CR'
+  },
+  {
+    :name => 'Escazú',
+    :province_name => 'San José',
+    :zone_name => 'Central Valley',
+    :iso2 => 'CR'
+  },
+  {
+    :name => 'Desamparados',
+    :province_name => 'San José',
+    :zone_name => 'Central Valley',
+    :iso2 => 'CR'
+  },
+  {
+    :name => 'Puriscal',
+    :province_name => 'San José',
+    :zone_name => 'Central Valley',
+    :iso2 => 'CR'
+  },
+  {
+    :name => 'Tarrazú',
+    :province_name => 'San José',
+    :zone_name => 'Central Pacific',
+    :iso2 => 'CR'
+  },
+  {
+    :name => 'Aserrí',
+    :province_name => 'San José',
+    :zone_name => 'Central Valley',
+    :iso2 => 'CR'
+  },
+  {
+    :name => 'Mora',
+    :province_name => 'San José',
+    :zone_name => 'Central Valley',
+    :iso2 => 'CR'
+  },
+  {
+    :name => 'Goicoechea',
+    :province_name => 'San José',
+    :zone_name => 'Central Valley',
+    :iso2 => 'CR'
+  },
+  {
+    :name => 'Santa Ana',
+    :province_name => 'San José',
+    :zone_name => 'Central Valley',
+    :iso2 => 'CR'
+  },
+  {
+    :name => 'Alajuelita',
+    :province_name => 'San José',
+    :zone_name => 'Central Valley',
+    :iso2 => 'CR'
+  },
+  {
+    :name => 'Vázquez de Coronado',
+    :province_name => 'San José',
+    :zone_name => 'Central Valley',
+    :iso2 => 'CR'
+  },
+  {
+    :name => 'Acosta',
+    :province_name => 'San José',
+    :zone_name => 'Central Valley',
+    :iso2 => 'CR'
+  },
+  {
+    :name => 'Tibás',
+    :province_name => 'San José',
+    :zone_name => 'Central Valley',
+    :iso2 => 'CR'
+  },
+  {
+    :name => 'Moravia',
+    :province_name => 'San José',
+    :zone_name => 'Central Valley',
+    :iso2 => 'CR'
+  },
+  {
+    :name => 'Montes de Oca',
+    :province_name => 'San José',
+    :zone_name => 'Central Valley',
+    :iso2 => 'CR'
+  },
+  {
+    :name => 'Turrubares',
+    :province_name => 'San José',
+    :zone_name => 'Central Pacific',
+    :iso2 => 'CR'
+  },
+  {
+    :name => 'Dota',
+    :province_name => 'San José',
+    :zone_name => 'Central Pacific',
+    :iso2 => 'CR'
+  },
+  {
+    :name => 'Curridabat',
+    :province_name => 'San José',
+    :zone_name => 'Central Valley',
+    :iso2 => 'CR'
+  },
+  {
+    :name => 'Pérez Zeledón',
+    :province_name => 'San José',
+    :zone_name => 'Central Pacific',
+    :iso2 => 'CR'
+  },
+  {
+    :name => 'León Cortés',
+    :province_name => 'San José',
+    :zone_name => 'Central Valley',
+    :iso2 => 'CR' }
 ].each do |record|
   province = Province.find(:first,
     :joins => :country,
     :conditions => [
       'provinces.name = :province_name AND countries.iso2 = :iso2',
-      { :province_name => record[:province_name], :iso2 => record[:iso2] }
+      { :province_name => record[:province_name],
+    :iso2 => record[:iso2] }
     ],
     :select => 'provinces.id'
   )
@@ -226,7 +681,12 @@ end
 Agency.delete_all
 i = 0
 [
-  { :name => 'Default Agency', :short_name => 'Default', :master_agency => true, :iso2 => 'CR' }
+  {
+    :name => 'Default Agency',
+    :short_name => 'Default',
+    :master_agency => true,
+    :iso2 => 'CR'
+  }
 ].each do |record|
   country = Country.find_by_iso2(record[:iso2],
     :select => [ :id ]
@@ -243,34 +703,30 @@ i = 0
   i += 1
 end
 
-Category.delete_all
-i = 0
-[
-  { :name => 'Homes', :user_defined => false },
-  { :name => 'Condominiums', :user_defined => false },
-  { :name => 'Residential Lots', :user_defined => false },
-  { :name => 'Farms & Ranches', :user_defined => false },
-  { :name => 'Hotels', :user_defined => false },
-  { :name => 'Apartments', :user_defined => false },
-  { :name => 'Business Opportunities', :user_defined => false }
-].each do |record|
-  record.merge!(:position => i + 1) unless record[:position]
-  key_value_hash = {}
-  record.each_pair do |key, value|
-    key_value_hash.merge!(key => value)
-  end
-  Category.create!(key_value_hash)
-  i += 1
-end
-
 # TODO: write script to grab these from Web and/or text file
 Currency.delete_all
 i = 0
 [
-  { :name => 'United States Dollar', :alphabetic_code => 'USD', :symbol => '$' },
-  { :name => 'Euro', :alphabetic_code => 'EUR', :symbol => '€' },
-  { :name => 'British Pound', :alphabetic_code => 'GBP', :symbol => '£' },
-  { :name => 'Costa Rican Colón', :alphabetic_code => 'CRC', :symbol => '₡' }
+  {
+    :name => 'United States Dollar',
+    :alphabetic_code => 'USD',
+    :symbol => '$'
+  },
+  {
+    :name => 'Euro',
+    :alphabetic_code => 'EUR',
+    :symbol => '€'
+  },
+  {
+    :name => 'British Pound',
+    :alphabetic_code => 'GBP',
+    :symbol => '£'
+  },
+  {
+    :name => 'Costa Rican Colón',
+    :alphabetic_code => 'CRC',
+    :symbol => '₡'
+  }
 ].each do |record|
   record.merge!(:position => i + 1) unless record[:position]
   key_value_hash = {}
@@ -296,22 +752,116 @@ i = 0
   i += 1
 end
 
-MarketSegment.delete_all
+Category.delete_all
 i = 0
 [
-  { :name => 'residential' },
-  { :name => 'beach homes' },
-  { :name => 'vacation homes' },
-  { :name => 'commercial' },
-  { :name => 'businesses' },
-  { :name => 'land for sale' }
+  { :name => 'Condominiums', :user_defined => false, :type => :both },
+  { :name => 'Commercial', :user_defined => false, :type => :both },
+  { :name => 'Apartments', :user_defined => false, :type => :both },
+  { :name => 'Beachfront', :user_defined => false, :type => :sale },
+  { :name => 'Oceanview', :user_defined => false, :type => :sale },
+  { :name => 'Fine Homes & Estates', :user_defined => false, :type => :both },
+  
+  { :name => 'Vacation Rentals', :user_defined => false, :type => :rent }
+  
+  { :name => 'Homes', :user_defined => false, :type => :sale },
+  { :name => 'Residential Lots', :user_defined => false, :type => :sale },
+  { :name => 'Land', :user_defined => false, :type => :sale },
+  { :name => 'Business Opportunities', :user_defined => false, :type => :sale },
+  { :name => 'Hotels', :user_defined => false, :type => :sale },
+  { :name => 'Bed & Breakfasts', :user_defined => false, :type => :sale },
+  { :name => 'Restaurant/Bar', :user_defined => false, :type => :sale },
+  { :name => 'Pre-construction', :user_defined => false, :type => :sale },
+  { :name => 'Farms & Ranches', :user_defined => false, :type => :sale },
+  { :name => 'Residential Development', :user_defined => false,
+    :type => :sale },
+  { :name => 'Commercial Development', :user_defined => false, :type => :sale }
 ].each do |record|
   record.merge!(:position => i + 1) unless record[:position]
+  types = []
   key_value_hash = {}
   record.each_pair do |key, value|
+    case :type
+    when :sale, :both
+      types << 'for sale'
+    when :rent, :both
+      types << 'for rent'
+    end
+    record.delete(:type)
     key_value_hash.merge!(key => value)
   end
-  MarketSegment.create!(key_value_hash)
+  category = Category.create!(key_value_hash)
+  types.each do |type|
+    listing_type = ListingType.find_by_name(type)
+    if listing_type
+      CategoryAssignment.create!(
+        :category_assignable_type => 'ListingType',
+        :category_assignable_id => listing_type.id,
+        :category_id => category.id
+      )
+    end
+  end
+  i += 1
+end
+
+Feature.delete_all
+i = 0
+[
+  { :name => 'swimming pool', :user_defined => false, :type => :both },
+  { :name => 'hot water', :user_defined => false, :type => :both },
+  { :name => 'hardwood floors', :user_defined => false, :type => :both },
+  { :name => 'central air', :user_defined => false, :type => :both },
+  { :name => 'central heat', :user_defined => false, :type => :both },
+  { :name => 'spa/hot tub', :user_defined => false, :type => :both },
+  { :name => 'carport', :user_defined => false, :type => :both },
+  { :name => 'RV/boat parking', :user_defined => false, :type => :both },
+  { :name => 'tennis court', :user_defined => false, :type => :both },
+  { :name => 'disability features', :user_defined => false, :type => :both },
+  { :name => 'den/office', :user_defined => false, :type => :both },
+  { :name => 'energy efficient home', :user_defined => false, :type => :both },
+  { :name => 'fireplace', :user_defined => false, :type => :both },
+  { :name => 'burglar alarm', :user_defined => false, :type => :both },
+  { :name => 'laundry room', :user_defined => false, :type => :both },
+  { :name => 'insulated glass', :user_defined => false, :type => :both },
+  { :name => 'front garden', :user_defined => false, :type => :both },
+  { :name => 'back garden', :user_defined => false, :type => :both },
+  { :name => 'front yard', :user_defined => false, :type => :both },
+  { :name => 'backyard', :user_defined => false, :type => :both },
+  { :name => 'basement', :user_defined => false, :type => :both },
+  { :name => 'close to or on a paved road', :user_defined => false,
+    :type => :both },
+  { :name => 'privacy', :user_defined => false, :type => :both },
+  { :name => 'natural area', :user_defined => false, :type => :both },
+  { :name => 'close to surf break', :user_defined => false, :type => :both },
+  { :name => 'close to school', :user_defined => false, :type => :both },
+  { :name => 'close to hospital', :user_defined => false, :type => :both },
+  { :name => 'close to services', :user_defined => false, :type => :both },
+  { :name => 'close to airport', :user_defined => false, :type => :both }
+].each do |record|
+  record.merge!(:position => i + 1) unless record[:position]
+  types = []
+  key_value_hash = {}
+  record.each_pair do |key, value|
+    case :type
+    when :sale, :both
+      types << 'for sale'
+    when :rent, :both
+      types << 'for rent'
+    end
+    record.delete(:type)
+    key_value_hash.merge!(key => value)
+  end
+  feature = Feature.create!(key_value_hash)
+  types.each do |type|
+    listing_type = ListingType.find_by_name(type)
+    if listing_type
+      FeatureAssignment.create!(
+        :feature_assignable_type => 'ListingType',
+        :feature_assignable_id => listing_type.id,
+        :feature_id => feature.id
+      )
+    end
+  end
   i += 1
 end
 
@@ -331,18 +881,62 @@ i = 0
   { :name => 'Ranch' }
 ].each do |record|
   record.merge!(:position => i + 1) unless record[:position]
+  types = []
+  key_value_hash = {}
+  record.each_pair do |key, value|
+    case :type
+    when :sale, :both
+      types << 'for sale'
+    when :rent, :both
+      types << 'for rent'
+    end
+    record.delete(:type)
+    key_value_hash.merge!(key => value)
+  end
+  style = Style.create!(key_value_hash)
+  types.each do |type|
+    listing_type = ListingType.find_by_name(type)
+    if listing_type
+      StyleAssignment.create!(
+        :style_assignable_type => 'ListingType',
+        :style_assignable_id => listing_type.id,
+        :style_id => style.id
+      )
+    end
+  end
+  i += 1
+end
+
+MarketSegment.delete_all
+i = 0
+[
+  { :name => 'residential' },
+  { :name => 'beach homes' },
+  { :name => 'vacation homes' },
+  { :name => 'commercial' },
+  { :name => 'businesses' },
+  { :name => 'land for sale' }
+].each do |record|
+  record.merge!(:position => i + 1) unless record[:position]
   key_value_hash = {}
   record.each_pair do |key, value|
     key_value_hash.merge!(key => value)
   end
-  Style.create!(key_value_hash)
+  MarketSegment.create!(key_value_hash)
   i += 1
 end
 
 User.delete_all
 i = 0
 [
-  { :login => 'admin', :email => 'admin@yourdomain.com', :first_name => 'Admin', :last_name => 'User', :password => 'password', :password_confirmation => 'password' }
+  {
+    :login => 'admin',
+    :email => 'admin@yourdomain.com',
+    :first_name => 'Admin',
+    :last_name => 'User',
+    :password => 'password',
+    :password_confirmation => 'password'
+  }
 ].each do |record|
   key_value_hash = {}
   record.each_pair do |key, value|
