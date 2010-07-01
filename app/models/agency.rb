@@ -26,11 +26,11 @@ class Agency < ActiveRecord::Base
   has_many :properties
   has_many :site_texts
   
-  validates_presence_of :name, :short_name, :domain
+  validates_presence_of :name, :short_name
   validates_uniqueness_of :name, :short_name
 #  validates_format_of :name, :with => /^[a-zA-Z0-9\s]+$/,
 #    :message => "may only contain letters and numbers"
-  validates_uniqueness_of :subdomain, :scope => :subdomain,
+  validates_uniqueness_of :subdomain, :scope => :domain,
     :case_sensitive => false,
     :message => 'Subdomain must be unique for given domain'
   validates_numericality_of :country_id,
@@ -41,7 +41,8 @@ class Agency < ActiveRecord::Base
     :message => "{{value}} must be an integer"
   validates_exclusion_of :subdomain, :in => %w(www),
     :message => 'Subdomain {{value}} is reserved.'
-    
+  validate :limit_one_root_domain
+  
   before_validation :short_name_same_as_name
   before_save :add_primary_market_to_market_ids
   after_save :set_primary_market
@@ -80,6 +81,17 @@ class Agency < ActiveRecord::Base
   
   
   private
+  
+  def limit_one_root_domain
+    if self.subdomain.blank?
+      return if self.domain.blank?
+      agencies = Agency.find_by_domain(self.domain)
+      if agencies
+        errors.add(:subdomain, ' with nil value already exists for this' +
+          ' domain. Choose a subdomain or change the domain.')
+      end
+    end
+  end
   
   def short_name_same_as_name
     if self.short_name.blank?

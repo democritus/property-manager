@@ -1,4 +1,4 @@
-class CreateDatabaseFromSchema < ActiveRecord::Migration
+class CreateDatabase < ActiveRecord::Migration
 
   def self.up
     create_table :agencies, :options => "ENGINE=InnoDB DEFAULT CHARSET=utf8",
@@ -96,9 +96,9 @@ class CreateDatabaseFromSchema < ActiveRecord::Migration
     add_index :barrios, [:canton_id, :name], :name => "canton_id__name",
       :unique => true
     add_index :barrios, [:canton_id, :position], :name => "canton_id__position"
-    add_index :barrios, [:market_id, :name], :name => "canton_id__name",
+    add_index :barrios, [:market_id, :name], :name => "market_id__name",
       :unique => true
-    add_index :barrios, [:market_id, :position], :name => "canton_id__position"
+    add_index :barrios, [:market_id, :position], :name => "market_id__position"
     add_index :barrios, [:cached_slug], :name => "cached_slug"
     
     
@@ -155,6 +155,7 @@ class CreateDatabaseFromSchema < ActiveRecord::Migration
       :force => true do |t|
       t.string  :iso2, :limit => 2, :null => false
       t.string  :name, :null => false
+      t.string  :nationality
       t.integer :currency_id
       t.integer :position
       t.string   :cached_slug
@@ -163,6 +164,8 @@ class CreateDatabaseFromSchema < ActiveRecord::Migration
 
     add_index :countries, [:iso2], :name => "iso2", :unique => true
     add_index :countries, [:name], :name => "name", :unique => true
+    add_index :countries, [:nationality], :name => "nationality",
+      :unique => true
     add_index :countries, [:position], :name => "position"
     add_index :countries, [:cached_slug], :name => "cached_slug"
 
@@ -170,13 +173,14 @@ class CreateDatabaseFromSchema < ActiveRecord::Migration
     create_table :currencies, :options => "ENGINE=InnoDB DEFAULT CHARSET=utf8",
       :force => true do |t|
       t.string  :name, :null => false
-      t.string  :code, :limit => 3, :null => false
+      t.string  :alphabetic_code, :limit => 3, :null => false
       t.string  :symbol, :limit => 2, :null => false
       t.integer :position
       t.timestamps
     end
 
-    add_index :currencies, [:code], :name => "code", :unique => true
+    add_index :currencies, [:alphabetic_code], :name => "alphabetic_code",
+      :unique => true
     add_index :currencies, [:name], :name => "name", :unique => true
     add_index :currencies, [:symbol], :name => "symbol"
     add_index :currencies, [:position], :name => "position"

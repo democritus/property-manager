@@ -12,15 +12,15 @@
 ActiveRecord::Schema.define(:version => 20090630115317) do
 
   create_table "agencies", :force => true do |t|
-    t.integer  "country_id",                           :null => false
-    t.integer  "market_segment_id",                    :null => false
+    t.integer  "country_id"
+    t.integer  "broker_id"
+    t.integer  "market_segment_id"
     t.string   "name",                                 :null => false
     t.string   "short_name",                           :null => false
     t.string   "domain"
     t.string   "subdomain"
     t.string   "email"
     t.string   "skype"
-    t.integer  "broker_id"
     t.text     "description"
     t.boolean  "master_agency",     :default => false, :null => false
     t.integer  "position"
@@ -77,10 +77,8 @@ ActiveRecord::Schema.define(:version => 20090630115317) do
   add_index "agents", ["user_id"], :name => "user_id", :unique => true
 
   create_table "barrios", :force => true do |t|
+    t.integer  "canton_id",   :null => false
     t.integer  "market_id"
-    t.integer  "country_id",  :null => false
-    t.integer  "zone_id",     :null => false
-    t.integer  "province_id", :null => false
     t.string   "name",        :null => false
     t.integer  "position"
     t.string   "cached_slug"
@@ -89,23 +87,24 @@ ActiveRecord::Schema.define(:version => 20090630115317) do
   end
 
   add_index "barrios", ["cached_slug"], :name => "cached_slug"
-  add_index "barrios", ["country_id", "market_id", "name"], :name => "country_id__market_id__name", :unique => true
-  add_index "barrios", ["country_id", "market_id", "position"], :name => "country_id__market_id__position"
-  add_index "barrios", ["country_id", "province_id", "name"], :name => "country_id__province__id_name"
-  add_index "barrios", ["country_id", "province_id", "position"], :name => "country_id__province_id__position"
-  add_index "barrios", ["country_id", "zone_id", "name"], :name => "country_id__zone_id__name"
-  add_index "barrios", ["country_id", "zone_id", "position"], :name => "country_id__zone_id__position"
+  add_index "barrios", ["canton_id", "name"], :name => "canton_id__name", :unique => true
+  add_index "barrios", ["canton_id", "position"], :name => "canton_id__position"
+  add_index "barrios", ["market_id", "name"], :name => "market_id__name", :unique => true
+  add_index "barrios", ["market_id", "position"], :name => "market_id__position"
 
   create_table "cantons", :force => true do |t|
     t.integer "province_id", :null => false
+    t.integer "zone_id",     :null => false
     t.string  "name",        :null => false
     t.integer "position"
     t.string  "cached_slug"
   end
 
   add_index "cantons", ["cached_slug"], :name => "cached_slug"
-  add_index "cantons", ["name"], :name => "name", :unique => true
+  add_index "cantons", ["province_id", "name"], :name => "province_id__name", :unique => true
   add_index "cantons", ["province_id", "position"], :name => "province_id__position"
+  add_index "cantons", ["zone_id", "name"], :name => "zone_id__name", :unique => true
+  add_index "cantons", ["zone_id", "position"], :name => "zone_id__position"
 
   create_table "categories", :force => true do |t|
     t.string   "name",                            :null => false
@@ -134,6 +133,7 @@ ActiveRecord::Schema.define(:version => 20090630115317) do
   create_table "countries", :force => true do |t|
     t.string   "iso2",        :limit => 2, :null => false
     t.string   "name",                     :null => false
+    t.integer  "currency_id"
     t.integer  "position"
     t.string   "cached_slug"
     t.datetime "created_at"
@@ -292,9 +292,8 @@ ActiveRecord::Schema.define(:version => 20090630115317) do
 
   create_table "properties", :force => true do |t|
     t.string   "name",                                                         :null => false
-    t.text     "description"
     t.integer  "agency_id"
-    t.integer  "barrio_id"
+    t.integer  "barrio_id",                                                    :null => false
     t.integer  "bedroom_number",    :limit => 3
     t.decimal  "bathroom_number",                :precision => 3, :scale => 1
     t.integer  "construction_size"
@@ -304,6 +303,7 @@ ActiveRecord::Schema.define(:version => 20090630115317) do
     t.integer  "year_built"
     t.integer  "stories",           :limit => 2
     t.date     "date_available"
+    t.text     "description"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

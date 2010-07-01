@@ -1,13 +1,44 @@
 # TODO: write script to grab these from Web and/or text file
+Currency.delete_all
+i = 0
+[
+  {
+    :name => 'United States Dollar',
+    :alphabetic_code => 'USD',
+    :symbol => '$'
+  },
+  {
+    :name => 'Euro',
+    :alphabetic_code => 'EUR',
+    :symbol => '€'
+  },
+  {
+    :name => 'British Pound',
+    :alphabetic_code => 'GBP',
+    :symbol => '£'
+  },
+  {
+    :name => 'Costa Rican Colón',
+    :alphabetic_code => 'CRC',
+    :symbol => '₡'
+  }
+].each do |record|
+  record.merge!(:position => i + 1) unless record[:position]
+  Currency.create!(record)
+  i += 1
+end
+
+# TODO: write script to grab these from Web and/or text file
 # Grab all countries from online list
 require 'open-uri'
 Country.delete_all
 countries = []
 url = 'http://openconcept.ca/sites/openconcept.ca/files/' +
   'country_code_drupal_0.txt'
-open(url) do |countries|
-  countries.read.each_line do |country|
-    iso2, name = country.chomp.split("|").strip
+open(url) do |data|
+  data.read.each_line do |country|
+    iso2_and_name = country.chomp.split("|").map { |x| x.chomp }
+    iso2, name = iso2_and_name
     case iso2
     when 'CR'
       nationality = 'Costa Rican'
@@ -27,9 +58,10 @@ open(url) do |countries|
     }
   end
 end
+i = 0
 countries.each do |record|
   if record[:currency_code]
-    currency = Currency.find_by_currency_code(record[:currency_code],
+    currency = Currency.find_by_alphabetic_code(record[:currency_code],
       :select => [ :id ]
     )
   end
@@ -38,11 +70,7 @@ countries.each do |record|
   end
   record.merge!(:position => i + 1) unless record[:position]
   record.delete(:currency_code)
-  key_value_hash = {}
-  record.each_pair do |key, value|
-    key_value_hash.merge!(key => value)
-  end
-  Country.create!(key_value_hash)
+  Country.create!(record)
   i += 1
 end
 
@@ -65,11 +93,7 @@ end
 #  end
 #  record.merge!(:position => i + 1) unless record[:position]
 #  record.delete(:currency_code)
-#  key_value_hash = {}
-#  record.each_pair do |key, value|
-#    key_value_hash.merge!(key => value)
-#  end
-#  Country.create!(key_value_hash)
+#  Country.create!(record)
 #  i += 1
 #end
 
@@ -98,20 +122,17 @@ i = 0
   },
   {
     :name => 'Northern Plains',
-    :iso2 => 'CR' }
+    :iso2 => 'CR'
+  }
 ].each do |record|
   country = Country.find_by_iso2(record[:iso2],
-    :select => [ :id ]
+    :select => :id
   )
   next unless country
   record.merge!(:country_id => country.id)
   record.merge!(:position => i + 1) unless record[:position]
   record.delete(:iso2)
-  key_value_hash = {}
-  record.each_pair do |key, value|
-    key_value_hash.merge!(key => value)
-  end
-  Zone.create!(key_value_hash)
+  Zone.create!(record)
   i += 1
 end
 
@@ -148,17 +169,13 @@ i = 0
   }
 ].each do |record|
   country = Country.find_by_iso2(record[:iso2],
-    :select => [ :id ]
+    :select => :id
   )
   next unless country
   record.merge!(:country_id => country.id)
   record.merge!(:position => i + 1) unless record[:position]
   record.delete(:iso2)
-  key_value_hash = {}
-  record.each_pair do |key, value|
-    key_value_hash.merge!(key => value)
-  end
-  Province.create!(key_value_hash)
+  Province.create!(record)
   i += 1
 end
 
@@ -667,14 +684,21 @@ i = 0
     :select => 'provinces.id'
   )
   next unless province
+  zone = Zone.find(:first,
+    :joins => :country,
+    :conditions => [
+      'zones.name = :zone_name AND countries.iso2 = :iso2',
+      { :zone_name => record[:zone_name],
+    :iso2 => record[:iso2] }
+    ],
+    :select => 'zones.id'
+  )
+  next unless zone
   record.merge!(:position => i + 1) unless record[:position]
   record.merge!(:province_id => province.id)
+  record.merge!(:zone_id => zone.id)
   record.delete(:iso2)
-  key_value_hash = {}
-  record.each_pair do |key, value|
-    key_value_hash.merge!(key => value)
-  end
-  Canton.create!(key_value_hash)
+  Canton.create!(record)
   i += 1
 end
 
@@ -689,51 +713,13 @@ i = 0
   }
 ].each do |record|
   country = Country.find_by_iso2(record[:iso2],
-    :select => [ :id ]
+    :select => :id
   )
   next unless country
   record.merge!(:country_id => country.id)
   record.merge!(:position => i + 1) unless record[:position]
   record.delete(:iso2)
-  key_value_hash = {}
-  record.each_pair do |key, value|
-    key_value_hash.merge!(key => value)
-  end
-  Agency.create!(key_value_hash)
-  i += 1
-end
-
-# TODO: write script to grab these from Web and/or text file
-Currency.delete_all
-i = 0
-[
-  {
-    :name => 'United States Dollar',
-    :alphabetic_code => 'USD',
-    :symbol => '$'
-  },
-  {
-    :name => 'Euro',
-    :alphabetic_code => 'EUR',
-    :symbol => '€'
-  },
-  {
-    :name => 'British Pound',
-    :alphabetic_code => 'GBP',
-    :symbol => '£'
-  },
-  {
-    :name => 'Costa Rican Colón',
-    :alphabetic_code => 'CRC',
-    :symbol => '₡'
-  }
-].each do |record|
-  record.merge!(:position => i + 1) unless record[:position]
-  key_value_hash = {}
-  record.each_pair do |key, value|
-    key_value_hash.merge!(key => value)
-  end
-  Currency.create!(key_value_hash)
+  Agency.create!(record)
   i += 1
 end
 
@@ -744,11 +730,7 @@ i = 0
   { :name => 'for rent' }
 ].each do |record|
   record.merge!(:position => i + 1) unless record[:position]
-  key_value_hash = {}
-  record.each_pair do |key, value|
-    key_value_hash.merge!(key => value)
-  end
-  ListingType.create!(key_value_hash)
+  ListingType.create!(record)
   i += 1
 end
 
@@ -762,7 +744,7 @@ i = 0
   { :name => 'Oceanview', :user_defined => false, :type => :sale },
   { :name => 'Fine Homes & Estates', :user_defined => false, :type => :both },
   
-  { :name => 'Vacation Rentals', :user_defined => false, :type => :rent }
+  { :name => 'Vacation Rentals', :user_defined => false, :type => :rent },
   
   { :name => 'Homes', :user_defined => false, :type => :sale },
   { :name => 'Residential Lots', :user_defined => false, :type => :sale },
@@ -779,7 +761,6 @@ i = 0
 ].each do |record|
   record.merge!(:position => i + 1) unless record[:position]
   types = []
-  key_value_hash = {}
   record.each_pair do |key, value|
     case :type
     when :sale, :both
@@ -788,9 +769,8 @@ i = 0
       types << 'for rent'
     end
     record.delete(:type)
-    key_value_hash.merge!(key => value)
   end
-  category = Category.create!(key_value_hash)
+  category = Category.create!(record)
   types.each do |type|
     listing_type = ListingType.find_by_name(type)
     if listing_type
@@ -840,7 +820,6 @@ i = 0
 ].each do |record|
   record.merge!(:position => i + 1) unless record[:position]
   types = []
-  key_value_hash = {}
   record.each_pair do |key, value|
     case :type
     when :sale, :both
@@ -849,9 +828,8 @@ i = 0
       types << 'for rent'
     end
     record.delete(:type)
-    key_value_hash.merge!(key => value)
   end
-  feature = Feature.create!(key_value_hash)
+  feature = Feature.create!(record)
   types.each do |type|
     listing_type = ListingType.find_by_name(type)
     if listing_type
@@ -882,7 +860,6 @@ i = 0
 ].each do |record|
   record.merge!(:position => i + 1) unless record[:position]
   types = []
-  key_value_hash = {}
   record.each_pair do |key, value|
     case :type
     when :sale, :both
@@ -891,9 +868,8 @@ i = 0
       types << 'for rent'
     end
     record.delete(:type)
-    key_value_hash.merge!(key => value)
   end
-  style = Style.create!(key_value_hash)
+  style = Style.create!(record)
   types.each do |type|
     listing_type = ListingType.find_by_name(type)
     if listing_type
@@ -918,11 +894,7 @@ i = 0
   { :name => 'land for sale' }
 ].each do |record|
   record.merge!(:position => i + 1) unless record[:position]
-  key_value_hash = {}
-  record.each_pair do |key, value|
-    key_value_hash.merge!(key => value)
-  end
-  MarketSegment.create!(key_value_hash)
+  MarketSegment.create!(record)
   i += 1
 end
 
@@ -938,10 +910,6 @@ i = 0
     :password_confirmation => 'password'
   }
 ].each do |record|
-  key_value_hash = {}
-  record.each_pair do |key, value|
-    key_value_hash.merge!(key => value)
-  end
-  User.create!(key_value_hash)
+  User.create!(record)
   i += 1
 end

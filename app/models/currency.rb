@@ -8,11 +8,11 @@ class Currency < ActiveRecord::Base
     :class_name => 'Listing',
     :foreign_key => 'close_currency_id'
     
-  validates_presence_of :name, :code, :symbol
-  validates_uniqueness_of :name, :code, :symbol
+  validates_presence_of :name, :alphabetic_code, :symbol
+  validates_uniqueness_of :name, :alphabetic_code, :symbol
   
   # Force code to be uppercase
-  def code=(code)
-    write_attribute(:code, code.upcase)
+  def alphabetic_code=(input)
+    write_attribute(:alphabetic_code, input.upcase)
   end
 end

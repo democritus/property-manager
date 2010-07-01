@@ -95,7 +95,7 @@ ActionController::Routing::Routes.draw do |map|
     end
     
     admin.resources :cantons, :only => :show do |cantons|
-      markets.resources :barrios,
+      cantons.resources :barrios,
         :collection => {
           :update_provinces => :get,
           :update_markets => :get,
