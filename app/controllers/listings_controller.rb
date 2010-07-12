@@ -116,10 +116,11 @@ class ListingsController < ApplicationController
     
     # TODO: create scheme to change order of listings so that the same listings
     # don't always show up at the top of the list
-    if search_params.has_key?('property_barrio_canton_province_country_name_equals')
-      if search_params.has_key?('categories_name_equals')
-        if search_params.has_key?('property_barrio_market_name_equals')
-          if search_params.has_key?('property_barrio_name_equals')
+    if search_params.has_key?(
+      'property_barrio_canton_province_country_cached_slug_equals')
+      if search_params.has_key?('categories_cached_slug_equals')
+        if search_params.has_key?('property_barrio_market_cached_slug_equals')
+          if search_params.has_key?('property_barrio_cached_slug_equals')
             order = 'listings.ask_amount'
           else
             order = 'barrios.name, listings.ask_amount'
@@ -128,8 +129,8 @@ class ListingsController < ApplicationController
           order = 'markets.name, barrios.name'
         end
       else
-        if search_params.has_key?('property_barrio_market_name_equals')
-          if search_params.has_key?('property_barrio_name_equals')
+        if search_params.has_key?('property_barrio_market_cached_slug_equals')
+          if search_params.has_key?('property_barrio_cached_slug_equals')
             order = 'categories.name'
           else
             order = 'categories.name, barrios.name'
@@ -139,7 +140,7 @@ class ListingsController < ApplicationController
         end
       end
     else
-      if search_params.has_key?('categories_name_equals')
+      if search_params.has_key?('categories_cached_slug_equals')
         order = 'countries.name, markets.name, barrios.name'
       else
         order = 'listings.ask_amount'
@@ -168,10 +169,11 @@ class ListingsController < ApplicationController
     
     # TODO: create scheme to change order of listings so that the same listings
     # don't always show up at the top of the list
-    if search_params.has_key?('property_barrio_canton_province_country_name_equals')
-      if search_params.has_key?('categories_name_equals')
-        if search_params.has_key?('property_barrio_market_name_equals')
-          if search_params.has_key?('property_barrio_name_equals')
+    if search_params.has_key?(
+      'property_barrio_canton_province_country_cached_slug_equals')
+      if search_params.has_key?('categories_cached_slug_equals')
+        if search_params.has_key?('property_barrio_market_cached_slug_equals')
+          if search_params.has_key?('property_barrio_cached_slug_equals')
             order = 'listings.ask_amount'
           else
             order = 'barrios.name, listings.ask_amount'
@@ -180,8 +182,8 @@ class ListingsController < ApplicationController
           order = 'markets.name, barrios.name'
         end
       else
-        if search_params.has_key?('property_barrio_market_name_equals')
-          if search_params.has_key?('property_barrio_name_equals')
+        if search_params.has_key?('property_barrio_market_cached_slug_equals')
+          if search_params.has_key?('property_barrio_cached_slug_equals')
             order = 'categories.name'
           else
             order = 'categories.name, barrios.name'
@@ -191,7 +193,7 @@ class ListingsController < ApplicationController
         end
       end
     else
-      if search_params.has_key?('categories_name_equals')
+      if search_params.has_key?('categories_cached_slug_equals')
         order = 'countries.name, markets.name, barrios.name'
       else
         order = 'listings.ask_amount'

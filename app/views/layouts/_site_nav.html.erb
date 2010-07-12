@@ -4,23 +4,23 @@
     when 'Heredia'
       %>
       <li><%= link_to 'Homes in Heredia', listings_options(
-        'categories_name_equals' => 'Homes',
-        'listing_type_name_equals' => 'for sale',
-        'property_barrio_market_name_equals' => 'Heredia') %></li>
+        'categories_cached_slug_equals' => 'homes',
+        'listing_type_cached_slug_equals' => 'for-sale',
+        'property_barrio_market_cached_slug_equals' => 'heredia') %></li>
       <%
     when 'Jacó Beach'
       %>
       <li><%= link_to 'Homes in Jacó Beach', listings_options(
-        'categories_name_equals' => 'Homes',
-        'listing_type_name_equals' => 'for sale',
-        'property_barrio_market_name_equals' => 'Heredia') %></li>
+        'categories_cached_slug_equals' => 'homes',
+        'listing_type_cached_slug_equals' => 'for-sale',
+        'property_barrio_market_cached_slug_equals' => 'heredia') %></li>
       <%
     when 'Dominical'
       %>
       <li><%= link_to 'Tin Shacks in Dominical', listings_options(
-        'categories_name_equals' => 'Tin Shacks',
-        'listing_type_name_equals' => 'for sale',
-        'property_barrio_market_name_equals' => 'Dominical') %></li>
+        'categories_cached_slug_equals' => 'tin-shacks',
+        'listing_type_cached_slug_equals' => 'for-sale',
+        'property_barrio_market_cached_slug_equals' => 'dominical') %></li>
       <%
   end
   %>
@@ -34,30 +34,30 @@
       <li><%= link_to 'All listings', listings_options %></li>
       <%= yield :active_agency_for_sale_links %>
       <li><%= link_to 'Beach Homes', listings_options(
-        'categories_name_equals' => 'Homes',
-        'features_name_equals_any' => 'Beach Home') %></li>
+        'categories_cached_slug_equals' => 'homes',
+        'features_cached_slug_equals_any' => 'beach-home') %></li>
       <li><%= link_to 'Mountain Homes', listings_options(
-        'categories_name_equals' => 'Homes',
-        'features_name_equals_any' => 'Mountain Home') %></li>
+        'categories_cached_slug_equals' => 'homes',
+        'features_cached_slug_equals_any' => 'mountain-home') %></li>
       <li><%= link_to 'Condos', listings_options(
-        'categories_name_equals' => 'Condos') %></li>
+        'categories_cached_slug_equals' => 'condos') %></li>
       <li><%= link_to 'Farms & Ranches', listings_options(
-        'categories_name_equals' => 'Farms') %></li>
+        'categories_cached_slug_equals' => 'farms') %></li>
       <li><%= link_to 'Lots', listings_options(
-        'categories_name_equals' => 'Lots') %></li>
+        'categories_cached_slug_equals' => 'lots') %></li>
     </ul>
   </div>
   <div class="menu_list">
     <h3>For Rent</h3>
     <ul>
       <li><%= link_to 'All listings', listings_options(
-        'listing_type_name_equals' => 'for rent') %></li>
+        'listing_type_cached_slug_equals' => 'for-rent') %></li>
       <li><%= link_to 'Houses', listings_options(
-        'categories_name_equals' => 'Homes',
-          'listing_type_name_equals' => 'for rent') %></li>
+        'categories_cached_slug_equals' => 'homes',
+          'listing_type_cached_slug_equals' => 'for-rent') %></li>
       <li><%= link_to 'Apartments', listings_options(
-        'categories_name_equals' => 'Apartments',
-        'listing_type_name_equals' => 'for rent') %></li>
+        'categories_cached_slug_equals' => 'apartments',
+        'listing_type_cached_slug_equals' => 'for-rent') %></li>
     </ul>
   </div>
   <%
@@ -83,7 +83,9 @@
           ].reject {
             |x| x.blank? }.join('.')
           agency_options = { :host => agency_host }
-          agency_options.merge!( :port => request.port ) unless request.port == 80
+          unless request.port == 80
+            agency_options.merge!( :port => request.port )
+          end
           %>
           <li><%= link_to agency.short_name.titleize +
             ' Listings<div class="after_icon"></div>',
@@ -101,9 +103,11 @@
       <!--<li><%= link_to 'Contact us',
         contact_agency_path(@active_agency) %></li>-->
       <li><%= link_to 'Contact us', '/contact' %></li>
-      <li><%= link_to @active_agency.country.name +
-        " Real Estate Buyer's Guide",
-        country_path(@active_agency.country) %></li>
+      <% if @active_agency.country %>
+        <li><%= link_to @active_agency.country.name +
+          " Real Estate Buyer's Guide",
+          country_path(@active_agency.country) %></li>
+      <% end %>
       <!--<li><%= link_to 'Useful links',
         links_agency_path(@active_agency) %></li>-->
       <li><%= link_to 'Useful links', '/links' %></li>

@@ -1,6 +1,6 @@
 class ListingType < ActiveRecord::Base
 
-  has_friendly_id :name
+  has_friendly_id :name, :use_slug => true, :approximate_ascii => true
   
   named_scope :friendly_id_equals, lambda { |friendly_id|
     { :conditions => { :id => friendly_id } }

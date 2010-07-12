@@ -10,7 +10,8 @@ merge_images!
         <% if @listing.images[0] %>
           <%= medium_image(@listing.images[0]) %>
         <% else %>
-          <%= image_tag(default_medium_images_properties_path(:format => :jpg)) %>
+          <%= image_tag(
+            default_medium_images_properties_path(:format => :jpg)) %>
         <% end %>
       </div>
       <%= main_image_spinner %>
@@ -165,7 +166,8 @@ merge_images!
             children = $(triggerName).childElements();
             opener = children[0];
             closer = children[1];
-            //confirm(target.style.display + ' / ' + opener.style.display + ' / ' + closer.style.display);
+            //confirm(target.style.display + ' / ' +
+              //opener.style.display + ' / ' + closer.style.display);
             if (target.style.display == 'none') {
               opener.style.display = 'none';
               closer.style.display = 'block';
@@ -242,17 +244,17 @@ merge_images!
     -->
     <%
     static_params = {
-      :listing_type_name_equals => @listing.listing_type.name
+      :listing_type_cached_slug_equals => @listing.listing_type.name
     }
     if @listing.property.barrio
       static_params.merge!(
-        :property_barrio_canton_province_country_name_equals => @listing.property.barrio.country.name
+        :property_barrio_canton_province_country_cached_slug_equals => @listing.property.barrio.country.name
       )
     end
     category_in_market = ''
     if @listing.primary_category
       static_params.merge!(
-        :categories_name_equals => @listing.primary_category.name
+        :categories_cached_slug_equals => @listing.primary_category.name
       )
       if @listing.property.barrio
         category_in_market = 'More ' + @listing.primary_category.name.downcase +
@@ -267,7 +269,8 @@ merge_images!
     market_params = {}
     if @listing.property.barrio
       market_params = static_params.merge(
-        :property_barrio_market_name_equals => @listing.property.barrio.market.name
+        :property_barrio_market_cached_slug_equals =>
+          @listing.property.barrio.market.name
       )
     end
     %>
@@ -320,7 +323,7 @@ merge_images!
               <%= link_to(barrio.name,
                 listings_options(
                   market_params.merge(
-                    :property_barrio_name_equals => barrio.name
+                    :property_barrio_cached_slug_equals => barrio.name
                   )
                 )
               ) %>

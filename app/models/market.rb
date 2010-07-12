@@ -76,5 +76,3 @@ class Market < ActiveRecord::Base
     end
   end
 end
-
-include RedundantAssociationFidelity

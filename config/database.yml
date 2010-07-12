@@ -58,3 +58,13 @@ production:
   username: be_user
   password: voyag3r
   host: localhost
+  
+legacy:
+  adapter: mysql
+  encoding: latin1
+  reconnect: false
+  database: barrioearth_php
+  pool: 5
+  username: be_user_php
+  password: jupit3r
+  host: localhost

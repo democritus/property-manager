@@ -9,27 +9,27 @@ require File.join(File.dirname(__FILE__), 'boot')
 # Constants needed for routing
 SEARCHLOGIC_PARAMS_MAP = [
   {
-    :key => :property_barrio_canton_province_country_name_equals,
+    :key => :property_barrio_canton_province_country_cached_slug_equals,
     :default_value => 'all'
   },
   {
-    :key => :categories_name_equals,
+    :key => :categories_cached_slug_equals,
     :default_value => 'property'
   },
   { 
-    :key => :listing_type_name_equals,
+    :key => :listing_type_cached_slug_equals,
     :default_value => 'for sale or rent'
   },
   { 
-    :key => :property_barrio_market_name_equals,
+    :key => :property_barrio_market_cached_slug_equals,
     :default_value => 'any market'
   },
   { 
-    :key => :property_barrio_name_equals,
+    :key => :property_barrio_cached_slug_equals,
     :default_value => 'any barrio'
   },
   { 
-    :key => :property_barrio_canton_name_equals,
+    :key => :property_barrio_canton_cached_slug_equals,
     :default_value => 'any canton'
   },
   { 
@@ -41,11 +41,11 @@ SEARCHLOGIC_PARAMS_MAP = [
     :default_value => 'over any amount'
   },
   { 
-    :key => :styles_name_equals,
+    :key => :styles_cached_slug_equals,
     :default_value => 'any style'
   },
   { 
-    :key => :features_name_equals_any,
+    :key => :features_cached_slug_equals_any,
     :default_value => 'any feature'
   }
 ]
@@ -67,7 +67,8 @@ Rails::Initializer.run do |config|
   # Specify gems that this application depends on and have them installed with
   # rake gems:install
   # config.gem "bj"
-  # config.gem "hpricot", :version => '0.6', :source => "http://code.whytheluckystiff.net"
+  # config.gem "hpricot", :version => '0.6',
+  #   :source => "http://code.whytheluckystiff.net"
   # config.gem "sqlite3-ruby", :lib => "sqlite3"
   # config.gem "aws-s3", :lib => "aws/s3"
   

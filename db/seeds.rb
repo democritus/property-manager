@@ -28,7 +28,6 @@ i = 0
   i += 1
 end
 
-# TODO: write script to grab these from Web and/or text file
 # Grab all countries from online list
 require 'open-uri'
 Country.delete_all
@@ -36,17 +35,20 @@ countries = []
 url = 'http://openconcept.ca/sites/openconcept.ca/files/' +
   'country_code_drupal_0.txt'
 open(url) do |data|
-  data.read.each_line do |country|
-    iso2_and_name = country.chomp.split("|").map { |x| x.chomp }
-    iso2, name = iso2_and_name
+  data.read.each_line do |line|
+    arr = line.chomp.split("|").map { |x| x.chomp }
+    iso2, name = arr
     case iso2
     when 'CR'
+      active = true
       nationality = 'Costa Rican'
       currency_code = 'CRC'
     when 'US'
+      active = true
       nationality = 'American'
       currency_code = 'USD'
     else
+      active = false
       nationality = name
       currency_code = nil
     end
@@ -54,7 +56,8 @@ open(url) do |data|
       :name => name,
       :iso2 => iso2,
       :nationality => nationality,
-      :currency_code => currency_code
+      :currency_code => currency_code,
+      :active => active
     }
   end
 end
@@ -816,7 +819,16 @@ i = 0
   { :name => 'close to school', :user_defined => false, :type => :both },
   { :name => 'close to hospital', :user_defined => false, :type => :both },
   { :name => 'close to services', :user_defined => false, :type => :both },
-  { :name => 'close to airport', :user_defined => false, :type => :both }
+  { :name => 'close to airport', :user_defined => false, :type => :both },
+  { :name => 'gated community', :user_defined => false, :type => :both },
+  { :name => 'non-gated community', :user_defined => false, :type => :both },
+  { :name => '24-hour security', :user_defined => false, :type => :both },
+  { :name => 'air conditioning', :user_defined => false, :type => :both },
+  { :name => 'ocean view', :user_defined => false, :type => :both },
+  { :name => 'mountain view', :user_defined => false, :type => :both },
+  
+  { :name => 'washer/dryer', :user_defined => false, :type => :rent }
+  
 ].each do |record|
   record.merge!(:position => i + 1) unless record[:position]
   types = []
@@ -856,7 +868,15 @@ i = 0
   { :name => 'Modern' },
   { :name => 'Queen Anne' },
   { :name => 'Quinta' },
-  { :name => 'Ranch' }
+  { :name => 'Ranch' },
+  
+  { :name => 'Victorian' },
+  { :name => 'Cottage' },
+  { :name => 'Log Cabin' },
+  { :name => 'Split-level' },
+  { :name => 'Townhouse' },
+  { :name => 'Studio' },
+  { :name => 'Duplex' }
 ].each do |record|
   record.merge!(:position => i + 1) unless record[:position]
   types = []

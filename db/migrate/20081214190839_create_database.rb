@@ -158,7 +158,8 @@ class CreateDatabase < ActiveRecord::Migration
       t.string  :nationality
       t.integer :currency_id
       t.integer :position
-      t.string   :cached_slug
+      t.boolean :active, :null => false, :default => false
+      t.string  :cached_slug
       t.timestamps
     end
 

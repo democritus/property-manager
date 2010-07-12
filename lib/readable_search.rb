@@ -46,10 +46,12 @@ module ReadableSearch
     parameters.delete_if {
       |key, value| ! searchlogic_keys.include?(key.to_sym) }
     
-    # TODO: perhaps better to get friendly_id working with Searchlogic instead?
+    
+    # REMOVED: using friendly_id's cached_slug field which already delimits
+    # spaces with '-'
     # Replace dashes with spaces so that incoming values will match
     # database values
-    parameters.each { |k, v| parameters[k] = v.to_s.gsub('-', ' ') }
+    #parameters.each { |k, v| parameters[k] = v.to_s.gsub('-', ' ') }
     
     return listings_params(parameters)
   end
@@ -79,8 +81,10 @@ module ReadableSearch
         parameters.merge!(param[:key].to_s => param[:default_value])
       end
     end
-    # TODO: perhaps better to get friendly_id working with Searchlogic instead?
-    parameters.each { |k, v| parameters[k] = v.to_s.gsub(' ', '-') }
+    
+    # REMOVED: using friendly_id's cached_slug field which already delimits
+    # spaces with '-'
+    #parameters.each { |k, v| parameters[k] = v.to_s.gsub(' ', '-') }
     
     return parameters
   end
@@ -103,25 +107,25 @@ module ReadableSearch
     features = nil
     parameters.each_pair do |key, value|
       case key.to_sym
-        when :property_barrio_canton_province_country_name_equals
+        when :property_barrio_canton_province_country_cached_slug_equals
           country = value
-        when :categories_name_equals
+        when :categories_cached_slug_equals
           category = value
-        when :listing_type_name_equals
+        when :listing_type_cached_slug_equals
           listing_type = value
-        when :property_barrio_name_equals
+        when :property_barrio_cached_slug_equals
           barrio = value
-        when :property_barrio_canton_name_equals
+        when :property_barrio_canton_cached_slug_equals
           canton = value
-        when :property_barrio_market_name_equals
+        when :property_barrio_market_cached_slug_equals
           market = value
         when :ask_amount_less_than_or_equal_to
           ask_amount_maximum = value.to_s
         when :ask_amount_greater_than_or_equal_to
           ask_amount_minimum = value.to_s
-        when :styles_name_equals
+        when :styles_cached_slug_equals
           style = value
-        when :features_name_equals_any
+        when :features_cached_slug_equals_any
           features = value
         else
           non_readable_params.merge!(key => value.to_s)

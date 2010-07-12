@@ -29,13 +29,14 @@ module ApplicationHelper
   def listings_options( params_to_overwrite = {} )
     parameters = { :controller => :listings, :action => :index }
     # Constrain "all listings" by agency's primary country by default
-    # Having a link with the country name is better for search engines
-    unless @active_agency.country.name.blank?
+    # Having a link with the country's name is better for search engines
+    if @active_agency.country
       parameters.merge!(
-        'property_barrio_canton_province_country_name_equals' => @active_agency.country.name
+        'property_barrio_canton_province_country_cached_slug_equals' =>
+          @active_agency.country.cached_slug
       )
     end
-    parameters.merge!('listing_type_name_equals' => 'for sale')
+    parameters.merge!('listing_type_cached_slug_equals' => 'for-sale')
     parameters.merge!(params_to_overwrite)
     
     return verbose_params(parameters)
