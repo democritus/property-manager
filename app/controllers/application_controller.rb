@@ -31,6 +31,7 @@ class ApplicationController < ActionController::Base
   
   def test
 #    debugger
+#    x = 1
   end
   
   # Need variable in view to know if caching is enabled. Used to save

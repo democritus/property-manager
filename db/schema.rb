@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090630115317) do
+ActiveRecord::Schema.define(:version => 20100713212045) do
 
   create_table "agencies", :force => true do |t|
     t.integer  "country_id"
@@ -131,10 +131,12 @@ ActiveRecord::Schema.define(:version => 20090630115317) do
   add_index "category_assignments", ["category_assignable_type", "category_assignable_id", "category_id"], :name => "category_assignable__category_id", :unique => true
 
   create_table "countries", :force => true do |t|
-    t.string   "iso2",        :limit => 2, :null => false
-    t.string   "name",                     :null => false
+    t.string   "iso2",        :limit => 2,                    :null => false
+    t.string   "name",                                        :null => false
+    t.string   "nationality"
     t.integer  "currency_id"
     t.integer  "position"
+    t.boolean  "active",                   :default => false, :null => false
     t.string   "cached_slug"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -143,18 +145,19 @@ ActiveRecord::Schema.define(:version => 20090630115317) do
   add_index "countries", ["cached_slug"], :name => "cached_slug"
   add_index "countries", ["iso2"], :name => "iso2", :unique => true
   add_index "countries", ["name"], :name => "name", :unique => true
+  add_index "countries", ["nationality"], :name => "nationality", :unique => true
   add_index "countries", ["position"], :name => "position"
 
   create_table "currencies", :force => true do |t|
-    t.string   "name",                    :null => false
-    t.string   "code",       :limit => 3, :null => false
-    t.string   "symbol",     :limit => 2, :null => false
+    t.string   "name",                         :null => false
+    t.string   "alphabetic_code", :limit => 3, :null => false
+    t.string   "symbol",          :limit => 2, :null => false
     t.integer  "position"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  add_index "currencies", ["code"], :name => "code", :unique => true
+  add_index "currencies", ["alphabetic_code"], :name => "alphabetic_code", :unique => true
   add_index "currencies", ["name"], :name => "name", :unique => true
   add_index "currencies", ["position"], :name => "position"
   add_index "currencies", ["symbol"], :name => "symbol"
@@ -293,7 +296,7 @@ ActiveRecord::Schema.define(:version => 20090630115317) do
   create_table "properties", :force => true do |t|
     t.string   "name",                                                         :null => false
     t.integer  "agency_id"
-    t.integer  "barrio_id",                                                    :null => false
+    t.integer  "barrio_id"
     t.integer  "bedroom_number",    :limit => 3
     t.decimal  "bathroom_number",                :precision => 3, :scale => 1
     t.integer  "construction_size"
@@ -306,6 +309,7 @@ ActiveRecord::Schema.define(:version => 20090630115317) do
     t.text     "description"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "legacy_id"
   end
 
   add_index "properties", ["agency_id"], :name => "agency_id"

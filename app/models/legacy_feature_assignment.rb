@@ -9,15 +9,17 @@ class LegacyFeatureAssignment < LegacyBase
   
   def map
     {
-      :feature_id => self.new_feature_id,
-#      :property_id => self.propertyid
+      :feature_id => new_feature_id,
+      :feature_assignable_id => new_property_id,
+      :feature_assignable_type => 'Property'
     }
   end
   
   def new_feature_id
-    Feature.find_by_name(
-      equivalent_name(self.legacy_feature.featurename.downcase)
-    ).id
+    feature = Feature.find_by_name(
+      equivalent_name(self.legacy_feature.FeatureName).downcase
+    )
+    feature ? feature.id : nil
   end
   
   
@@ -25,8 +27,12 @@ class LegacyFeatureAssignment < LegacyBase
   
   def equivalent_name( legacy_name )
     name = case legacy_name
-    when 'pool'
+    when 'Pool'
       'swimming pool'
+    when 'Garden'
+      'front garden'
+    when 'Beach home'
+      'ocean view'
     else
       legacy_name
     end

@@ -9,13 +9,17 @@ class LegacyStyleAssignment < LegacyBase
   
   def map
     {
-      :style_id => self.new_style_id,
-#      :property_id => self.propertyid
+      :style_id => new_style_id,
+      :style_assignable_id => new_property_id,
+      :style_assignable_type => 'Property'
     }
   end
   
   def new_style_id
-    Style.find_by_name(equivalent_name(self.legacy_style.style)).id
+    style = Style.find_by_name(
+      equivalent_name(self.legacy_style.Style)
+    )
+    style ? style.id : nil
   end
   
   

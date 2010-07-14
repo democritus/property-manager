@@ -862,21 +862,20 @@ i = 0
   { :name => 'Bungalow' },
   { :name => 'Chalet' },
   { :name => 'Colonial' },
+  { :name => 'Cottage' },
+  { :name => 'Duplex' },
   { :name => 'Farmhouse' },
   { :name => 'Georgian' },
+  { :name => 'Log Cabin' },
   { :name => 'Mobile' },
   { :name => 'Modern' },
   { :name => 'Queen Anne' },
   { :name => 'Quinta' },
   { :name => 'Ranch' },
-  
-  { :name => 'Victorian' },
-  { :name => 'Cottage' },
-  { :name => 'Log Cabin' },
   { :name => 'Split-level' },
-  { :name => 'Townhouse' },
   { :name => 'Studio' },
-  { :name => 'Duplex' }
+  { :name => 'Townhouse' },
+  { :name => 'Victorian' }
 ].each do |record|
   record.merge!(:position => i + 1) unless record[:position]
   types = []

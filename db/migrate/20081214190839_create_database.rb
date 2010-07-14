@@ -338,7 +338,7 @@ class CreateDatabase < ActiveRecord::Migration
       :force => true do |t|
       t.string   :name, :null => false
       t.integer  :agency_id
-      t.integer  :barrio_id, :null => false
+      t.integer  :barrio_id
       t.integer  :bedroom_number, :limit => 3
       t.decimal  :bathroom_number, :precision => 3, :scale => 1
       t.integer  :construction_size

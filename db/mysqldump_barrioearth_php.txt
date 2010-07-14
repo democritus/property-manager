@@ -1,0 +1,15 @@
+# Create local legacy database
+CREATE DATABASE `barrioearth_php`;
+
+# Set up user to
+CREATE USER 'be_user_php'@'localhost' IDENTIFIED BY 'jupit3r';
+GRANT ALL ON barrioearth_php.* TO 'be_user_php'@'localhost';
+
+# Load tables from production server into local database for testing
+mysqldump --opt --user=be_user_php -pjupit3r --host=luna.qlogicinc.com --compress barrioearth_php property_feature property_style real_estate_category real_estate_listing real_estate_listing_category real_estate_listing_feature real_estate_listing_images | mysql -u be_user_php -pjupit3r barrioearth_php
+
+# Pipe output directly into local database
+# | mysql -u be_user_php -pjupit3r barrioearth_php
+
+# Output to file
+# > /home/brian/tmp/barrioearth_php.sql

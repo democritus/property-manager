@@ -1,4 +1,5 @@
 class CategoryAssignment < ActiveRecord::Base
+
   belongs_to :category
   belongs_to :category_assignable, :polymorphic => true
     

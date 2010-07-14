@@ -9,14 +9,18 @@ class LegacyCategoryAssignment < LegacyBase
   
   def map
     {
-      :primary_category => self.main,
-      :category_id => self.new_category_id,
-#      :property_id => self.propertyid
+      :primary_category => self.Main,
+      :category_id => new_category_id,
+      :category_assignable_id => new_property_id,
+      :category_assignable_type => 'Property'
     }
   end
   
   def new_category_id
-    Category.find_by_name(equivalent_name(self.legacy_category.categoryname)).id
+    category = Category.find_by_name(
+      equivalent_name(self.legacy_category.CategoryName_en)
+    )
+    category ? category.id : nil
   end
   
   

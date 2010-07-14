@@ -18,8 +18,7 @@
         <% end %>      
       </div>
     <div class="flowed_content">
-      <%= price_div(listing.ask_amount, listing.ask_currency.symbol,
-        listing.ask_currency.code) %>
+      <%= price_div( listing ) %>
       <h2><%= link_to listing.name, listing %></h2>
       <div class="section highlighted-items">
         <div>

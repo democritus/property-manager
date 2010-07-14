@@ -1,17 +1,15 @@
 # MIGRATION HELPER
 
-def migrate( name, options = {} )
+def migrate( name, options={} )
   # Grab custom entity label if present
   label = options.delete(:label) if options[:label]
   
   unless options[:helper]
-    model = name.to_s.singularize.capitalize
+    model = name.to_s.singularize.camelize
     model.constantize.delete_all
-
-    if offset_for_records
-      puts "Migrating #{number_of_records || "all"} #{label || name}" +
-        " #{"after #{offset_for_records}"
-    end
+    message = "Migrating #{number_of_records || "all"} #{label || name}"
+    message += " after #{offset_for_records}" if offset_for_records
+    puts message
     "Legacy#{model}".constantize.find(:all, with(options)).each do |record|
       record.migrate
     end

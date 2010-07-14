@@ -52,6 +52,7 @@ module ListingsHelper
   end
   
   def price_formatted(amount, symbol, code)
+    return '' unless amount
     class_attr = ' class="price "' + code.to_s.downcase
     return number_to_currency(
       amount,
@@ -60,7 +61,19 @@ module ListingsHelper
     ) + ' ' + code.to_s
   end
 
-  def price_div(amount, symbol, code)
+  def price_div( listing = nil )
+    listing = @listing unless listing
+    if listing.ask_amount.blank?
+      return content_tag( :div, '', :class => 'price' )
+    end
+    amount = listing.ask_amount
+    if listing.ask_currency
+      symbol = listing.ask_currency.symbol
+      code = listing.ask_currency.code
+    else
+      symbol = '$'
+      code = 'USD'
+    end
     #classes = 'price ' + code.to_s.downcase
     #return content_tag(:div, price(amount, symbol, code),
       #:class => classes)
@@ -99,10 +112,16 @@ module ListingsHelper
     location_text.join(', ')
   end
   
-  def ask_price(listing = nil)
+  def ask_price( listing = nil )
     listing = @listing unless listing
-    price_formatted(listing.ask_amount, listing.ask_currency.symbol,
-      listing.ask_currency.code)
+    if listing.ask_currency
+      symbol = listing.ask_currency.symbol
+      code = listing.ask_currency.code
+    else
+      symbol = '$'
+      code = 'USD'
+    end
+    price_formatted(listing.ask_amount, symbol, code)
   end
 
   def extra_features_inline(features)

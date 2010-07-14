@@ -297,10 +297,12 @@ merge_images!
         end
         %>
         <% in_range = false %>
-        <% if price_range[:lower] <= @listing.ask_amount %>
-          <% if ! price_range[:upper] ||
-          price_range[:upper] > @listing.ask_amount %>
-            <% in_range = true %>
+        <% if @listing.ask_amount %>
+          <% if price_range[:lower] <= @listing.ask_amount %>
+            <% if ! price_range[:upper] ||
+            price_range[:upper] > @listing.ask_amount %>
+              <% in_range = true %>
+            <% end %>
           <% end %>
         <% end %>
         <% unless in_range %>
