@@ -5,46 +5,57 @@ namespace :db do
   namespace :migrate do
   
     desc 'Migrates legacy content'
-    task :legacy => [ 'properties', 'listings', 'property_images',
-      'category_assignments', 'feature_assignments', 'style_assignments'] 
+    task :legacy => [ 'properties', 'listings', 'category_assignments',
+      'feature_assignments', 'style_assignments', 'property_images'] 
     
     desc 'Migrates properties'
     task :properties => :environment do
-      migrate :properties
+      migrate :properties, {
+        :conditions => 'real_estate_listing.Deleted = 0'
+      }
     end
     
     desc 'Migrates listings'
     task :listings => :environment do
-      migrate :listings
+      migrate :listings, {
+        :conditions => 'real_estate_listing.Deleted = 0'
+      }
     end
     
     desc 'Migrates property_images'
     task :property_images => :environment do
-      migrate :property_images
-      # REMOVED: used for testing smaller batches of images
-      #, {
-      #  :limit => 1
-      #}
+      migrate :property_images, {
+        :joins => :legacy_listing,
+        :conditions => 'real_estate_listing.Deleted = 0' +
+          ' AND real_estate_listing_images.Deleted = 0'
+        #:limit => 10
+      }
     end
     
     desc 'Migrates category_assignments'
     task :category_assignments => :environment do
-      migrate :category_assignments
+      migrate :category_assignments, {
+        :joins => :legacy_listing,
+        :conditions => 'real_estate_listing.Deleted = 0'
+      }
     end
     
     desc 'Migrates feature_assignments'
     task :feature_assignments => :environment do
       migrate :feature_assignments, {
-        :joins => :legacy_feature,
-        :conditions => "property_feature.FeatureName <> 'Garage'"
+        :joins => [ :legacy_listing, :legacy_feature ],
+        :conditions => "real_estate_listing.Deleted = 0" +
+          " AND property_feature.FeatureName <> 'Garage'" + 
+          " AND property_feature.FeatureName <> 'Beach home'"
       }
     end
     
     desc 'Migrates style_assignments'
     task :style_assignments => :environment do
       migrate :style_assignments, {
-        :joins => :legacy_style,
-        :conditions => "property_style.Style <> 'Other'"
+        :joins => [ :legacy_listing, :legacy_style ],
+        :conditions => "real_estate_listing.Deleted = 0" +
+          " AND property_style.Style <> 'Other'"
       }
     end
     

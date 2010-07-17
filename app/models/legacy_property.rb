@@ -26,16 +26,8 @@ class LegacyProperty < LegacyBase
       :parking_spaces => self.ParkingSpaces,
       :year_built => self.YearBuilt,  
       :agency_id => forced_agency_id,
-      :legacy_id => self.PropertyID
-
-# REMOVED - couldn't figure out how to do this nested, so doing each model
-# separately and saving legacy id in "legacy_id" so that associations can
-# be figured out (since new id is different than the legacy id)
-#      :legacy_listings_attributes => self.legacy_listings
-#      :legacy_property_images => self.legacy_property_images,
-#      :legacy_category_assignments => self.legacy_category_assignments,
-#      :legacy_feature_assignments => self.legacy_feature_assignments,
-#      :legacy_style_assignments => self.legacy_style_assignments
+      :legacy_id => self.PropertyID,
+      :barrio_id => new_barrio_id
     }
   end
   
@@ -46,5 +38,178 @@ class LegacyProperty < LegacyBase
     Agency.find(:first,
       :order => '(domain = "barrioearth.com" AND subdomain IS NULL) DESC'
     ).id
+  end
+  
+  def new_canton_id
+    canton = Canton.find( :first,
+      :joins => { :province => :country },
+      :conditions => [
+        'cantons.name = :canton_name AND provinces.name = :province_name' +
+          ' AND countries.iso2 = :country_iso2',
+        { :canton_name => new_canton_name, :province_name => new_province_name,
+          :country_iso2 => self.CountryID }
+      ]
+    )
+    unless canton
+      logger.debug "Not found: '#{new_canton_name}, #{new_province_name}" +
+        ", #{self.CountryID}'"
+    end
+    return canton.id
+  end
+  
+  def new_barrio_id
+    return nil unless new_canton_id
+    barrio = Barrio.find( :first,
+      :joins => :canton,
+      :conditions => [
+        'barrios.name = :barrio_name AND cantons.id = :canton_id',
+        { :barrio_name => new_barrio_name, 
+        :canton_id => new_canton_id }
+      ]
+    )
+    return barrio.id if barrio
+    # Create new barrio if it doesn't exist yet
+    new_barrio = Barrio.new(
+      :name => new_barrio_name, :canton_id => new_canton_id
+    )
+    if id = new_barrio.save
+      logger.debug "New barrio name: #{new_barrio_name}"
+    else
+      logger.debug "Barrio #{new_barrio_name} not created!"
+    end
+    return id || nil
+  end
+  
+  def place_map
+    place = {}
+    if self.CountryID = 'CR'
+      case self.BarrioID
+      when 'parrita'
+        place[:barrio_name] = 'Parrita'
+        place[:canton_name] = 'Parrita'
+        place[:province_name] = 'Puntarenas'
+      when 'san_joaquin'
+        place[:barrio_name] = 'San Joaquín'
+        place[:canton_name] = 'Flores'
+        place[:province_name] = 'Heredia'
+      when 'playa_hermosa'
+        place[:barrio_name] = 'Hermosa Beach'
+        place[:canton_name] = 'Garabito'
+        place[:province_name] = 'Puntarenas'
+      when 'herradura'
+        place[:barrio_name] = 'Herradura Beach'
+        place[:canton_name] = 'Garabito'
+        place[:province_name] = 'Puntarenas'
+      when 'heredia'
+        place[:barrio_name] = 'Downtown Heredia'
+        place[:canton_name] = 'Heredia'
+        place[:province_name] = 'Heredia'
+      when 'alajuela'
+        place[:barrio_name] = 'Alajuela'
+        place[:canton_name] = 'Alajuela'
+        place[:province_name] = 'Alajuela'
+      when 'guacimo'
+        place[:barrio_name] = 'Guácimo'
+        place[:canton_name] = 'Guácimo'
+        place[:province_name] = 'Limón'
+      when 'barva'
+        place[:barrio_name] = 'Barva'
+        place[:canton_name] = 'Barva'
+        place[:province_name] = 'Heredia'
+      when 'san_rafael_hd'
+        place[:barrio_name] = 'San Rafael'
+        place[:canton_name] = 'San Rafael'
+        place[:province_name] = 'Heredia'
+      when 'santo_domingo'
+        place[:barrio_name] = 'Quizarco'
+        place[:canton_name] = 'Santo Domingo'
+        place[:province_name] = 'Heredia'
+      when 'san_isidro_hd'
+        place[:barrio_name] = 'San Isidro'
+        place[:canton_name] = 'San Isidro'
+        place[:province_name] = 'Heredia'
+      when 'santa_barbara'
+        place[:barrio_name] = 'Santa Barbara'
+        place[:canton_name] = 'Santa Barbara'
+        place[:province_name] = 'Heredia'
+      when 'escazu'
+        place[:barrio_name] = 'Escazú'
+        place[:canton_name] = 'Escazú'
+        place[:province_name] = 'San José'
+      when 'puerto_jimenez'
+        place[:barrio_name] = 'Puerto Jiménez'
+        place[:canton_name] = 'Golfito'
+        place[:province_name] = 'Puntarenas'
+      when 'jaco'
+        place[:barrio_name] = 'Jacó Beach'
+        place[:canton_name] = 'Garabito'
+        place[:province_name] = 'Puntarenas'
+      when 'esterillos_jaco'
+        place[:barrio_name] = 'Esterillos Beach'
+        place[:canton_name] = 'Garabito'
+        place[:province_name] = 'Puntarenas'
+      when 'santa_ana'
+        place[:barrio_name] = 'Santa Ana'
+        place[:canton_name] = 'Santa Ana'
+        place[:province_name] = 'San José'
+      when 'san_pablo'
+        place[:barrio_name] = 'San Pablo'
+        place[:canton_name] = 'San Pablo'
+        place[:province_name] = 'Heredia'
+      when 'santa_lucia'
+        place[:barrio_name] = 'Santa Lucía'
+        place[:canton_name] = 'Barva'
+        place[:province_name] = 'Heredia'
+      when 'monteverde'
+        place[:barrio_name] = 'Monteverde'
+        place[:canton_name] = 'Puntarenas'
+        place[:province_name] = 'Puntarenas'
+      when 'sabana'
+        place[:barrio_name] = 'Sabana'
+        place[:canton_name] = 'San José'
+        place[:province_name] = 'San José'
+      when 'atenas'
+        place[:barrio_name] = 'Atenas'
+        place[:canton_name] = 'Atenas'
+        place[:province_name] = 'Alajuela'
+      when 'cariari'
+        place[:barrio_name] = 'Ciudad Cariari'
+        place[:canton_name] = 'Belén'
+        place[:province_name] = 'Heredia'
+      when 'mercedes'
+        place[:barrio_name] = 'Mercedes Norte'
+        place[:canton_name] = 'Heredia'
+        place[:province_name] = 'Heredia'
+      when 'moravia'
+        place[:barrio_name] = 'Moravia'
+        place[:canton_name] = 'Moravia'
+        place[:province_name] = 'San José'
+      when 'punta_leona'
+        place[:barrio_name] = 'Punta Leona'
+        place[:canton_name] = 'Garabito'
+        place[:province_name] = 'Puntarenas'
+      when 'playas_del_coco'
+        place[:barrio_name] = 'Playa del Coco'
+        place[:canton_name] = 'Carrillo'
+        place[:province_name] = 'Guanacaste'
+      else
+        place[:barrio_name] = nil
+        place[:canton_name] = nil
+        place[:province_name] = nil
+      end
+    end
+    return place
+  end
+  
+  def new_barrio_name
+    place_map[:barrio_name]
+  end
+  
+  def new_canton_name
+    place_map[:canton_name]
+  end
+  
+  def new_province_name
+    place_map[:province_name]
   end
 end

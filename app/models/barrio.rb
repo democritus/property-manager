@@ -1,12 +1,12 @@
 class Barrio < ActiveRecord::Base
 
   has_friendly_id :name, :use_slug => true, :approximate_ascii => true,
-    :scope => :country
+    :scope => :canton
   
   default_scope :order => 'barrios.canton_id ASC, barrios.name ASC'
 
-  belongs_to :market
   belongs_to :canton
+  belongs_to :market
   has_many :properties
  
   validates_numericality_of :canton_id,
@@ -18,6 +18,4 @@ class Barrio < ActiveRecord::Base
     :allow_nil => true
   validates_uniqueness_of :name, :scope => :market_id
   validates_uniqueness_of :name, :scope => :canton_id
-#  validates_format_of :name, :with => /^[a-zA-Z0-9\s]+$/,
-#    :message => "may only contain letters and numbers"
 end

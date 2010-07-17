@@ -36,8 +36,7 @@
         </div>
         
         <% if listing.property.barrio %>
-          <%= location_formatted(listing.property.barrio.name,
-            listing.property.barrio.market.name) %>
+          <%= location_formatted(listing.property.barrio) %>
         <% end %>
       </div>
       <ul class="info_list horizontal clearfix">

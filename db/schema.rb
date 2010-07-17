@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100713212045) do
+ActiveRecord::Schema.define(:version => 20090630115317) do
 
   create_table "agencies", :force => true do |t|
     t.integer  "country_id"
@@ -237,10 +237,10 @@ ActiveRecord::Schema.define(:version => 20100713212045) do
   add_index "listing_types", ["position"], :name => "position"
 
   create_table "listings", :force => true do |t|
-    t.integer  "listing_type_id",                      :null => false
-    t.integer  "property_id",                          :null => false
-    t.string   "label",                                :null => false
-    t.string   "name",                                 :null => false
+    t.integer  "listing_type_id",                                     :null => false
+    t.integer  "property_id",                                         :null => false
+    t.string   "label",                                               :null => false
+    t.string   "name",                                                :null => false
     t.text     "description"
     t.integer  "ask_amount"
     t.integer  "ask_currency_id"
@@ -248,18 +248,20 @@ ActiveRecord::Schema.define(:version => 20100713212045) do
     t.integer  "close_currency_id"
     t.date     "publish_date"
     t.date     "date_available"
-    t.boolean  "show_agent",        :default => true,  :null => false
-    t.boolean  "show_agency",       :default => true,  :null => false
+    t.boolean  "show_agent",                       :default => true,  :null => false
+    t.boolean  "show_agency",                      :default => true,  :null => false
     t.text     "admin_notes"
-    t.boolean  "sold",              :default => false, :null => false
-    t.boolean  "approved",          :default => false, :null => false
+    t.boolean  "sold",                             :default => false, :null => false
+    t.boolean  "approved",                         :default => false, :null => false
     t.string   "cached_slug"
+    t.string   "legacy_reference_id", :limit => 5
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   add_index "listings", ["cached_slug"], :name => "cached_slug"
   add_index "listings", ["date_available"], :name => "date_available"
+  add_index "listings", ["legacy_reference_id"], :name => "legacy_reference_id", :unique => true
   add_index "listings", ["listing_type_id", "property_id"], :name => "listing_type_id"
   add_index "listings", ["name"], :name => "name"
   add_index "listings", ["property_id", "label"], :name => "property_id__label", :unique => true
@@ -314,6 +316,7 @@ ActiveRecord::Schema.define(:version => 20100713212045) do
 
   add_index "properties", ["agency_id"], :name => "agency_id"
   add_index "properties", ["barrio_id"], :name => "barrio_id"
+  add_index "properties", ["legacy_id"], :name => "legacy_id"
 
   create_table "provinces", :force => true do |t|
     t.integer  "country_id",  :null => false

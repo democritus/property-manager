@@ -31,8 +31,6 @@ class LegacyFeatureAssignment < LegacyBase
       'swimming pool'
     when 'Garden'
       'front garden'
-    when 'Beach home'
-      'ocean view'
     else
       legacy_name
     end

@@ -14,6 +14,8 @@ class LegacyListing < LegacyBase
       :label => 'legacy record',
       :ask_amount => self.AskPrice,
       :admin_notes => self.AdminNotes,
+      :approved => new_approved,
+      :legacy_reference_id => self.ReferenceID,
       
       :description => new_description,
       
@@ -24,6 +26,10 @@ class LegacyListing < LegacyBase
   
   
   private
+  
+  def new_approved
+    self.Hidden ? false : true
+  end
   
   def new_description
     description = []

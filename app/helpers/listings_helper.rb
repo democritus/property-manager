@@ -29,9 +29,9 @@ module ListingsHelper
     return if @listing.name.blank?
     title = @listing.name
     title += ' ' + primary_category unless primary_category.blank?
-    title += ' in ' +  location_text unless location_text.blank?
     if @listing.property.barrio
-      title += ', ' + @listing.property.barrio.country.name
+      title += ' in ' +  location_formatted( @listing.property.barrio ) +
+        ', ' + @listing.property.barrio.canton.province.country.name
     end
   end
   
@@ -81,34 +81,11 @@ module ListingsHelper
     return content_tag(:div, price_formatted(amount, symbol, code),
       :class => ['price', ' ', code.to_s.downcase])
   end
-  
-  def location_text(listing = nil)
-    listing = @listing unless listing
-    if listing.property.barrio
-      barrio_name = listing.property.barrio.name
-    else
-      barrio_name = ''
-    end
-    if listing.property.barrio
-      if listing.property.barrio.market
-        market_name = listing.property.barrio.market.name
-      else
-        market_name = ''
-      end
-    end
-    location_formatted(barrio_name, market_name)
-  end
 
-  def location_formatted(barrio_name = nil, market_name = nil)
+  def location_formatted( barrio )
     location_text = []
-    unless barrio_name.blank? && market_name.blank?
-      unless barrio_name.blank?
-        location_text << barrio_name
-      end
-      unless market_name.blank?
-        location_text << market_name
-      end
-    end
+    location_text << barrio.name
+    location_text << barrio.market.name if barrio.market
     location_text.join(', ')
   end
   
@@ -140,8 +117,9 @@ module ListingsHelper
     unless primary_category.blank?
       full_feature_list << 'Category: ' + primary_category
     end
-    unless location_text.blank?
-      full_feature_list << 'Location: ' + location_text
+    if listing.property.barrio
+      full_feature_list << 'Location: ' +
+        location_formatted( listing.property.barrio )
     end
     unless ask_price.blank?
       full_feature_list << 'Ask price: ' + ask_price

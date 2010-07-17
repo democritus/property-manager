@@ -11,8 +11,8 @@ class LegacyPropertyImage < LegacyBase
       :imageable_id => new_property_id,
       :imageable_type => 'Property',
 
-      # TODO: This isn't being saved. Maybe this only works when the file
-      # is uploaded or something?
+      # TODO: This isn't being saved. Maybe this only works when the file is
+      # uploaded or something?
       :image_filename => new_image[0],
 
       :caption => self.Caption,

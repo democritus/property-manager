@@ -62,6 +62,10 @@ class Property < ActiveRecord::Base
     :allow_blank => true,
     :only_integer => true,
     :message => "{{value}} must be an integer"
+  validates_numericality_of :legacy_id,
+    :allow_nil => true,
+    :only_integer => true,
+    :message => "{{value}} must be an integer"
   
   # TODO: These are virtual attributes and they fail when doing database
   # migrations. Need to figure way to validate when saving but still allow

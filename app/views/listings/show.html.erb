@@ -33,7 +33,9 @@ merge_images!
       <h2><%=h @listing.name %></h2>
       <div class="highlighted-items">
         <div><%= primary_category %></div>
-        <div><%= location_text %></div>
+        <% if @listing.property.barrio %>
+          <div><%= location_formatted( @listing.property.barrio ) %></div>
+        <% end %>
         <div><%=h ask_price %></div>
       </div>
       <ul>
@@ -127,13 +129,16 @@ merge_images!
             :class => 'readonly property-field'
           ) %>
         </div>
-        <div class="row">
-          <%= label_tag(:location, "Location:") %>
-          <%= text_field_tag(:location, location_text,
-            :readonly => true,
-            :class => 'readonly property-field'
-          ) %>
-        </div>
+        <% if @listing.property.barrio %>
+          <div class="row">
+            <%= label_tag(:location, "Location:") %>
+            <%= text_field_tag(:location,
+              location_formatted( @listing.property.barrio ),
+              :readonly => true,
+              :class => 'readonly property-field'
+            ) %>
+          </div>
+        <% end %>
         <div class="row">
           <%= label_tag(:listing_id, "Reference ID:") %>
           <%= text_field_tag(:listing_id, @listing.id,
@@ -248,7 +253,8 @@ merge_images!
     }
     if @listing.property.barrio
       static_params.merge!(
-        :property_barrio_canton_province_country_cached_slug_equals => @listing.property.barrio.country.name
+        :property_barrio_canton_province_country_cached_slug_equals =>
+          @listing.property.barrio.canton.province.country.name
       )
     end
     category_in_market = ''
@@ -262,16 +268,20 @@ merge_images!
       end
     else
       if @listing.property.barrio
-        category_in_market = 'More properties in ' +
-          @listing.property.barrio.market.name + '...'
+        if @listing.property.barrio.market
+          category_in_market = 'More properties in ' +
+            @listing.property.barrio.market.name + '...'
+        end
       end
     end
     market_params = {}
     if @listing.property.barrio
-      market_params = static_params.merge(
-        :property_barrio_market_cached_slug_equals =>
-          @listing.property.barrio.market.name
-      )
+      if @listing.property.barrio.market
+        market_params = static_params.merge(
+          :property_barrio_market_cached_slug_equals =>
+            @listing.property.barrio.market.name
+        )
+      end
     end
     %>
     <div class="menu_list">
@@ -316,10 +326,15 @@ merge_images!
         <% end %>
       <% end %>
       </ul>
-      <% if @listing.property.barrio %>
+      <% if @listing.property.barrio %>      
         <h3>Barrio</h3>
         <ul>
-        <% @listing.property.barrio.market.barrios.each do |barrio| %>
+        <% if @listing.property.barrio.market %>
+          <% parent = if @listing.property.barrio.market %>
+        <% else %>
+          <% if @listing.property.barrio.canton %>
+        <% end %>
+        <% parent.barrios.each do |barrio| %>
           <% unless barrio.id == @listing.property.barrio.id %>
             <li>
               <%= link_to(barrio.name,

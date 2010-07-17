@@ -298,6 +298,9 @@ class CreateDatabase < ActiveRecord::Migration
       t.boolean  :sold, :default => false, :null => false
       t.boolean  :approved, :default => false, :null => false
       t.string   :cached_slug
+      # Legacy fields
+      t.string   :legacy_reference_id, :limit => 5
+      
       t.timestamps
     end
 
@@ -311,6 +314,9 @@ class CreateDatabase < ActiveRecord::Migration
     add_index :listings, [:property_id, :name],
       :name => "property_id__name", :unique => true
     add_index :listings, [:cached_slug], :name => "cached_slug"
+    # Legacy fields
+    add_index :listings, [:legacy_reference_id], :name => "legacy_reference_id",
+      :unique => true
 
 
     # Markets are arbitrarily designated the administrator. They consist of
@@ -334,6 +340,20 @@ class CreateDatabase < ActiveRecord::Migration
     add_index :markets, [:cached_slug], :name => "cached_slug"
 
 
+    create_table :market_segments,
+      :options => "ENGINE=InnoDB DEFAULT CHARSET=utf8",
+      :force => true do |t|
+      t.string  :name, :limit => 64, :default => "", :null => false
+      t.integer :position
+      t.string   :cached_slug
+      t.timestamps
+    end
+
+    add_index :market_segments, [:name], :name => "name", :unique => true
+    add_index :market_segments, [:position], :name => "position"
+    add_index :market_segments, [:cached_slug], :name => "cached_slug"
+
+
     create_table :properties, :options => "ENGINE=InnoDB DEFAULT CHARSET=utf8",
       :force => true do |t|
       t.string   :name, :null => false
@@ -350,24 +370,14 @@ class CreateDatabase < ActiveRecord::Migration
       t.date     :date_available
       t.text     :description
       t.timestamps
+      # Legacy fields
+      t.integer  :legacy_id
     end
     
     add_index :properties, [:agency_id], :name => "agency_id"
     add_index :properties, [:barrio_id], :name => "barrio_id"
-
-
-    create_table :market_segments,
-      :options => "ENGINE=InnoDB DEFAULT CHARSET=utf8",
-      :force => true do |t|
-      t.string  :name, :limit => 64, :default => "", :null => false
-      t.integer :position
-      t.string   :cached_slug
-      t.timestamps
-    end
-
-    add_index :market_segments, [:name], :name => "name", :unique => true
-    add_index :market_segments, [:position], :name => "position"
-    add_index :market_segments, [:cached_slug], :name => "cached_slug"
+    # Legacy fields
+    add_index :properties, [:legacy_id], :name => "legacy_id"
 
 
     create_table :provinces, :options => "ENGINE=InnoDB DEFAULT CHARSET=utf8",
