@@ -7,6 +7,7 @@ class Canton < ActiveRecord::Base
 
   belongs_to :province
   belongs_to :zone
+#  has_one :country, :through => :province
   has_many :barrios, :order => 'position ASC'
   
   validates_numericality_of :province_id,

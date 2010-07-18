@@ -4,7 +4,7 @@ class Listing < ActiveRecord::Base
   
   # will_paginate options
   cattr_reader :per_page
-  @@per_page = 2
+  @@per_page = 10
   
   # Pseudo fields for data stored in associated models
   include AssignablePseudoFields
@@ -19,20 +19,21 @@ class Listing < ActiveRecord::Base
     :include => {
       :property => { :agency => { :broker => { :user => :user_icons } } } }
   named_scope :featured,
-    :include => [:property_images, :property],
-    :conditions => '`listings`.`listing_type_id` = 1',
-    :order => '`listings`.`property_id`',
-    :limit => 7
+    :include => [ :property_images, :property, :listing_type ],
+    :conditions => "listing_types.name = 'for sale'",
+    :order => 'listings.publish_date DESC',
+    :limit => 10
   named_scope :regular_index,
     :include => {
       :property => { :agency => { :broker => { :user => :user_icons } } } }
-  named_scope :by_agency, lambda {
-    |agency_id| {
-      :include => {
-        :property => { :agency => { :broker => { :user => :user_icons } } } },
-      :conditions => [ 'properties.agency_id = ?', agency_id ]
-    }
-  }
+#  REMOVED: not necessary. Use 'active_agency.listings' instead
+#  named_scope :by_agency, lambda {
+#    |agency_id| {
+#      :include => {
+#        :property => { :agency => { :broker => { :user => :user_icons } } } },
+#      :conditions => [ 'properties.agency_id = ?', agency_id ]
+#    }
+#  }
   
   belongs_to :ask_currency,
     :class_name => 'Currency',
@@ -44,6 +45,10 @@ class Listing < ActiveRecord::Base
   belongs_to :property
 #  belongs_to :property,
 #    :include => [:agency, :property_images]
+
+#  has_one :agency, :through => :property
+#  has_one :barrio, :through => :property
+
   has_one :primary_category, :through => :category_assignments,
     :source => :category,
     :conditions => 'primary_category = 1'

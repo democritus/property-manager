@@ -1,0 +1,53 @@
+<%
+if @active_agency.master_agency
+  featured_glider = featured_listings = Listing.featured
+else
+  featured_glider = featured_listings = @active_agency.listings.featured
+end
+# Prepend agency to collection of listings so that the first group of
+# images to appear in the glider are agency images
+if @active_agency.agency_images
+  if @active_agency.agency_images.length > 2
+    splash_name = @active_agency.name
+    splash_object = @active_agency
+  end
+end
+# If insufficient agency images, use generic images for market segment
+unless splash_name
+  if @active_agency.market_segment
+    if @active_agency.market_segment.market_segment_images
+      if @active_agency.market_segment.market_segment_images.length > 2
+        splash_name = @active_agency.name
+        splash_object = @active_agency.market_segment
+      end
+    end
+  end
+end
+if splash_name
+  #@featured_glider.insert(0, splash_name) # Overlay text
+  featured_glider.insert(0, splash_object) # Object containing images
+end
+    
+# Set up image glider
+options = {
+  'type' => 'large',
+  'size' => 3,
+  #'image_width' => 293,
+  'image_width' => 244,
+  'image_height' => 170,
+  'images_per_object' => 3,
+  'image_placeholders' => true
+}
+# Inline styles need this value to position glider correctly
+glider_top_offset = -8
+glider_left_offset = 8
+%>
+
+<div class="main_panel" style="height: <%= (options['image_height'] +
+  glider_top_offset).to_s %>px">
+  <div id="feature_glider" style="top: <%= glider_top_offset.to_s %>px;
+    left: <%= glider_left_offset.to_s %>px;">
+    <%= glider_js('featuredImages', featured_glider, options) %>
+    <%= glider_html('featuredImages', featured_glider, options) %>
+  </div>
+</div>

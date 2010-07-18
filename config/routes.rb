@@ -58,7 +58,7 @@ ActionController::Routing::Routes.draw do |map|
   
   map.resources :listings,
     :as => :real_estate,
-    :only => [ :show, :index ],
+    :only => [ :show, :index, :featured_glider ],
     :member => { :glider_image_swap => :get },
     :collection => { :featured_glider => :get } do |listings|
     listings.resources :information_requests,

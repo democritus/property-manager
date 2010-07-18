@@ -33,6 +33,7 @@ module ApplicationHelper
     if @active_agency.country
       parameters.merge!(
         'property_barrio_canton_province_country_cached_slug_equals' =>
+#        'barrio_province_country_cached_slug_equals' =>
           @active_agency.country.cached_slug
       )
     end

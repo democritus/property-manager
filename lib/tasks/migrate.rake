@@ -22,16 +22,6 @@ namespace :db do
       }
     end
     
-    desc 'Migrates property_images'
-    task :property_images => :environment do
-      migrate :property_images, {
-        :joins => :legacy_listing,
-        :conditions => 'real_estate_listing.Deleted = 0' +
-          ' AND real_estate_listing_images.Deleted = 0'
-        #:limit => 10
-      }
-    end
-    
     desc 'Migrates category_assignments'
     task :category_assignments => :environment do
       migrate :category_assignments, {
@@ -56,6 +46,17 @@ namespace :db do
         :joins => [ :legacy_listing, :legacy_style ],
         :conditions => "real_estate_listing.Deleted = 0" +
           " AND property_style.Style <> 'Other'"
+      }
+    end
+    
+    desc 'Migrates property_images'
+    task :property_images => :environment do
+      migrate :property_images, {
+        :joins => :legacy_listing,
+        :conditions => 'real_estate_listing.Deleted = 0' +
+          ' AND real_estate_listing_images.Deleted = 0'
+#        # TESTING - limit to just 10 images
+#        :limit => 10
       }
     end
     

@@ -1,7 +1,6 @@
 class ListingsController < ApplicationController
   
-  # TODO: re-enable this to test caching
-  caches_page :index, :show
+  caches_page :index, :show, :featured_glider
   
   before_filter :set_search_params
   
@@ -27,10 +26,13 @@ class ListingsController < ApplicationController
     end
     unless active_agency.master_agency
       if direction
-        @search = Listing.by_agency(active_agency.id).send(
+        @search = active_agency.listings.send(
           "#{direction}_#{params[:order]}").search(search_params)
+        #@search = Listing.by_agency(active_agency.id).send(
+        #  "#{direction}_#{params[:order]}").search(search_params)
       else
-        @search = Listing.by_agency(active_agency.id).search(search_params)
+        @search = active_agency.listing.search(search_params)
+        #@search = Listing.by_agency(active_agency.id).search(search_params)
       end
     else
       if direction
@@ -41,10 +43,6 @@ class ListingsController < ApplicationController
       end
     end
     @listings = @search.paginate :page => params[:page]
-#    @listings = @search.paginate :page => params[:page], :order => infer_order
-#    @listings = Listing.by_agency(
-#      active_agency.id).paginate :page => params[:page], :order => infer_order
-    
     
     respond_to do |format|
       format.html # index.html.erb
@@ -52,16 +50,39 @@ class ListingsController < ApplicationController
     end
   end
   
+# REMOVED: moved to partial
 #  # GET /listings/large_glider
 #  def featured_glider
-#    unless active_agency.master_agency
-#      @featured_listings = Listing.by_agency(active_agency.id).featured
-#      # Prepend agency to collection of listings so that the first group of
-#      # images to appear in the glider are agency images
-#      @featured_listings = @featured_listings.insert(0, active_agency)
+#    if active_agency.master_agency
+#      @featured_glider = featured_listings = Listing.featured
 #    else
-#      @featured_listings = Listing.featured
+#      @featured_glider = featured_listings = active_agency.listings.featured
 #    end
+#    # Prepend agency to collection of listings so that the first group of
+#    # images to appear in the glider are agency images
+#    if active_agency.agency_images
+#      if active_agency.agency_images.length > 2
+#        splash_name = active_agency.name
+#        splash_object = active_agency
+#      end
+#    end
+#    # If insufficient agency images, use generic images for market segment
+#    unless splash_name
+#      if active_agency.market_segment
+#        if active_agency.market_segment.market_segment_images
+#          if active_agency.market_segment.market_segment_images.length > 2
+#            splash_name = active_agency.name
+#            splash_object = active_agency.market_segment
+#          end
+#        end
+#      end
+#    end
+#    if splash_name
+#      #@featured_glider.insert(0, splash_name) # Overlay text
+#      @featured_glider.insert(0, splash_object) # Object containing images
+#    end
+#    
+#    render :layout => false
 #  end
 
   # GET /listings/1
@@ -118,9 +139,12 @@ class ListingsController < ApplicationController
     # don't always show up at the top of the list
     if search_params.has_key?(
       'property_barrio_canton_province_country_cached_slug_equals')
+#      'barrio_province_country_cached_slug_equals')
       if search_params.has_key?('categories_cached_slug_equals')
         if search_params.has_key?('property_barrio_market_cached_slug_equals')
+#        if search_params.has_key?('barrio_market_cached_slug_equals')
           if search_params.has_key?('property_barrio_cached_slug_equals')
+#          if search_params.has_key?('barrio_cached_slug_equals')
             order = 'listings.ask_amount'
           else
             order = 'barrios.name, listings.ask_amount'
@@ -130,7 +154,9 @@ class ListingsController < ApplicationController
         end
       else
         if search_params.has_key?('property_barrio_market_cached_slug_equals')
+#        if search_params.has_key?('barrio_market_cached_slug_equals')
           if search_params.has_key?('property_barrio_cached_slug_equals')
+#          if search_params.has_key?('barrio_cached_slug_equals')
             order = 'categories.name'
           else
             order = 'categories.name, barrios.name'
@@ -171,9 +197,12 @@ class ListingsController < ApplicationController
     # don't always show up at the top of the list
     if search_params.has_key?(
       'property_barrio_canton_province_country_cached_slug_equals')
+#      'barrio_province_country_cached_slug_equals')
       if search_params.has_key?('categories_cached_slug_equals')
         if search_params.has_key?('property_barrio_market_cached_slug_equals')
+#        if search_params.has_key?('barrio_market_cached_slug_equals')
           if search_params.has_key?('property_barrio_cached_slug_equals')
+#          if search_params.has_key?('barrio_cached_slug_equals')
             order = 'listings.ask_amount'
           else
             order = 'barrios.name, listings.ask_amount'
@@ -183,7 +212,9 @@ class ListingsController < ApplicationController
         end
       else
         if search_params.has_key?('property_barrio_market_cached_slug_equals')
+#        if search_params.has_key?('barrio_market_cached_slug_equals')
           if search_params.has_key?('property_barrio_cached_slug_equals')
+#          if search_params.has_key?('barrio_cached_slug_equals')
             order = 'categories.name'
           else
             order = 'categories.name, barrios.name'

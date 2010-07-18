@@ -5,26 +5,26 @@ class LegacyPropertyImage < LegacyBase
   
   belongs_to :legacy_listing, :foreign_key => 'PropertyID'
   belongs_to :legacy_property, :foreign_key => 'PropertyID'
-    
+  
   def map
     {
       :imageable_id => new_property_id,
       :imageable_type => 'Property',
 
-      # TODO: This isn't being saved. Maybe this only works when the file is
-      # uploaded or something?
-      :image_filename => new_image[0],
-
       :caption => self.Caption,
       :position => self.OrderNum, 
       
       # Source image path (not saved to database)
-      :image_file => File.new( new_image[1], 'rb' )
+      :image_file => new_image_file
     }
   end
   
   
   private
+  
+  def new_image_file
+    File.new( new_image[1], 'r' )
+  end
   
   def new_image
     stem, extension = self.ImageName.split('.')

@@ -32,4 +32,3 @@ class PropertyImage < Image
         ' OR `images`.`imageable_type` = "Listing" AND `listings`.`id` = `images`.`imageable_id`',
     :order => '`properties`.`id`'
 end
-

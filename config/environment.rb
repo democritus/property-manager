@@ -10,6 +10,7 @@ require File.join(File.dirname(__FILE__), 'boot')
 SEARCHLOGIC_PARAMS_MAP = [
   {
     :key => :property_barrio_canton_province_country_cached_slug_equals,
+#    :key => :barrio_province_country_cached_slug_equals,
     :default_value => 'all'
   },
   {
@@ -22,14 +23,17 @@ SEARCHLOGIC_PARAMS_MAP = [
   },
   { 
     :key => :property_barrio_market_cached_slug_equals,
+#    :key => :barrio_market_cached_slug_equals,
     :default_value => 'any market'
   },
   { 
     :key => :property_barrio_cached_slug_equals,
+#    :key => :barrio_cached_slug_equals,
     :default_value => 'any barrio'
   },
   { 
     :key => :property_barrio_canton_cached_slug_equals,
+#    :key => :barrio_canton_cached_slug_equals,
     :default_value => 'any canton'
   },
   { 

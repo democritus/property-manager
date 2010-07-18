@@ -5,6 +5,9 @@ class Property < ActiveRecord::Base
   belongs_to :agency
   belongs_to :barrio, :include => true
   
+#  has_one :canton, :through => :barrio
+#  has_one :market, :through => :barrio
+
   has_one :primary_category, :through => :category_assignments,
     :source => :category,
     :conditions => 'primary_category = 1'

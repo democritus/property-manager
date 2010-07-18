@@ -108,16 +108,20 @@ module ReadableSearch
     parameters.each_pair do |key, value|
       case key.to_sym
         when :property_barrio_canton_province_country_cached_slug_equals
+#        when :barrio_province_country_cached_slug_equals
           country = value
         when :categories_cached_slug_equals
           category = value
         when :listing_type_cached_slug_equals
           listing_type = value
         when :property_barrio_cached_slug_equals
+#        when :barrio_cached_slug_equals
           barrio = value
         when :property_barrio_canton_cached_slug_equals
+#        when :barrio_canton_cached_slug_equals
           canton = value
         when :property_barrio_market_cached_slug_equals
+#        when :barrio_market_cached_slug_equals
           market = value
         when :ask_amount_less_than_or_equal_to
           ask_amount_maximum = value.to_s

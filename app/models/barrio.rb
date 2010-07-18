@@ -7,6 +7,7 @@ class Barrio < ActiveRecord::Base
 
   belongs_to :canton
   belongs_to :market
+#  has_one :province, :through => :canton
   has_many :properties
  
   validates_numericality_of :canton_id,

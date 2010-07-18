@@ -409,6 +409,7 @@ module ListingsHelper
   def country_filter
     if @search_params[
       :property_barrio_canton_province_country_cached_slug_equals]
+#      :barrio_province_country_cached_slug_equals]
       has_filter = true
     end
     if has_filter
@@ -416,8 +417,11 @@ module ListingsHelper
         link_to('All countries', listings_options(
           @search_params.merge(
             :property_barrio_canton_province_country_cached_slug_equals => nil,
+#            :barrio_province_country_cached_slug_equals => nil,
             :property_barrio_market_cached_slug_equals => nil,
+#            :barrio_market_cached_slug_equals => nil,
             :property_barrio_cached_slug_equals => nil
+#            :barrio_cached_slug_equals => nil
           )
         )) + '</li>'
     else
@@ -429,6 +433,7 @@ module ListingsHelper
             link_to(country.name.capitalize, listings_options(
               @search_params.merge(
                 :property_barrio_canton_province_country_cached_slug_equals =>
+#                :barrio_province_country_cached_slug_equals =>
                   country.cached_slug
               )
             )) + '</li>'
@@ -445,15 +450,19 @@ module ListingsHelper
   
   def market_filter
     if @search_params[:property_barrio_market_cached_slug_equals]
+#    if @search_params[:barrio_market_cached_slug_equals]
       html = '<li>' +
         link_to('All markets', listings_options(
           @search_params.merge(
             :property_barrio_market_cached_slug_equals => nil,
+#            :barrio_market_cached_slug_equals => nil,
             :property_barrio_cached_slug_equals => nil
+#            :barrio_cached_slug_equals => nil
           )
         )) + '</li>'
     elsif @search_params[
-      :property_barrio_canton_province_country_cached_slug_equals]        
+      :property_barrio_canton_province_country_cached_slug_equals]
+#      :barrio_province_country_cached_slug_equals]
       markets = []
       unless @active_agency.master_agency
         if @active_agency.markets
@@ -461,6 +470,7 @@ module ListingsHelper
             # TODO: allow for non-standard characters
             if market.country.name.downcase == @search_params[
                 :property_barrio_canton_province_country_cached_slug_equals
+#                :barrio_province_country_cached_slug_equals
               ].downcase
               markets << market
             end
@@ -472,6 +482,7 @@ module ListingsHelper
           :conditions => [
             'countries.cached_slug = ?',
             params[:property_barrio_canton_province_country_cached_slug_equals]
+#            params[:barrio_province_country_cached_slug_equals]
           ]
         )
       end
@@ -482,6 +493,7 @@ module ListingsHelper
             link_to(market.name.capitalize, listings_options(
               @search_params.merge(
                 :property_barrio_market_cached_slug_equals => market.cached_slug
+#                :barrio_market_cached_slug_equals => market.cached_slug
               )
             )) + '</li>'
         end
@@ -497,17 +509,23 @@ module ListingsHelper
   
   def barrio_filter
     if @search_params[:property_barrio_cached_slug_equals]
+#    if @search_params[:barrio_cached_slug_equals]
       html = '<li>' +
         link_to('All barrios', listings_options(
           @search_params.merge(:property_barrio_cached_slug_equals => nil)
+#          @search_params.merge(:barrio_cached_slug_equals => nil)
         )) + '</li>'
     elsif @search_params[
       :property_barrio_canton_province_country_cached_slug_equals] &&
+#      :barrio_province_country_cached_slug_equals] &&
       @search_params[:property_barrio_market_cached_slug_equals]
+#      @search_params[:barrio_market_cached_slug_equals]
       country_slug = @search_params[
         :property_barrio_canton_province_country_cached_slug_equals]
+#        :barrio_province_country_cached_slug_equals]
       market_slug = @search_params[
         :property_barrio_market_cached_slug_equals]
+#        :barrio_market_cached_slug_equals]
       barrios = Barrio.find(:all,
         :joins => [:market, :country],
         :conditions => [
@@ -522,6 +540,7 @@ module ListingsHelper
             link_to(barrio.name.capitalize, listings_options(
               @search_params.merge(
                 :property_barrio_cached_slug_equals => barrio.cached_slug)
+#                :barrio_cached_slug_equals => barrio.cached_slug)
             )) + '</li>'
         end
       end

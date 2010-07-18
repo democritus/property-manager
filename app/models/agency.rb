@@ -24,6 +24,7 @@ class Agency < ActiveRecord::Base
   has_many :partner_agencies, :through => :agency_relationships,
     :source => :agency
   has_many :properties
+  has_many :listings, :through => :properties
   has_many :site_texts
   
   validates_presence_of :name, :short_name

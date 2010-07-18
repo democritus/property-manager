@@ -85,24 +85,26 @@ merge_images!
     </div>
   <% end %>
 
-  <div id="features">
-    <h3>All features</h3>
-    <div class="clearfix">
-      <ul style="float: left">
-      <%  full_feature_list.each_with_index do |feature, i| %>
-        <% if i == (full_feature_list.length + 1) / 2 %>
-          </ul>
-          <ul style="float: left">
+  <% unless full_feature_list.blank? %>
+    <div id="features">
+      <h3>All features</h3>
+      <div class="clearfix">
+        <ul style="float: left">
+        <% full_feature_list.each_with_index do |feature, i| %>
+          <% if i == (full_feature_list.length + 1) / 2 %>
+            </ul>
+            <ul style="float: left">
+          <% end %>
+          <% if feature.is_a?(Array) %>
+            <li><%=h feature.join(' / ') %></li>
+          <% else %>
+            <li><%=h feature %></li>
+          <% end %>
         <% end %>
-        <% if feature.is_a?(Array) %>
-          <li><%=h feature.join(' / ') %></li>
-        <% else %>
-          <li><%=h feature %></li>
-        <% end %>
-      <% end %>
-      </ul>
+        </ul>
+      </div>
     </div>
-  </div>
+  <% end %>
 
   <a name="information_request"></a>
   <div id="information-request">
@@ -254,34 +256,45 @@ merge_images!
     if @listing.property.barrio
       static_params.merge!(
         :property_barrio_canton_province_country_cached_slug_equals =>
+#        :barrio_province_country_cached_slug_equals =>
           @listing.property.barrio.canton.province.country.name
+#          @listing.barrio.province.country.name
       )
+    end
+    if @listing.property.barrio
+      if @listing.property.barrio.market
+        nearby_area = @listing.property.barrio.market.name
+#        nearby_area = @listing.barrio.market.name
+        nearby_slug = @listing.property.barrio.market.cached_slug
+#        nearby_slug = @listing.barrio.market.cached_slug
+        nearby_key = :property_barrio_market_cached_slug_equals
+#        nearby_key = :barrio_market_cached_slug_equals
+      else
+        nearby_area = @listing.property.barrio.name
+#        nearby_area = @listing.barrio.name
+        nearby_slug = @listing.property.barrio.cached_slug
+#        nearby_slug = @listing.barrio.cached_slug
+        nearby_key = :property_barrio_cached_slug_equals
+#        nearby_key = :barrio_cached_slug_equals
+      end
     end
     category_in_market = ''
     if @listing.primary_category
       static_params.merge!(
         :categories_cached_slug_equals => @listing.primary_category.name
       )
-      if @listing.property.barrio
-        category_in_market = 'More ' + @listing.primary_category.name.downcase +
-          ' in ' + @listing.property.barrio.market.name + '...'
+      if nearby_area
+        category_in_area = 'More ' + @listing.primary_category.name.downcase +
+          ' in ' + nearby_area + '...'
       end
     else
-      if @listing.property.barrio
-        if @listing.property.barrio.market
-          category_in_market = 'More properties in ' +
-            @listing.property.barrio.market.name + '...'
-        end
+      if nearby_area
+        category_in_area = 'More properties in ' + nearby_area + '...'
       end
     end
-    market_params = {}
-    if @listing.property.barrio
-      if @listing.property.barrio.market
-        market_params = static_params.merge(
-          :property_barrio_market_cached_slug_equals =>
-            @listing.property.barrio.market.name
-        )
-      end
+    nearby_params = {}
+    if nearby_slug
+      nearby_params = static_params.merge( nearby_key => nearby_slug )
     end
     %>
     <div class="menu_list">
@@ -289,7 +302,7 @@ merge_images!
       <h3>Same market</h3>
       <ul>        
       <li>
-        <%= link_to(category_in_market, listings_options(market_params)) %>
+        <%= link_to(category_in_market, listings_options(nearby_params)) %>
       </li>
       </ul>
       <h3>Price range</h3>
@@ -318,7 +331,7 @@ merge_images!
         <% unless in_range %>
           <li>
             <%= link_to(price_range[:label],
-              listings_options(market_params.merge(boundaries)
+              listings_options(nearby_params.merge(boundaries)
             )) %>
           </li>
         <% else %>
@@ -329,11 +342,13 @@ merge_images!
       <% if @listing.property.barrio %>      
         <h3>Barrio</h3>
         <ul>
-        <% if @listing.property.barrio.market %>
-          <% parent = if @listing.property.barrio.market %>
-        <% else %>
-          <% if @listing.property.barrio.canton %>
-        <% end %>
+        <%
+        if @listing.property.barrio.market
+          parent = @listing.property.barrio.market
+        else
+          parent = @listing.property.barrio.canton
+        end
+        %>
         <% parent.barrios.each do |barrio| %>
           <% unless barrio.id == @listing.property.barrio.id %>
             <li>
@@ -341,6 +356,7 @@ merge_images!
                 listings_options(
                   market_params.merge(
                     :property_barrio_cached_slug_equals => barrio.name
+#                    :barrio_cached_slug_equals => barrio.name
                   )
                 )
               ) %>
