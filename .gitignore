@@ -1,4 +1,4 @@
 log/*
 public/cache
-public/media/*
+public/source_images
 tmp/*
