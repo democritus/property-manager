@@ -22,16 +22,15 @@
 <% @property_images.each do |property_image| %>
   <tr>
     <td>
-      <%= image_tag(
-        thumb_images_property_image_path(property_image, :format => :jpg)
-      ) %></td>
+      <%= image_tag
+        thumb_images_property_image_path( property_image, :format => :jpg ) %></td>
     <td><%=h property_image.image_filename %></td>
     <td><%=h property_image.image_width %></td>
     <td><%=h property_image.image_height %></td>
     <td><%=h property_image.caption %></td>
     <td><%=h property_image.position %></td>
     <td><%=h property_image.visible %></td>
-    <td><%= link_to 'Show', property_image_path(property_image),
+    <td><%= link_to 'Show', images_property_image_path( property_image ),
       :target => :_blank %></td>
     <td><%= link_to 'Edit', edit_polymorphic_path(      
       [:admin, @property_imageable, property_image]) %></td>
@@ -47,4 +46,3 @@
 <%= link_to 'New image', new_polymorphic_path(
   [:admin, @property_imageable, :property_image]) %> |
 <%= link_to 'Back', back_to_property_imageable %>
-

@@ -13,9 +13,9 @@
   <tr>
     <td>
       <% if agency.agency_logos[0] %>
-        <%= image_tag(
-          thumb_images_agency_logo_path(agency.agency_logos[0], :format => :jpg)
-        ) %>
+        <%= image_tag
+          thumb_images_agency_logo_path(
+            agency.agency_logos[0], :format => :jpg ) %>
       <% end %></td>
     <td><%=h agency.name %></td>
     <td><%=h agency.subdomain %></td>

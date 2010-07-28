@@ -17,8 +17,7 @@ my_broker = listing_contact(listing)
         <%
         # TODO: Get this view from a separate controller to work and cache
         %>
-        <%= render :controller => :agents, :action => :snapshot,
-          :locals => {:agent => my_broker} %>
+        <%= render 'agents/snapshot', :locals => {:agent => my_broker} %>
         <% if my_broker.user.user_icons[0] %>
           <% link_to(listing_path(listing, :anchor => 'information_request')) do %>
             <%= image_tag(

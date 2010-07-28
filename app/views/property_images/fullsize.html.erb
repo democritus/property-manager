@@ -1,9 +1,9 @@
 <p>
-  <%= image_tag(fullsize_images_property_image_path(@property_image,
-    :format => :jpg)) %>
+  <%= image_tag fullsize_images_property_image_path( @property_image,
+    :format => :jpg ) %>
 </p>
 <p>
-  <%= link_to('original image', original_property_image_path(@property_image),
-    :target => :original_image) %>
+  <%= link_to 'original image',
+    original_images_property_image_path(@property_image),
+    :target => :original_image %>
 </p>
-

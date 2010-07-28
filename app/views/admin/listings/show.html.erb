@@ -49,16 +49,6 @@
 </p>
 
 <p>
-  <b>Listing expiration date:</b>
-  <%=h @listing.listing_expiration_date %>
-</p>
-
-<p>
-  <b>Contract expiration date:</b>
-  <%=h @listing.contract_expiration_date %>
-</p>
-
-<p>
   <b>Date available:</b>
   <%=h @listing.date_available %>
 </p>
@@ -98,17 +88,16 @@
   <%=h primary_listing_style %>
 </p>
 
-<%= link_to 'Add image', new_admin_listing_property_image_path(@listing) %> |
+<%= link_to 'Add image', new_admin_listing_property_image_path( @listing ) %> |
 <%= link_to 'Images',
-  admin_listing_property_images_path(@listing) %> |
+  admin_listing_property_images_path( @listing ) %> |
 <%= link_to 'Categories',
-  admin_listing_category_assignments_path(@listing) %> |
+  admin_listing_category_assignments_path( @listing ) %> |
 <%= link_to 'Features',
-  admin_listing_feature_assignments_path(@listing) %> |
+  admin_listing_feature_assignments_path( @listing ) %> |
 <%= link_to 'Styles',
-  admin_listing_information_requests_path(@listing) %> |
+  admin_listing_information_requests_path( @listing ) %> |
 <%= link_to 'Information requests',
-  admin_listing_information_requests_path(@listing) %>
-<%= link_to 'Edit', edit_admin_property_listing_path(@property, @listing) %> |
-<%= link_to 'Back', admin_property_listings_path(@property) %>
-
+  admin_listing_information_requests_path( @listing ) %>
+<%= link_to 'Edit', edit_admin_property_listing_path( @property, @listing ) %> |
+<%= link_to 'Back', admin_property_listings_path( @property ) %>

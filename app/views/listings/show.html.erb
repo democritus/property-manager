@@ -63,8 +63,6 @@ merge_images!
   %>
   <% unless @listing.images.length < 4 %>
     <div id="image-slides" class="clearfix">
-      <div class="alpha-shadow">
-        <div class="shadow">
       <div id="listing-image-glide">
         <%
         # Set up image glider
@@ -79,8 +77,6 @@ merge_images!
         %>
         <%= glider_js('listingGlider', @listing.images, options) %>
         <%= glider_html('listingGlider', @listing.images, options) %>      
-      </div>
-        </div>
       </div>
     </div>
   <% end %>
@@ -255,33 +251,25 @@ merge_images!
     }
     if @listing.property.barrio
       static_params.merge!(
-        :property_barrio_canton_province_country_cached_slug_equals =>
-#        :barrio_province_country_cached_slug_equals =>
+        COUNTRY_EQUALS =>
           @listing.property.barrio.canton.province.country.name
-#          @listing.barrio.province.country.name
       )
     end
     if @listing.property.barrio
       if @listing.property.barrio.market
         nearby_area = @listing.property.barrio.market.name
-#        nearby_area = @listing.barrio.market.name
         nearby_slug = @listing.property.barrio.market.cached_slug
-#        nearby_slug = @listing.barrio.market.cached_slug
-        nearby_key = :property_barrio_market_cached_slug_equals
-#        nearby_key = :barrio_market_cached_slug_equals
+        nearby_key = MARKET_EQUALS
       else
         nearby_area = @listing.property.barrio.name
-#        nearby_area = @listing.barrio.name
         nearby_slug = @listing.property.barrio.cached_slug
-#        nearby_slug = @listing.barrio.cached_slug
-        nearby_key = :property_barrio_cached_slug_equals
-#        nearby_key = :barrio_cached_slug_equals
+        nearby_key = BARRIO_EQUALS
       end
     end
     category_in_market = ''
     if @listing.primary_category
       static_params.merge!(
-        :categories_cached_slug_equals => @listing.primary_category.name
+        CATEGORIES_EQUALS_ANY => @listing.primary_category.name
       )
       if nearby_area
         category_in_area = 'More ' + @listing.primary_category.name.downcase +
@@ -312,11 +300,11 @@ merge_images!
         boundaries = {}
         unless price_range[:lower].zero?
           boundaries.merge!(
-            :ask_amount_greater_than_or_equal_to => price_range[:lower])
+            ASK_AMOUNT_GREATER_THAN_OR_EQUAL_TO => price_range[:lower])
         end
         if price_range[:upper]
           boundaries.merge!(
-            :ask_amount_less_than_or_equal_to => price_range[:upper])
+            ASK_AMOUNT_LESS_THAN_OR_EQUAL_TO => price_range[:upper])
         end
         %>
         <% in_range = false %>
@@ -354,9 +342,8 @@ merge_images!
             <li>
               <%= link_to(barrio.name,
                 listings_options(
-                  market_params.merge(
-                    :property_barrio_cached_slug_equals => barrio.name
-#                    :barrio_cached_slug_equals => barrio.name
+                  nearby_params.merge(
+                    BARRIO_EQUALS => barrio.name
                   )
                 )
               ) %>

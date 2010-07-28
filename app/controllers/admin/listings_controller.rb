@@ -4,91 +4,48 @@ class Admin::ListingsController < Admin::AdminController
   include ReadableSearch
   
   before_filter :set_contextual_property
-  #caches_page :large_glider
   
-  # GET /listings
-  # GET /listings.xml
   def index   
     @listings = @property.listings.paginate(
       :page => params[:page]
-    )    
-    respond_to do |format|
-      format.html # index.html.erb
-    end
+    )
   end
-
-  # GET /listings/1
-  # GET /listings/1.xml
+  
   def show
-    @listing = Listing.find(params[:id])
-
-    respond_to do |format|
-      format.html # show.html.erb
-    end
-
+    @listing = Listing.find( params[:id] )
   end
-
-  # GET /listings/new
-  # GET /listings/new.xml
   def new
     @listing = Listing.new
-
-    respond_to do |format|
-      format.html # new.html.erb
-    end
   end
 
-  # GET /listings/1/edit
   def edit
-    @listing = Listing.find(params[:id])
-
-    respond_to do |format|
-      format.html # new.html.erb
-    end
+    @listing = Listing.find( params[:id] )
   end
 
-  # POST /listings
-  # POST /listings.xml
   def create
     @listing = @property.listings.build(params[:listing])
-
-    respond_to do |format|
-      if @listing.save
-        flash[:notice] = 'Listing was successfully created.'
-        format.html { redirect_to(
-          admin_agency_property_path(@property.agency, @property)) }
-      else
-        format.html { render :action => "new" }
-      end
+    if @listing.save
+      flash[:notice] = 'Listing was successfully created.'
+      redirect_to( admin_agency_property_path( @property.agency, @property ) )
+    else
+      render :new
     end
   end
 
-  # PUT /listings/1
-  # PUT /listings/1.xml
   def update
-    @listing = Listing.find(params[:id])
-    
-    respond_to do |format|
-      if @listing.update_attributes(params[:listing])
-        flash[:notice] = 'Listing was successfully updated.'
-        format.html {
-          redirect_to(admin_property_listing_url(@listing.property, @listing)) }
-      else
-        format.html { render :action => "edit" }
-      end
+    @listing = Listing.find(params[:id])    
+    if @listing.update_attributes(params[:listing])
+      flash[:notice] = 'Listing was successfully updated.'
+      redirect_to( admin_property_listing_url( @listing.property, @listing ) )
+    else
+      render :edit
     end
   end
 
-  # DELETE /listings/1
-  # DELETE /listings/1.xml
   def destroy
     @listing = Listing.find(params[:id])
     @listing.destroy
-
-    respond_to do |format|
-      format.html { redirect_to(
-        admin_agency_property_path(@property.agency, @property)) }
-    end
+    redirect_to( admin_agency_property_path( @property.agency, @property ) )
   end
 
   # AJAX target for updating fields based on checked listing type

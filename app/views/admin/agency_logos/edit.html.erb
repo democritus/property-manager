@@ -3,9 +3,8 @@
 <% form_for( [ :admin, @agency_logoable, @agency_logo ] ) do |f| %>
   <%= f.error_messages %>
   <p>
-    <%= image_tag(
-      thumb_images_agency_logo_path(@agency_logo, :format => :jpg)
-    ) %>
+    <%= image_tag
+      thumb_images_agency_logo_path( @agency_logo, :format => :jpg ) %>
   </p>
   <p>
     <%= f.label :image_filename %>
@@ -38,4 +37,3 @@
 
 <%= link_to 'Back',
   polymorphic_path([:admin, @agency_logoable, :agency_logos]) %>
-

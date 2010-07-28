@@ -34,12 +34,6 @@ ActionController::Routing::Routes.draw do |map|
     :only => [ :new, :create, :edit, :update ]
   
   map.resources :users
-  
-  # Shallow routes - member routes (with id) accessed directly, other
-  # routes are nested
-  map.resources :property_images,
-    :only => [ :featured, :show, :fullsize, :original ],
-    :member => { :featured => :get, :fullsize => :get, :original => :get }
     
   #
   # Nested routes
@@ -74,10 +68,10 @@ ActionController::Routing::Routes.draw do |map|
         :auto_complete_for_agency_broker_id => :post # TODO: change to :get
       } do |agencies|
       agencies.resources :agency_images,
-        :except => :show,
+        :only => [ :new, :create, :edit, :update, :index ],
         :requirements => { :context_type => 'agencies' }
       agencies.resources :agency_logos,
-        :except => :show,
+        :only => [ :new, :create, :edit, :update, :index ],
         :requirements => { :context_type => 'agencies' }
       agencies.resources :agents,
         :requirements => { :context_type => 'agencies' },
@@ -137,10 +131,7 @@ ActionController::Routing::Routes.draw do |map|
     
     admin.resources :listings, :only => :show do |listings|
       listings.resources :property_images,
-        :except => :show,
-        :member => { :thumb => :get, :medium => :get, :fullsize => :get,
-          :original => :get, :large_glider => :get, :listing_glider => :get,
-          :mini_glider => :get },
+        :only => [ :new, :create, :edit, :update, :index ],
         :requirements => { :context_type => 'listings' }
       listings.resources :category_assignments,
         :only => [ :index, :edit, :update ],
@@ -184,7 +175,7 @@ ActionController::Routing::Routes.draw do |map|
         :member => { :listing_type_pivot => :get },
         :requirements => { :context_type => 'properties' }
       properties.resources :property_images,
-        :except => :show,
+        :only => [ :new, :create, :edit, :update, :index ],
         :requirements => { :context_type => 'properties' }
     end
     
@@ -196,12 +187,11 @@ ActionController::Routing::Routes.draw do |map|
     
     admin.resources :users do |users|
       users.resources :user_icons,
-        :except => [ :show, :new, :create ],
-        :member => { :small => :get },
+        :only => [ :new, :create, :edit, :update, :index ],
         :requirements => { :context_type => 'users' }
     end
   end
-  
+   
   # Image routes
   map.namespace(:images) do |images|
     images.resources :agencies,

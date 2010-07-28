@@ -66,6 +66,10 @@ div#image-slides {
   width: 736px;
 }
 
+/* Change cursor to pointer even though images aren't technically links */
+div.glide-window div.glide-item img {
+  cursor: pointer;
+}
 
 #features ul {
   font-size: 120%;

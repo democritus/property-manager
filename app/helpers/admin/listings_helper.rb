@@ -25,18 +25,20 @@ module Admin::ListingsHelper
     # country has a primary currency. If so, it should appear first in list.
     if @active_agency
       unless @active_agency.country_id.blank?
-        country = Country.find_by_id(@active_agency.country_id)
+        country = Country.find_by_id( @active_agency.country_id )
         unless country.currency_id.blank?
-          order = 'id = ' + country.currency_id + ' DESC'
+          order = 'id = ' + country.currency_id.to_s + ' DESC'
+        end
       end
     end
     options = {
       :include => nil,
-      :select => 'id, code, symbol'
+      :select => 'id, alphabetic_code, symbol'
     }
     options.merge( :order => order ) if order
     Currency.find( :all, options ).map {
-      |currency| [currency.code + ' ' + currency.symbol, currency.id] }
+      |currency| [ currency.alphabetic_code + ' ' +
+        currency.symbol, currency.id ] }
   end
   
   def set_listing_form_list_data
@@ -45,7 +47,7 @@ module Admin::ListingsHelper
       :include => nil,
       :select => 'id, name'
     ).map {
-      |category| [category.name, category.id] }
+      |category| [ category.name, category.id ] }
     @lists[:currencies] = currency_list
     #@lists[:styles] = Style.find(:all,
     #  :include => nil,
@@ -59,7 +61,7 @@ module Admin::ListingsHelper
       :include => [ :categories, :features, :styles ]
     )
     @lists[:listing_types] = @listing_types.map {
-      |listing_type| [listing_type.name, listing_type.id] }
+      |listing_type| [ listing_type.name, listing_type.id ] }
       
     # Lists pre-screened according to either "rent" or "sale" listing type
     @lists[:categories] = []

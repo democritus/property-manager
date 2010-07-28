@@ -1,6 +1,6 @@
 class ListingsController < ApplicationController
   
-  caches_page :index, :show, :featured_glider
+  caches_page :index, :show
   
   before_filter :set_search_params
   
@@ -137,14 +137,10 @@ class ListingsController < ApplicationController
     
     # TODO: create scheme to change order of listings so that the same listings
     # don't always show up at the top of the list
-    if search_params.has_key?(
-      'property_barrio_canton_province_country_cached_slug_equals')
-#      'barrio_province_country_cached_slug_equals')
-      if search_params.has_key?('categories_cached_slug_equals')
-        if search_params.has_key?('property_barrio_market_cached_slug_equals')
-#        if search_params.has_key?('barrio_market_cached_slug_equals')
-          if search_params.has_key?('property_barrio_cached_slug_equals')
-#          if search_params.has_key?('barrio_cached_slug_equals')
+    if search_params.has_key?( COUNTRY_EQUALS )
+      if search_params.has_key?( CATEGORIES_EQUALS_ANY )
+        if search_params.has_key?( MARKET_EQUALS )
+          if search_params.has_key?( BARRIO_EQUALS )
             order = 'listings.ask_amount'
           else
             order = 'barrios.name, listings.ask_amount'
@@ -153,10 +149,8 @@ class ListingsController < ApplicationController
           order = 'markets.name, barrios.name'
         end
       else
-        if search_params.has_key?('property_barrio_market_cached_slug_equals')
-#        if search_params.has_key?('barrio_market_cached_slug_equals')
-          if search_params.has_key?('property_barrio_cached_slug_equals')
-#          if search_params.has_key?('barrio_cached_slug_equals')
+        if search_params.has_key?( MARKET_EQUALS )
+          if search_params.has_key?( BARRIO_EQUALS )
             order = 'categories.name'
           else
             order = 'categories.name, barrios.name'
@@ -166,7 +160,7 @@ class ListingsController < ApplicationController
         end
       end
     else
-      if search_params.has_key?('categories_cached_slug_equals')
+      if search_params.has_key?( CATEGORIES_EQUALS_ANY )
         order = 'countries.name, markets.name, barrios.name'
       else
         order = 'listings.ask_amount'
@@ -195,14 +189,10 @@ class ListingsController < ApplicationController
     
     # TODO: create scheme to change order of listings so that the same listings
     # don't always show up at the top of the list
-    if search_params.has_key?(
-      'property_barrio_canton_province_country_cached_slug_equals')
-#      'barrio_province_country_cached_slug_equals')
-      if search_params.has_key?('categories_cached_slug_equals')
-        if search_params.has_key?('property_barrio_market_cached_slug_equals')
-#        if search_params.has_key?('barrio_market_cached_slug_equals')
-          if search_params.has_key?('property_barrio_cached_slug_equals')
-#          if search_params.has_key?('barrio_cached_slug_equals')
+    if search_params.has_key?( COUNTRY_EQUALS )
+      if search_params.has_key?( CATEGORIES_EQUALS_ANY )
+        if search_params.has_key?( MARKET_EQUALS )
+          if search_params.has_key?( BARRIO_EQUALS )
             order = 'listings.ask_amount'
           else
             order = 'barrios.name, listings.ask_amount'
@@ -211,10 +201,8 @@ class ListingsController < ApplicationController
           order = 'markets.name, barrios.name'
         end
       else
-        if search_params.has_key?('property_barrio_market_cached_slug_equals')
-#        if search_params.has_key?('barrio_market_cached_slug_equals')
-          if search_params.has_key?('property_barrio_cached_slug_equals')
-#          if search_params.has_key?('barrio_cached_slug_equals')
+        if search_params.has_key?( MARKET_EQUALS )
+          if search_params.has_key?( BARRIO_EQUALS )
             order = 'categories.name'
           else
             order = 'categories.name, barrios.name'
@@ -224,7 +212,7 @@ class ListingsController < ApplicationController
         end
       end
     else
-      if search_params.has_key?('categories_cached_slug_equals')
+      if search_params.has_key?( CATEGORIES_EQUALS_ANY )
         order = 'countries.name, markets.name, barrios.name'
       else
         order = 'listings.ask_amount'

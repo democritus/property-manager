@@ -23,7 +23,8 @@
     <td><%=h market_image.caption %></td>
     <td><%=h market_image.position %></td>
     <td><%=h market_image.visible %></td>
-    <td><%= link_to 'Show', images_market_image(market_image, :format => :jpg),
+    <td><%= link_to 'Show',
+      images_market_image( market_image, :format => :jpg ),
       :target => :_blank %></td>
     <td><%= link_to 'Edit',
       edit_polymorphic_path([:admin, @market_imageable, market_image]) %></td>
@@ -40,5 +41,3 @@
   [:admin, @market_imageable, :market_image]) %> |
 <%= link_to 'Back', admin_country_market_path(
   @market_imageable.country, @market_imageable) %>
-
-

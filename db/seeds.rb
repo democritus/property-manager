@@ -755,7 +755,7 @@ i = 0
   { :name => 'Business Opportunities', :user_defined => false, :type => :sale },
   { :name => 'Hotels', :user_defined => false, :type => :sale },
   { :name => 'Bed & Breakfasts', :user_defined => false, :type => :sale },
-  { :name => 'Restaurant/Bar', :user_defined => false, :type => :sale },
+  { :name => 'Restaurants & Bars', :user_defined => false, :type => :sale },
   { :name => 'Pre-construction', :user_defined => false, :type => :sale },
   { :name => 'Farms & Ranches', :user_defined => false, :type => :sale },
   { :name => 'Residential Development', :user_defined => false,

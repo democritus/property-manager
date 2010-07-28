@@ -4,23 +4,23 @@
     when 'Heredia'
       %>
       <li><%= link_to 'Homes in Heredia', listings_options(
-        'categories_cached_slug_equals' => 'homes',
-        'listing_type_cached_slug_equals' => 'for-sale',
-        'property_barrio_market_cached_slug_equals' => 'heredia') %></li>
+        CATEGORIES_EQUALS_ANY => 'homes',
+        LISTING_TYPE_EQUALS => 'for-sale',
+        MARKET_EQUALS => 'heredia') %></li>
       <%
     when 'Jacó Beach'
       %>
       <li><%= link_to 'Homes in Jacó Beach', listings_options(
-        'categories_cached_slug_equals' => 'homes',
-        'listing_type_cached_slug_equals' => 'for-sale',
-        'property_barrio_market_cached_slug_equals' => 'heredia') %></li>
+        CATEGORIES_EQUALS_ANY => 'homes',
+        LISTING_TYPE_EQUALS => 'for-sale',
+        MARKET_EQUALS => 'heredia') %></li>
       <%
     when 'Dominical'
       %>
       <li><%= link_to 'Tin Shacks in Dominical', listings_options(
-        'categories_cached_slug_equals' => 'tin-shacks',
-        'listing_type_cached_slug_equals' => 'for-sale',
-        'property_barrio_market_cached_slug_equals' => 'dominical') %></li>
+        CATEGORIES_EQUALS_ANY => 'tin-shacks',
+        LISTING_TYPE_EQUALS => 'for-sale',
+        MARKET_EQUALS => 'dominical') %></li>
       <%
   end
   %>
@@ -34,30 +34,28 @@
       <li><%= link_to 'All listings', listings_options %></li>
       <%= yield :active_agency_for_sale_links %>
       <li><%= link_to 'Beach Homes', listings_options(
-        'categories_cached_slug_equals' => 'homes',
-        'features_cached_slug_equals_any' => 'beach-home') %></li>
+        CATEGORIES_EQUALS_ANY => 'beach-homes') %></li>
       <li><%= link_to 'Mountain Homes', listings_options(
-        'categories_cached_slug_equals' => 'homes',
-        'features_cached_slug_equals_any' => 'mountain-home') %></li>
-      <li><%= link_to 'Condos', listings_options(
-        'categories_cached_slug_equals' => 'condos') %></li>
+        CATEGORIES_EQUALS_ANY => 'mountain-homes') %></li>
+      <li><%= link_to 'Condominiums', listings_options(
+        CATEGORIES_EQUALS_ANY => 'condominiums') %></li>
       <li><%= link_to 'Farms & Ranches', listings_options(
-        'categories_cached_slug_equals' => 'farms') %></li>
-      <li><%= link_to 'Lots', listings_options(
-        'categories_cached_slug_equals' => 'lots') %></li>
+        CATEGORIES_EQUALS_ANY => 'farms-ranches') %></li>
+      <li><%= link_to 'Residential Lots', listings_options(
+        CATEGORIES_EQUALS_ANY => 'residential-lots') %></li>
     </ul>
   </div>
   <div class="menu_list">
     <h3>For Rent</h3>
     <ul>
       <li><%= link_to 'All listings', listings_options(
-        'listing_type_cached_slug_equals' => 'for-rent') %></li>
+        LISTING_TYPE_EQUALS => 'for-rent') %></li>
       <li><%= link_to 'Houses', listings_options(
-        'categories_cached_slug_equals' => 'homes',
-          'listing_type_cached_slug_equals' => 'for-rent') %></li>
+        CATEGORIES_EQUALS_ANY => 'homes',
+          LISTING_TYPE_EQUALS => 'for-rent') %></li>
       <li><%= link_to 'Apartments', listings_options(
-        'categories_cached_slug_equals' => 'apartments',
-        'listing_type_cached_slug_equals' => 'for-rent') %></li>
+        CATEGORIES_EQUALS_ANY => 'apartments',
+        LISTING_TYPE_EQUALS => 'for-rent') %></li>
     </ul>
   </div>
   <%

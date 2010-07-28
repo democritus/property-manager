@@ -3,9 +3,8 @@
 <% form_for( [ :admin, @property_imageable, @property_image ] ) do |f| %>
   <%= f.error_messages %>
   <p>
-    <%= image_tag(
-      thumb_property_image_path(@property_image, :format => :jpg)
-    ) %>
+    <%= image_tag
+      thumb_images_property_image_path( @property_image, :format => :jpg ) %>
   </p>
   <p>
     <%= f.label :image_filename %>
@@ -36,8 +35,5 @@
   </p>
 <% end %>
 
-<%= link_to 'Show', property_image_path(@property_image),
-  :target => :_blank %> |
 <%= link_to 'Back', polymorphic_path(:admin,
   [@property_imageable, :property_images]) %>
-

@@ -23,10 +23,10 @@
       <% if user.user_icons[0] %>
         <%= link_to(
           image_tag(
-            small_images_user_icon_path(user.user_icons[0], :format => :jpg),
+            small_images_user_icon_path( user.user_icons[0], :format => :jpg ),
             :style => 'border: 0'
           ),
-          user_icon_path(user.user_icons[0]),
+          images_user_icon_path( user.user_icons[0] ),
           :target => :image_viewer
         ) %>
       <% end %></td>
@@ -42,11 +42,10 @@
     <td><%=h user.address1 %></td>
     <td><%=h user.address2 %></td>
     <td><%=h user.referer_url %></td>
-    <td><%= link_to 'Show', admin_user_path(user) %></td>
-    <td><%= link_to 'Edit', edit_admin_user_path(user) %></td>
-    <td><%= link_to 'Destroy', admin_user_path(user),
+    <td><%= link_to 'Show', admin_user_path( user ) %></td>
+    <td><%= link_to 'Edit', edit_admin_user_path( user ) %></td>
+    <td><%= link_to 'Destroy', admin_user_path( user ),
       :confirm => 'Are you sure?', :method => :delete %></td>
   </tr>
 <% end %>
 </table>
-

@@ -7,49 +7,70 @@ RAILS_GEM_VERSION = '2.3.5' unless defined? RAILS_GEM_VERSION
 require File.join(File.dirname(__FILE__), 'boot')
 
 # Constants needed for routing
+
+# Shorthand for long parameters corresponding with named routes generated
+# by Searchlogic plugin
+COUNTRY_EQUALS = :property_barrio_canton_province_country_cached_slug_equals
+CATEGORIES_EQUALS_ANY = :categories_cached_slug_equals_any
+LISTING_TYPE_EQUALS = :listing_type_cached_slug_equals
+MARKET_EQUALS = :property_barrio_market_cached_slug_equals
+BARRIO_EQUALS = :property_barrio_cached_slug_equals
+CANTON_EQUALS = :property_barrio_canton_cached_slug_equals
+PROVINCE_EQUALS = :property_barrio_canton_province_cached_slug_equals
+ZONE_EQUALS = :property_barrio_canton_zone_cached_slug_equals
+ASK_AMOUNT_LESS_THAN_OR_EQUAL_TO = :ask_amount_less_than_or_equal_to
+ASK_AMOUNT_GREATER_THAN_OR_EQUAL_TO = :ask_amount_greater_than_or_equal_to
+STYLES_EQUALS_ANY = :styles_cached_slug_equals_any
+FEATURES_EQUALS_ANY = :features_cached_slug_equals_any
+
+# Maps URL params in this order to Searchlogic named routes
 SEARCHLOGIC_PARAMS_MAP = [
   {
-    :key => :property_barrio_canton_province_country_cached_slug_equals,
-#    :key => :barrio_province_country_cached_slug_equals,
+    :key => COUNTRY_EQUALS,
     :default_value => 'all'
   },
   {
-    :key => :categories_cached_slug_equals,
+    :key => CATEGORIES_EQUALS_ANY,
     :default_value => 'property'
   },
   { 
-    :key => :listing_type_cached_slug_equals,
+    :key => LISTING_TYPE_EQUALS,
     :default_value => 'for sale or rent'
   },
   { 
-    :key => :property_barrio_market_cached_slug_equals,
-#    :key => :barrio_market_cached_slug_equals,
+    :key => MARKET_EQUALS,
     :default_value => 'any market'
   },
   { 
-    :key => :property_barrio_cached_slug_equals,
-#    :key => :barrio_cached_slug_equals,
+    :key => BARRIO_EQUALS,
     :default_value => 'any barrio'
   },
   { 
-    :key => :property_barrio_canton_cached_slug_equals,
-#    :key => :barrio_canton_cached_slug_equals,
+    :key => CANTON_EQUALS,
     :default_value => 'any canton'
   },
   { 
-    :key => :ask_amount_less_than_or_equal_to,
+    :key => PROVINCE_EQUALS,
+    :default_value => 'any province'
+  },
+  { 
+    :key => ZONE_EQUALS,
+    :default_value => 'any zone'
+  },
+  { 
+    :key => ASK_AMOUNT_LESS_THAN_OR_EQUAL_TO,
     :default_value => 'under any amount'
   },
   { 
-    :key => :ask_amount_greater_than_or_equal_to,
+    :key => ASK_AMOUNT_GREATER_THAN_OR_EQUAL_TO,
     :default_value => 'over any amount'
   },
   { 
-    :key => :styles_cached_slug_equals,
+    :key => STYLES_EQUALS_ANY,
     :default_value => 'any style'
   },
   { 
-    :key => :features_cached_slug_equals_any,
+    :key => FEATURES_EQUALS_ANY,
     :default_value => 'any feature'
   }
 ]

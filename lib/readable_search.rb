@@ -7,7 +7,7 @@ module ReadableSearch
   end
   
   # Remove extraneous words that are not actually part of the lookup value
-  def listings_params(parameters = nil)
+  def listings_params( parameters = nil )
     if parameters.nil?
       parameters = params.dup
     end 
@@ -19,11 +19,11 @@ module ReadableSearch
         else
           case param[:key]
             # Slice off "under " and " dollars"
-            when :ask_amount_less_than_or_equal_to
+            when ASK_AMOUNT_LESS_THAN_OR_EQUAL_TO
               parameters[param[:key]] = parameters[
                 param[:key]].slice(6..-1).slice(0..-9)
             # Slice off "over " and " dollars"
-            when :ask_amount_greater_than_or_equal_to
+            when ASK_AMOUNT_GREATER_THAN_OR_EQUAL_TO
               parameters[param[:key]] = parameters[
                 param[:key]].slice(5..-1).slice(0..-9)
           end
@@ -69,10 +69,10 @@ module ReadableSearch
         unless value == param[:default_value]
           case param[:key]
             # Slice off "under " and " dollars"
-            when :ask_amount_less_than_or_equal_to
+            when ASK_AMOUNT_LESS_THAN_OR_EQUAL_TO
               parameters[string_key] = 'under ' + value + ' dollars'
             # Slice off "over " and " dollars"
-            when :ask_amount_greater_than_or_equal_to
+            when ASK_AMOUNT_GREATER_THAN_OR_EQUAL_TO
               parameters[string_key] = 'over ' + value + ' dollars'
           end
         end
@@ -81,16 +81,11 @@ module ReadableSearch
         parameters.merge!(param[:key].to_s => param[:default_value])
       end
     end
-    
-    # REMOVED: using friendly_id's cached_slug field which already delimits
-    # spaces with '-'
-    #parameters.each { |k, v| parameters[k] = v.to_s.gsub(' ', '-') }
-    
     return parameters
   end
   
-  def searchlogic_params_to_readable_params(parameters, type = 'url',
-                                              insert_linebreaks = true)
+  def searchlogic_params_to_readable_params( parameters, type = 'url',
+                                              insert_linebreaks = true )
     # Return values
     readable_string = ''
     non_readable_params = {}
@@ -98,41 +93,49 @@ module ReadableSearch
     country = nil
     category = nil
     listing_type = nil
-    canton = nil
     barrio = nil
+    canton = nil
     market = nil
+    province = nil
+    zone = nil
     ask_amount_maximum = nil
     ask_amount_minimum = nil
     style = nil
     features = nil
     parameters.each_pair do |key, value|
       case key.to_sym
-        when :property_barrio_canton_province_country_cached_slug_equals
-#        when :barrio_province_country_cached_slug_equals
-          country = value
-        when :categories_cached_slug_equals
-          category = value
-        when :listing_type_cached_slug_equals
-          listing_type = value
-        when :property_barrio_cached_slug_equals
-#        when :barrio_cached_slug_equals
-          barrio = value
-        when :property_barrio_canton_cached_slug_equals
-#        when :barrio_canton_cached_slug_equals
-          canton = value
-        when :property_barrio_market_cached_slug_equals
-#        when :barrio_market_cached_slug_equals
-          market = value
-        when :ask_amount_less_than_or_equal_to
-          ask_amount_maximum = value.to_s
-        when :ask_amount_greater_than_or_equal_to
-          ask_amount_minimum = value.to_s
-        when :styles_cached_slug_equals
-          style = value
-        when :features_cached_slug_equals_any
-          features = value
-        else
-          non_readable_params.merge!(key => value.to_s)
+      when COUNTRY_EQUALS
+        country = value
+        country = country.titleize if type == 'text'
+      when CATEGORIES_EQUALS_ANY
+        category = value
+      when LISTING_TYPE_EQUALS
+        listing_type = value
+      when BARRIO_EQUALS
+        barrio = value
+        barrio = barrio.titleize if type == 'text'
+      when CANTON_EQUALS
+        canton = value
+        canton = canton.titleize if type == 'text'
+      when MARKET_EQUALS
+        market = value
+        market = market.titleize if type == 'text'
+      when PROVINCE_EQUALS
+        province = value
+        province = province.titleize if type == 'text'
+      when ZONE_EQUALS
+        zone = value
+        zone = zone.titleize if type == 'text'
+      when ASK_AMOUNT_LESS_THAN_OR_EQUAL_TO
+        ask_amount_maximum = value.to_s
+      when ASK_AMOUNT_GREATER_THAN_OR_EQUAL_TO
+        ask_amount_minimum = value.to_s
+      when STYLES_EQUALS_ANY
+        style = value
+      when FEATURES_EQUALS_ANY
+        features = value
+      else
+        non_readable_params.merge!(key => value.to_s)
       end
     end
     if type == 'text' # (display info about search results)
@@ -160,21 +163,35 @@ module ReadableSearch
     end
     readable_string = country + delimiter + category + delimiter + listing_type
     unless country == 'all'
-      if market
-        if barrio
-          readable_string += delimiter + 'in' + spacer + barrio + delimiter +
-            'de' + spacer + market
-        else
-          readable_string += delimiter + 'in' + spacer + market
-        end
+      place_separator = 'in'
+      place_delemiter = delimiter
+      if barrio
+        readable_string += delimiter + 'in' + spacer + barrio
+        place_separator = ','
+        place_delimiter = ''
       end
       if canton
-        readable_string += delimiter + 'in' + spacer + canton
+        readable_string += place_delimiter + place_separator + spacer + canton
+        place_separator = ','
+        place_delimiter = ''
+      end
+      if market
+        readable_string += place_delimiter + place_separator + spacer + market
+        place_separator = ','
+        place_delimiter = ''
+      end
+      if province
+        readable_string += place_delimiter + place_separator + spacer + province
+        place_separator = ','
+        place_delimiter = ''
+      end
+      if zone
+        readable_string += place_delimiter + place_separator + spacer + zone
       end
     end
     if ask_amount_maximum
       readable_string += delimiter + 'under' + spacer +
-        number_to_currency(ask_amount_maximum,
+        number_to_currency(ask_amount_maximum.to_i,
           :precision => 0,
           :unit => money_symbol,
           :delimiter => money_delimiter
@@ -183,7 +200,7 @@ module ReadableSearch
     end
     if ask_amount_minimum
       readable_string += delimiter + 'over' + spacer +
-        number_to_currency(ask_amount_minimum,
+        number_to_currency(ask_amount_minimum.to_i,
           :precision => 0,
           :unit => money_symbol,
           :delimiter => money_delimiter
@@ -213,6 +230,7 @@ module ReadableSearch
         end
       end
     end
-    return [readable_string, non_readable_params]
+    readable_string.gsub!('-', ' ') if type == 'text'
+    return [ readable_string, non_readable_params ]
   end
 end

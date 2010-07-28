@@ -1,8 +1,6 @@
 class Admin::AgentsController < Admin::AdminController
 
   before_filter :set_contextual_agency
-
-  caches_page :snapshot
   
   # Auto complete
   # REMOVED: couldn't get conditions to merge, manually added method to

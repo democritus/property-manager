@@ -17,3 +17,7 @@ mysqldump --opt --user=be_user_php -pmastod0n --host=luna.qlogicinc.com --compre
 
 # Load more tables from production server to local
 mysqldump --opt --user=be_user_php -pmastod0n --host=luna.qlogicinc.com --compress barrioearth_php --ignore-table=barrioearth_php.property_feature --ignore-table=barrioearth_php.property_style --ignore-table=barrioearth_php.real_estate_category --ignore-table=barrioearth_php.real_estate_listing --ignore-table=barrioearth_php.real_estate_listing_category --ignore-table=barrioearth_php.real_estate_listing_feature --ignore-table=barrioearth_php.real_estate_listing_images --ignore-table=barrioearth_php.visitorlog --ignore-table=barrioearth_php.ip_to_country | mysql -u be_user_php -pjupit3r barrioearth_php
+
+# Dump entire database
+mysqldump --opt --user=be_user_php -pmastod0n --host=luna.qlogicinc.com --compress barrioearth_php > /home/brian/tmp/barrioearth_php.sql
+scp -p /home/tmp/barrioearth_php.sql brian@igor.qlogicinc.com:/home/backup/barrioearth_php.sql

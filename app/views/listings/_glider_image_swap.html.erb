@@ -1,6 +1,8 @@
 <% if image %>
-  <%= image_tag(medium_images_property_image_path(image, :format => :jpg)) %>
+  <%= image_tag medium_images_property_image_path( image, :format => :jpg ) %>
 <% else %>
+  <%
+  # TODO: show "image not found" image
+  %>
   Image not found
 <% end %>
-

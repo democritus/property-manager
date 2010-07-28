@@ -294,7 +294,7 @@ module GliderHelper
       end
     end
     
-    return image_tag(path, html_options)
+    return image_tag( path, html_options )
   end
   
   # Insert nil value instead of image path to indicate placeholder image

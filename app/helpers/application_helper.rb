@@ -8,14 +8,16 @@ module ApplicationHelper
 
   def active_agency_logo(agency_logo)
     link_to(
-      image_tag(images_agency_logo_path(agency_logo, :format => :png)),
+      image_tag(
+        images_agency_logo_path( agency_logo, :format => :png )
+      ),
       root_path
     )
   end
   
   def default_logo
     image_html = image_tag(
-      default_logo_images_agency_path(@active_agency, :format => :png),
+      default_logo_images_agency_path( @active_agency, :format => :png ),
       :border => 0
     )
     link_to image_html, root_path
@@ -31,13 +33,9 @@ module ApplicationHelper
     # Constrain "all listings" by agency's primary country by default
     # Having a link with the country's name is better for search engines
     if @active_agency.country
-      parameters.merge!(
-        'property_barrio_canton_province_country_cached_slug_equals' =>
-#        'barrio_province_country_cached_slug_equals' =>
-          @active_agency.country.cached_slug
-      )
+      parameters.merge!( COUNTRY_EQUALS => @active_agency.country.cached_slug )
     end
-    parameters.merge!('listing_type_cached_slug_equals' => 'for-sale')
+    parameters.merge!( LISTING_TYPE_EQUALS => 'for-sale' )
     parameters.merge!(params_to_overwrite)
     
     return verbose_params(parameters)
@@ -74,4 +72,3 @@ module ApplicationHelper
     return options_for_select(entries, field)
   end  
 end
-

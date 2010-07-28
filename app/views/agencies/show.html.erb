@@ -12,11 +12,8 @@
   <% @agency.markets.each do |market| %>
     <%
     options = listings_options(
-      'property_barrio_canton_province_country_cached_slug_equals' =>
-#      'barrio_province_country_cached_slug_equals' =>
-        market.country.name,
-      'property_barrio_market_cached_slug_equals' => market.name )
-#      'barrio_market_cached_slug_equals' => market.name )
+      COUNTRY_EQUALS => market.country.name,
+      MARKET_EQUALS => market.name )
     %>
     <div class="market_snapshot" class="clearfix">
       <% if market.market_images %>
@@ -43,13 +40,9 @@
             <% market.barrios.each do |barrio| %>
               <%
               barrio_list << link_to (barrio.name, listings_options(
-                'property_barrio_canton_province_country_cached_slug_equals' =>
-#                'property_barrio_canton_province_country_cached_slug_equals' =>
-                  market.country.name,
-                'property_barrio_market_cached_slug_equals' => market.name,
-#                'barrio_market_cached_slug_equals' => market.name,
-                'property_barrio_cached_slug_equals' => barrio.name
-#                'barrio_cached_slug_equals' => barrio.name
+                COUNTRY_EQUALS => market.country.name,
+                MARKET_EQUALS => market.name,
+                BARRIO_EQUALS => barrio.name
               ))
               %>
             <% end %>
@@ -64,22 +57,16 @@
           <div><%= link_to(
             'Properties for rent in ' + market.name,
             listings_options(
-              'listing_type_cached_slug_equals' => 'for rent',
-              'property_barrio_canton_province_country_cached_slug_equals' =>
-#              'barrio_province_country_cached_slug_equals' =>
-                market.country.name,
-              'property_barrio_market_cached_slug_equals' => market.name
-#              'barrio_market_cached_slug_equals' => market.name
+              LISTING_TYPE_EQUALS => 'for rent',
+              COUNTRY_EQUALS => market.country.name,
+              MARKET_EQUALS => market.name
             )
           ) %></div>
           <div><%= link_to(
             'Properties for sale in ' + market.name,
             listings_options(
-              'property_barrio_canton_province_country_cached_slug_equals' =>
-#              'barrio_province_country_cached_slug_equals' =>
-                market.country.name,
-              'property_barrio_market_cached_slug_equals' => market.name
-#              'barrio_market_cached_slug_equals' => market.name
+              COUNTRY_EQUALS => market.country.name,
+              MARKET_EQUALS => market.name
             )
           ) %></div>
         </div>
@@ -100,12 +87,12 @@
     <div class="menu_list">
       <ul id="alternative_listing_filters">
         <li><%= link_to 'Homes under $200,000', listings_options(
-          'categories_cached_slug_equals' => 'Homes',
-          'ask_amount_less_than_or_equal_to' => '200000'
+          CATEGORIES_EQUALS_ANY => 'Homes',
+          ASK_AMOUNT_LESS_THAN_OR_EQUAL_TO => '200000'
         ) %></li>
         
         <li><%= link_to 'Businesses for sale', listings_options(
-          'categories_cached_slug_equals' => 'Businesses'
+          CATEGORIES_EQUALS_ANY => 'Businesses'
         ) %></li>
       </ul>
     </div>

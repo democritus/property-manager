@@ -24,12 +24,12 @@
     <td><%=h agency_logo.position %></td>
     <td><%=h agency_logo.visible %></td>
     <td><%= link_to 'Show',
-      images_agency_logo_path(agency_logo, :format => :png),
+      images_agency_logo_path( agency_logo, :format => :png ),
       :target => :_blank %></td>
     <td><%= link_to 'Edit', edit_polymorphic_path(
-      [:admin, @agency_logoable, agency_logo]) %></td>
+      [:admin, @agency_logoable, agency_logo] ) %></td>
     <td><%= link_to 'Destroy', polymorphic_path(
-      [:admin, @agency_logoable, agency_logo]),
+      [:admin, @agency_logoable, agency_logo] ),
       :confirm => 'Are you sure?',
       :method => :delete %></td>
   </tr>
@@ -39,6 +39,5 @@
 <br />
 
 <%= link_to 'New image', new_polymorphic_path(
-  [:admin, @agency_logoable, :agency_logo]) %> |
-<%= link_to 'Back', polymorphic_path([:admin, @agency_logoable]) %>
-
+  [:admin, @agency_logoable, :agency_logo] ) %> |
+<%= link_to 'Back', polymorphic_path( [:admin, @agency_logoable] ) %>
