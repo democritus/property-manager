@@ -1,6 +1,6 @@
 class Images::PropertyImagesController < Images::ImagesController
 
-  caches_page :show, :thumb, :medium, :fullsize, :original, :listing_glider,
+  caches_fleximage :show, :thumb, :medium, :fullsize, :original, :listing_glider,
     :listing_glider_placeholder, :mini_glider, :mini_glider_placeholder,
     :mini_glider_suggested, :mini_glider_similar, :mini_glider_recent,
     :large_glider, :large_glider_placeholder, :featured

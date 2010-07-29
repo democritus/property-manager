@@ -28,25 +28,36 @@ class SiteSweeper < ActionController::Caching::Sweeper
     self.class::sweep(subdirectory)
   end
   
-  def self.exclude_directories
+  # Exclude files and directories to be skipped when sweeping. For example,
+  # if routes for images generated with Fleximage plugin are namespaced to
+  # "images", then skip this directory so that they don't have to be
+  # regenerated.
+  def self.exclude_paths
     [
       'images'
     ]
   end
   
-  def self.sweep( subdirectory = nil )
+  def self.sweep( subdirectory = nil, exclude_paths_to_ignore = [] )
     cache_dir = ActionController::Base.page_cache_directory
     cache_dir += '/' + subdirectory if subdirectory
     unless cache_dir == RAILS_ROOT + '/public'
       dir = Dir.new(cache_dir)
       dir.each do |filename|
         path = cache_dir + '/' + filename
+        skip_path = false
+        if self.exclude_paths.include?( filename )
+          # Skip path unless it is explicitly listed in exclude_paths_to_ignore
+          # array
+          skip_path = true unless exclude_paths_to_ignore.include?( path )
+        end
+        debugger
         unless filename == '.' || filename == '..'
-          if File.directory?(path)
-            unless self.exclude_directories.include?(filename)
-              #FileUtils.rm_r(Dir.glob(path + '/*')) rescue Errno::ENOENT
-              FileUtils.rm_r(path) rescue Errno::ENOENT
-              RAILS_DEFAULT_LOGGER.info("Cache directory '#{path}' swept.")
+          if File.directory?( path )
+            unless skip_path
+              #FileUtils.rm_r( Dir.glob(path + '/*') ) rescue Errno::ENOENT
+              #FileUtils.rm_r( path ) rescue Errno::ENOENT
+              RAILS_DEFAULT_LOGGER.info( "Cache directory '#{path}' swept." )
             end
           else
             FileUtils.rm(path)

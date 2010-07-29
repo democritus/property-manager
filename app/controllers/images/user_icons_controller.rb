@@ -1,6 +1,6 @@
 class Images::UserIconsController < Images::ImagesController
   
-  caches_page :show, :small
+  caches_fleximage :show, :small
 
   # GET /user_images/1.png
   def show

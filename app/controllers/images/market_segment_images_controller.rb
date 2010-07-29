@@ -1,6 +1,6 @@
 class Images::MarketSegmentImagesController < Images::ImagesController
 
-  caches_page :show, :large_glider, :mini_glider, :thumb
+  caches_fleximage :show, :large_glider, :mini_glider, :thumb
 
   # GET /market_segment_images/1.png
   def show

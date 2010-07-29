@@ -1,6 +1,6 @@
 class Images::AgencyLogosController < Images::ImagesController
   
-  caches_page :show, :thumb
+  caches_fleximage :show, :thumb
   
   def show
     @agency_logo = AgencyLogo.find(params[:id])

@@ -1,0 +1,5 @@
+development:
+  perform_fleximage_caching: true
+
+production:
+  perform_fleximage_caching: true

@@ -1,6 +1,6 @@
 class Images::AgenciesController < Images::ImagesController
   
-  caches_page :default_logo
+  caches_fleximage :default_logo
   
   # GET /agencies/1/default_logo
   def default_logo

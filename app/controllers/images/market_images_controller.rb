@@ -1,6 +1,6 @@
 class Images::MarketImagesController < Images::ImagesController
 
-  caches_page :show, :thumb
+  caches_fleximage :show, :thumb
 
   # GET /market_images/1.jpg
   def show

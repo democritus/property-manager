@@ -1,6 +1,6 @@
 class Images::AgencyImagesController < Images::ImagesController
   
-  caches_page :show, :thumb, :large_glider, :large_glider_placeholder
+  caches_fleximage :show, :thumb, :large_glider, :large_glider_placeholder
 
   # GET /agency_images/1.png
   def show
