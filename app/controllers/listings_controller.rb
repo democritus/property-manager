@@ -4,8 +4,6 @@ class ListingsController < ApplicationController
   
   before_filter :set_search_params
   
-  # GET /listings
-  # GET /listings.xml
   def index
     # Record user's search results for the most recent listings index they
     # have viewed
@@ -27,27 +25,22 @@ class ListingsController < ApplicationController
     unless active_agency.master_agency
       if direction
         @search = active_agency.listings.send(
-          "#{direction}_#{params[:order]}").search(search_params)
+          "#{direction}_#{params[:order]}").search( search_params )
         #@search = Listing.by_agency(active_agency.id).send(
         #  "#{direction}_#{params[:order]}").search(search_params)
       else
-        @search = active_agency.listing.search(search_params)
+        @search = active_agency.listing.search( search_params )
         #@search = Listing.by_agency(active_agency.id).search(search_params)
       end
     else
       if direction
         @search = Listing.regular_index.send(
-          "#{direction}_#{params[:order]}").search(search_params)
+          "#{direction}_#{params[:order]}").search( search_params )
       else
-        @search = Listing.regular_index.search(search_params)
+        @search = Listing.regular_index.search( search_params )
       end
     end
     @listings = @search.paginate :page => params[:page]
-    
-    respond_to do |format|
-      format.html # index.html.erb
-      format.xml  { render :xml => @listings }
-    end
   end
   
 # REMOVED: moved to partial
@@ -85,11 +78,8 @@ class ListingsController < ApplicationController
 #    render :layout => false
 #  end
 
-  # GET /listings/1
-  # GET /listings/1.xml
   def show
     @listing = Listing.find(params[:id])
-
     # User might send information request
     if session[:information_request] # Load data from session after redirect
       @information_request = session[:information_request]
@@ -97,18 +87,12 @@ class ListingsController < ApplicationController
     else
       @information_request = InformationRequest.new
     end
-
-    respond_to do |format|
-      format.html { add_recent_listing(@listing) } # remember listings seen
-      format.xml  { render :xml => @listing }
-    end
-
+    add_recent_listing(@listing) # remember listings seen
   end
   
   # AJAX target for listing image swap for glider images
   def glider_image_swap
     image = PropertyImage.find(params[:image_id])
-        
     render :partial => 'glider_image_swap',
       :layout => false,
       :locals => { :image => image }

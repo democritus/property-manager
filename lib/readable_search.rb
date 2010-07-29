@@ -36,35 +36,25 @@ module ReadableSearch
   
   # Prepare params for use with Searchlogic plugin by removing non-Searchlogic
   # elements, i.e. :controller, :action, :page, :order, :order_dir, etc.
-  def search_params(parameters = nil)
+  def search_params( parameters = nil )
     if parameters.nil?
       parameters = params.dup
     end
-    
     # Remove non-Searchlogic elements
     searchlogic_keys = SEARCHLOGIC_PARAMS_MAP.map { |param| param[:key] }
     parameters.delete_if {
-      |key, value| ! searchlogic_keys.include?(key.to_sym) }
-    
-    
-    # REMOVED: using friendly_id's cached_slug field which already delimits
-    # spaces with '-'
-    # Replace dashes with spaces so that incoming values will match
-    # database values
-    #parameters.each { |k, v| parameters[k] = v.to_s.gsub('-', ' ') }
-    
-    return listings_params(parameters)
+      |key, value| ! searchlogic_keys.include?( key.to_sym ) }
+    return listings_params( parameters )
   end
   
   # Make params more human readable and keyword-rich so that URLs are better
   # for search engines
-  def verbose_params(parameters = nil)
+  def verbose_params( parameters = nil )
     if parameters.nil?
       parameters = params.dup
     end
     LISTING_PARAMS_MAP.each do |param|
-      string_key = param[:key].to_s
-      value = parameters[string_key]
+      value = parameters[param[:key]]
       if value
         unless value == param[:default_value]
           case param[:key]
@@ -78,7 +68,7 @@ module ReadableSearch
         end
       else
         # All possible listings
-        parameters.merge!(param[:key].to_s => param[:default_value])
+        parameters.merge!( param[:key] => param[:default_value] )
       end
     end
     return parameters
@@ -135,7 +125,7 @@ module ReadableSearch
       when FEATURES_EQUALS_ANY
         features = value
       else
-        non_readable_params.merge!(key => value.to_s)
+        non_readable_params.merge!( key => value.to_s )
       end
     end
     if type == 'text' # (display info about search results)

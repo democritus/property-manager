@@ -36,9 +36,9 @@ module ApplicationHelper
       parameters.merge!( COUNTRY_EQUALS => @active_agency.country.cached_slug )
     end
     parameters.merge!( LISTING_TYPE_EQUALS => 'for-sale' )
-    parameters.merge!(params_to_overwrite)
+    parameters.merge!( params_to_overwrite )
     
-    return verbose_params(parameters)
+    return verbose_params( parameters )
   end
     
   def spinner( id = 'spinner', class_attribute = ' class=""' )
