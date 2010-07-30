@@ -42,7 +42,7 @@ class SiteSweeper < ActionController::Caching::Sweeper
     cache_dir = ActionController::Base.page_cache_directory
     cache_dir += '/' + subdirectory if subdirectory
     unless cache_dir == RAILS_ROOT + '/public'
-      dir = Dir.new(cache_dir)
+      dir = Dir.new( cache_dir )
       dir.each do |filename|
         path = cache_dir + '/' + filename
         skip_path = false

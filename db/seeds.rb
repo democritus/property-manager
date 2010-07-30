@@ -705,6 +705,36 @@ i = 0
   i += 1
 end
 
+MarketSegment.delete_all
+i = 0
+[
+  { :name => 'residential' },
+  { :name => 'beach homes' },
+  { :name => 'vacation homes' },
+  { :name => 'commercial' },
+  { :name => 'businesses' },
+  { :name => 'land for sale' }
+].each do |record|
+  record.merge!( :position => i + 1 ) unless record[:position]
+  if market_segment = MarketSegment.create!( record )
+    market_segment_images = []
+    image_dir = RAILS_ROOT + '/seed_images/market_segment_images'
+    dir = Dir.new( image_dir )
+    j = 0
+    dir.each do |filename|
+      market_segment_images << {
+        :imageable_id => market_segment.id,
+        :imageable_type => 'MarketSegment',
+        :position => j,
+        :image_file => File.new( image_dir + '/' + filename, 'r' )
+      }
+      j++
+    end
+    MarketSegmentImage.create!( market_segment_images )
+  end
+  i += 1
+end
+
 Agency.delete_all
 i = 0
 [
@@ -712,17 +742,19 @@ i = 0
     :name => 'Default Agency',
     :short_name => 'Default',
     :master_agency => true,
-    :iso2 => 'CR'
+    :iso2 => 'CR',
+    :market_segment_name => 'residential'
   }
 ].each do |record|
-  country = Country.find_by_iso2(record[:iso2],
-    :select => :id
-  )
+  country = Country.find_by_iso2( record[:iso2], :select => :id )
   next unless country
-  record.merge!(:country_id => country.id)
-  record.merge!(:position => i + 1) unless record[:position]
-  record.delete(:iso2)
-  Agency.create!(record)
+  market_segment = Country.find_by_name( record[:market_segment_name],
+    :select => :id )
+  record.merge!( :country_id => country.id )
+  record.merge!( :market_segment_id => market_segment.id ) if market_segment
+  record.merge!( :position => i + 1 ) unless record[:position]
+  record.delete( :iso2 )
+  Agency.create!( record )
   i += 1
 end
 
@@ -899,21 +931,6 @@ i = 0
       )
     end
   end
-  i += 1
-end
-
-MarketSegment.delete_all
-i = 0
-[
-  { :name => 'residential' },
-  { :name => 'beach homes' },
-  { :name => 'vacation homes' },
-  { :name => 'commercial' },
-  { :name => 'businesses' },
-  { :name => 'land for sale' }
-].each do |record|
-  record.merge!(:position => i + 1) unless record[:position]
-  MarketSegment.create!(record)
   i += 1
 end
 

@@ -60,10 +60,10 @@ module ReadableSearch
           case param[:key]
             # Slice off "under " and " dollars"
             when ASK_AMOUNT_LESS_THAN_OR_EQUAL_TO
-              parameters[string_key] = 'under ' + value + ' dollars'
+              parameters[param[:key]] = 'under ' + value + ' dollars'
             # Slice off "over " and " dollars"
             when ASK_AMOUNT_GREATER_THAN_OR_EQUAL_TO
-              parameters[string_key] = 'over ' + value + ' dollars'
+              parameters[param[:key]] = 'over ' + value + ' dollars'
           end
         end
       else

@@ -1,0 +1,18 @@
+-When migrating legacy data, accented characters cause strings to be cut off. FIX!
+-Save default market segment images in separate directory and add logic to
+  seed data to create these records. Need to find more/better stock images
+-Smooth out featured/similar/etc. glider shiznit
+  -number of images
+  -deal with missing images
+  -prevent manipulation of glider while gliding
+  -better watermark
+  -overlay text? price, name, etc.
+  -overlay image, such as a title as a graphic instead of text?
+-Pretty up filters/sorts
+-Clean up crazy SQL selects
+  -Why are some so long?
+  -Move as much as possible to model, i.e. named routes
+  -Eager load appropriately
+-Better main navigation links
+-Better right margin links, pics, ads, etc.
+-Keep contact buttons?

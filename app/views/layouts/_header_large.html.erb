@@ -33,7 +33,7 @@
   <div id="logo_area">
     <div id="site_logo">
       <% if @active_agency.agency_logos[0] %>
-        <%= active_agency_logo(@active_agency.agency_logos[0]) %>
+        <%= active_agency_logo( @active_agency.agency_logos[0] ) %>
       <% else %>
         <%= default_logo %>
       <% end %>
@@ -204,6 +204,6 @@
       </div>
     </div>
   </div>
-  <%= render :partial => 'listings/featured_glider' %>
+  <%= render :partial => 'listings/large_glider' %>
 </div>
 

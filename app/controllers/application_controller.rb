@@ -3,13 +3,6 @@
 
 class ApplicationController < ActionController::Base
   
-  # Module for translating search parameters into readable string and back again
-  include ReadableSearch
-  # Module for dealing with nested routes
-  include ContextResources
-  # Module with various host-related methods
-  include HostHelp
-  
   #helper :all # include all helpers, all the time
   helper :glider, :labeled_form, :layout, :rounded_box
   
@@ -25,62 +18,20 @@ class ApplicationController < ActionController::Base
   before_filter :set_page_caching_status, :set_active_agency,
     :set_agency_content, :redirect_if_current_agency_not_found, :set_locale,
     :glide_image_pairs
+      
+  # Module for translating search parameters into readable string and back again
+  include ReadableSearch
   
-  ##
-  # Extend page caching methods to accommodate domain-specific caching and
-  # also separate image caching with Fleximage plugin from regular page
-  # caching since caching images is so resource intensive that turning
-  # it off even on the development server is rarely desired
-  def cache_page_path( options = nil )
-    path = "/#{request.host}"
-    path << case options
-      when Hash
-        url_for(
-          options.merge(
-            :only_path => true,
-            :skip_relative_url_root => true,
-            :format => params[:format]
-          )
-        )
-      when String
-        options
-      else
-        request.path
-    end
-  end
+  # Module for dealing with nested routes
+  include ContextResources
   
-  ##
-  # "cache_page" alias method which effectivly forces the domain name to be
-  # pre-pended to the page cache path. Note that the "caches_page" method
-  # called on actions within a controller is affected by this as well
-  def cache_page_with_domain( content = nil, options = nil )
-    cache_page_without_domain( content, cache_page_path(options) )
-  end
-  alias_method_chain :cache_page, :domain
+  # Module with various host-related methods
+  include HostHelp
   
-  # Create caching methods that do exactly the same thing as cache_page and
-  # caches_page, except they check the custom configuration setting
-  # "perform_fleximage_caching" instead of the built-in Rails "perform_caching"
-  def self.cache_fleximage( content, path )
-    benchmark "Cached page: #{page_cache_file(path)}" do
-      FileUtils.makedirs(File.dirname(page_cache_path(path)))
-      File.open(page_cache_path(path), "wb+") { |f| f.write(content) }
-    end
-  end
-  
-  def self.caches_fleximage( *actions )
-    return unless APP_CONFIG['perform_fleximage_caching']
-    options = actions.extract_options!
-    after_filter({:only => actions}.merge(options)) { |c| c.cache_fleximage }
-  end
-  
-  def cache_fleximage( content = nil, options = nil )
-    return unless APP_CONFIG['perform_fleximage_caching']
-    self.class.cache_fleximage(
-      content || response.body, cache_page_path(options)
-    )
-  end
-    
+  # Module that changes behavior of page caching and adds methods to allow
+  # Fleximage caching to be turned on and off independently of page caching
+  include CustomPageCaching
+
 
   private
   

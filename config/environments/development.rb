@@ -14,7 +14,7 @@ config.action_view.debug_rjs                         = true
 #config.action_controller.perform_caching             = false
 
 # Enable caching (otherwise Fleximage renders will be super slow)
-config.action_controller.perform_caching             = false
+config.action_controller.perform_caching             = true
 
 # Mailer settings
 config.action_mailer.raise_delivery_errors = false
