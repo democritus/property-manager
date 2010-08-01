@@ -226,20 +226,36 @@ module ListingsHelper
   # Methods that make use of Searchlogic plugin
   # # # 
   def listing_type_toggle
-    if @search_params[LISTING_TYPE_EQUALS]
-      current_type = @search_params[LISTING_TYPE_EQUALS]
+    types = [
+      {
+        :label => 'for sale',
+        :cached_slug => 'for-sale'
+      },
+      {
+        :label => 'rentals',
+        :cached_slug => 'for-rent'
+      }
+    ]
+    if @search_params[ LISTING_TYPE_EQUALS ]
+      type = @search_params[ LISTING_TYPE_EQUALS ]
     else
-      current_type = 'for sale'
+      type = 'for-sale'
     end
-    if current_type == 'for sale'
-      current_type + ' <span>|</span> ' +
-      link_to('rentals', listings_options(
-        LISTING_TYPE_EQUALS => 'for-rent'))
+    if type == 'for-rent'
+      active_type_index = 1
     else
-      link_to('for sale', listings_options(
-        LISTING_TYPE_EQUALS => 'for-sale')) + ' <span>|</span> ' +
-          current_type
+      active_type_index = 0
     end
+    parts = []
+    (0..1).each do |index|
+      if index == active_type_index
+        parts[index] = types[index][:label]
+      else
+        parts[index] = link_to(types[index][:label],
+          listings_options(LISTING_TYPE_EQUALS => types[index][:cached_slug]))
+      end
+    end
+    parts.join(' <span>|</span> ')
   end
   
   def listing_type_filter
@@ -286,12 +302,17 @@ module ListingsHelper
     else
       # TODO: select subset of records associated with current listings
       if @search_params[LISTING_TYPE_EQUALS]
-        categories = Category.find(:all,
-          :joins => :listing_types,
-          :conditions => [
+        conditions = nil
+        if @search_params[LISTING_TYPE_EQUALS] == 'for-sale' ||
+          @search_params[LISTING_TYPE_EQUALS] == 'for-rent'
+          conditions = [
             'listing_types.name = ?',
             @search_params[LISTING_TYPE_EQUALS]
           ]
+        end
+        categories = Category.find(:all,
+          :joins => :listing_types,
+          :conditions => conditions
         )
       end
       unless categories
@@ -439,6 +460,124 @@ module ListingsHelper
     end
   end
   
+  def place_filter( type )
+    parents = []
+    places = [ :country, :zone, :province, :market, :canton, :barrio ]
+    case type
+    when :country
+    when :zone
+      parents = [ :country ]
+    when :province
+      parents = [ :country ]
+    when :market
+      parents = [ :country ]
+    when :canton
+      parents = [ :province, :market ]
+    when :barrio
+      parents = [ :market, :canton ]
+    end
+    place_equals = "#{type.to_s.upcase}_EQUALS".constantize
+    html = ''
+    if @search_params[place_equals]
+      nil_params = {}
+      in_scope = false
+      places.each do |place|
+        in_scope = true if place == type
+        if in_scope
+          nil_params.merge!( "#{place.to_s.upcase}_EQUALS".constantize => nil )
+        end
+      end
+      html = '<li>' +
+        link_to("All #{type.to_s.pluralize}", listings_options(
+          @search_params.merge( nil_params )
+        )) + '</li>'
+    else
+      required_search_params = []
+      parents.each do |parent|
+        required_search_params << [
+          parent,
+          "#{parent.to_s.upcase}_EQUALS".constantize
+        ]
+      end
+      filtered_parents = []
+      required_search_params.each do |param|
+        if @search_params.include?(param[1])
+          filtered_parents << param[0]
+        end
+      end
+      return if filtered_parents.empty?
+      case type
+      when :country
+        conditions = { :active => true }
+      when :zone, :province, :market
+        joins = :country
+        conditions = [
+          'countries.cached_slug = :country',
+          { :country => params[COUNTRY_EQUALS] }
+        ]
+      when :canton
+        joins.merge!( :country => :province )
+        conditions = [
+          'countries.cached_slug = :country' +
+            ' AND provinces.cached_slug = :province',
+          {
+            :country => params[COUNTRY_EQUALS],
+            :province => params[PROVINCE_EQUALS]
+          }
+        ]
+      when :barrio
+        joins.merge!( :country => { :province => :canton } )
+        conditions = [
+          'countries.cached_slug = :country' +
+            ' AND provinces.cached_slug = :province' +
+            ' AND cantons.cached_slug = :canton',
+          {
+            :country => params[COUNTRY_EQUALS],
+            :province => params[PROVINCE_EQUALS],
+            :canton => params[CANTON_EQUALS]
+          }
+        ]
+      end
+      if type == :market && ! @active_agency.master_agency?
+        places = @active_agency.markets
+      else
+        unless @active_agency.master_agency?
+          if type == :canton || type == :barrio
+            market_ids =
+              @active_agency.markets.map { |market| market.id }.join(',')
+            conditions << [
+              'markets.id IN :markets',
+              { :markets => market_ids }
+            ]
+          end
+        end
+        places = "#{type.to_s.camelize}".constantize.find( :all,
+          :joins => joins,
+          :conditions => conditions
+        )
+      end
+      return if places.empty?
+      places.each do |place|
+        place_params = { place_equals => place.cached_slug }
+        parents.each do |parent|
+          place_params.merge!(
+            "#{parent.to_s.upcase}_EQUALS".constantize =>
+              place.send("#{parent.to_s}").cached_slug
+          )
+        end
+        html += '<li>' +
+          link_to(place.name.capitalize, listings_options(
+            @search_params.merge( place_params )
+          )) + '</li>'
+      end
+    end
+    if html
+      html = "<div class=\"menu_list\"><h3>Filter by #{type}</h3><ul>" + html +
+        '</ul></div>'
+    end
+    return html
+  end
+  
   def market_filter
     if @search_params[MARKET_EQUALS]
       html = '<li>' +
@@ -448,8 +587,7 @@ module ListingsHelper
             BARRIO_EQUALS => nil
           )
         )) + '</li>'
-    elsif @search_params[
-      COUNTRY_EQUALS]
+    elsif @search_params[COUNTRY_EQUALS]
       markets = []
       unless @active_agency.master_agency
         if @active_agency.markets
@@ -500,8 +638,7 @@ module ListingsHelper
             BARRIO_EQUALS => nil
           )
         )) + '</li>'
-    elsif @search_params[
-      COUNTRY_EQUALS]
+    elsif @search_params[COUNTRY_EQUALS]
       cantons = []
       unless @active_agency.master_agency
         if @active_agency.cantons
@@ -553,6 +690,7 @@ module ListingsHelper
   end
   
   def barrio_filter
+    return unless @search_params[MARKET_EQUALS] || @search_params[CANTON_EQUALS]
     if @search_params[BARRIO_EQUALS]
       html = '<li>' +
         link_to('All barrios', listings_options(
@@ -620,12 +758,12 @@ module ListingsHelper
     else
       if @search_params[LISTING_TYPE_EQUALS]
         listing_type = @search_params[LISTING_TYPE_EQUALS]
-        if listing_type == 'for sale' || listing_type == 'for rent'
-          listing_types = [ listing_type ]
+        if listing_type == 'for-sale' || listing_type == 'for-rent'
+          listing_types = [ listing_type.gsub(/-/, ' ') ]
         end
       end
       unless listing_types
-        listing_types = ['for sale', 'for rent']
+        listing_types = [ 'for sale', 'for rent' ]
       end
       html = ''
       listing_types.each do |listing_type|

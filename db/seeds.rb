@@ -805,15 +805,16 @@ i = 0
     end
     record.delete(:type)
   end
-  category = Category.create!(record)
-  types.each do |type|
-    listing_type = ListingType.find_by_name(type)
-    if listing_type
-      CategoryAssignment.create!(
-        :category_assignable_type => 'ListingType',
-        :category_assignable_id => listing_type.id,
-        :category_id => category.id
-      )
+  if category = Category.create!(record)
+    types.each do |type|
+      listing_type = ListingType.find_by_name(type)
+      if listing_type
+        CategoryAssignment.create!(
+          :category_assignable_type => 'ListingType',
+          :category_assignable_id => listing_type.id,
+          :category_id => category.id
+        )
+      end
     end
   end
   i += 1
@@ -873,15 +874,16 @@ i = 0
     end
     record.delete(:type)
   end
-  feature = Feature.create!(record)
-  types.each do |type|
-    listing_type = ListingType.find_by_name(type)
-    if listing_type
-      FeatureAssignment.create!(
-        :feature_assignable_type => 'ListingType',
-        :feature_assignable_id => listing_type.id,
-        :feature_id => feature.id
-      )
+  if feature = Feature.create!(record)
+    types.each do |type|
+      listing_type = ListingType.find_by_name(type)
+      if listing_type
+        FeatureAssignment.create!(
+          :feature_assignable_type => 'ListingType',
+          :feature_assignable_id => listing_type.id,
+          :feature_id => feature.id
+        )
+      end
     end
   end
   i += 1
@@ -920,15 +922,16 @@ i = 0
     end
     record.delete(:type)
   end
-  style = Style.create!(record)
-  types.each do |type|
-    listing_type = ListingType.find_by_name(type)
-    if listing_type
-      StyleAssignment.create!(
-        :style_assignable_type => 'ListingType',
-        :style_assignable_id => listing_type.id,
-        :style_id => style.id
-      )
+  if style = Style.create!(record)
+    types.each do |type|
+      listing_type = ListingType.find_by_name(type)
+      if listing_type
+        StyleAssignment.create!(
+          :style_assignable_type => 'ListingType',
+          :style_assignable_id => listing_type.id,
+          :style_id => style.id
+        )
+      end
     end
   end
   i += 1
