@@ -18,19 +18,18 @@ module ReadableSearch
           parameters.delete(param[:key])
         else
           case param[:key]
-            # Slice off "under " and " dollars"
-            when ASK_AMOUNT_LESS_THAN_OR_EQUAL_TO
-              parameters[param[:key]] = parameters[
-                param[:key]].slice(6..-1).slice(0..-9)
-            # Slice off "over " and " dollars"
-            when ASK_AMOUNT_GREATER_THAN_OR_EQUAL_TO
-              parameters[param[:key]] = parameters[
-                param[:key]].slice(5..-1).slice(0..-9)
+          # Slice off "under " and " dollars"
+          when ASK_AMOUNT_LESS_THAN_OR_EQUAL_TO
+            parameters[param[:key]] = parameters[
+              param[:key]].slice(6..-1).slice(0..-9)
+          # Slice off "over " and " dollars"
+          when ASK_AMOUNT_GREATER_THAN_OR_EQUAL_TO
+            parameters[param[:key]] = parameters[
+              param[:key]].slice(5..-1).slice(0..-9)
           end
         end
       end
     end
-    
     return parameters.merge( params[:q] || {} )
   end
   
@@ -154,7 +153,7 @@ module ReadableSearch
     readable_string = country + delimiter + category + delimiter + listing_type
     unless country == 'all'
       place_separator = 'in'
-      place_delemiter = delimiter
+      place_delimiter = delimiter
       if barrio
         readable_string += delimiter + 'in' + spacer + barrio
         place_separator = ','

@@ -472,7 +472,7 @@ module ListingsHelper
     when :market
       parents = [ :country ]
     when :canton
-      parents = [ :province, :market ]
+      parents = [ :zone, :province ]
     when :barrio
       parents = [ :market, :canton ]
     end
@@ -484,12 +484,18 @@ module ListingsHelper
       places.each do |place|
         in_scope = true if place == type
         if in_scope
-          nil_params.merge!( "#{place.to_s.upcase}_EQUALS".constantize => nil )
+          key = "#{place.to_s.upcase}_EQUALS".constantize
+          nil_params.merge!( key => nil )
         end
       end
+      # TODO: figure out why passing keys as symbols to listings_options screws
+      # up the URL (nil values aren't being represented as default values and
+      # therefore missing search values cause no route to be found)
+      current_params = {}
+      @search_params.each_pair { |key, value| current_params[key.to_s] = value }
       html = '<li>' +
         link_to("All #{type.to_s.pluralize}", listings_options(
-          @search_params.merge( nil_params )
+          current_params.merge( nil_params )
         )) + '</li>'
     else
       required_search_params = []
@@ -505,7 +511,7 @@ module ListingsHelper
           filtered_parents << param[0]
         end
       end
-      return if filtered_parents.empty?
+      return if filtered_parents.empty? && type != :country
       case type
       when :country
         conditions = { :active => true }
@@ -516,7 +522,7 @@ module ListingsHelper
           { :country => params[COUNTRY_EQUALS] }
         ]
       when :canton
-        joins.merge!( :country => :province )
+        joins = { :province => :country }
         conditions = [
           'countries.cached_slug = :country' +
             ' AND provinces.cached_slug = :province',
@@ -526,7 +532,7 @@ module ListingsHelper
           }
         ]
       when :barrio
-        joins.merge!( :country => { :province => :canton } )
+        joins = { :canton => { :province => :country } }
         conditions = [
           'countries.cached_slug = :country' +
             ' AND provinces.cached_slug = :province' +
@@ -560,10 +566,12 @@ module ListingsHelper
       places.each do |place|
         place_params = { place_equals => place.cached_slug }
         parents.each do |parent|
-          place_params.merge!(
-            "#{parent.to_s.upcase}_EQUALS".constantize =>
-              place.send("#{parent.to_s}").cached_slug
-          )
+          if place.send("#{parent.to_s}")
+            place_params.merge!(
+              "#{parent.to_s.upcase}_EQUALS".constantize =>
+                place.send("#{parent.to_s}").cached_slug
+            )
+          end
         end
         html += '<li>' +
           link_to(place.name.capitalize, listings_options(

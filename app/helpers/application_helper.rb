@@ -37,7 +37,6 @@ module ApplicationHelper
     end
     parameters.merge!( LISTING_TYPE_EQUALS => 'for-sale' )
     parameters.merge!( params_to_overwrite )
-    
     return verbose_params( parameters )
   end
     
