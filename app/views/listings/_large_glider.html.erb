@@ -1,9 +1,11 @@
 <%
 if @active_agency.master_agency
-  large_glider = featured_listings = Listing.featured
+  featured_listings = Listing.featured
 else
-  large_glider = featured_listings = @active_agency.listings.featured
+  featured_listings = @active_agency.listings.featured
 end
+remove_listings_without_images!(featured_listings)
+large_glider = featured_listings
 # Prepend agency to collection of listings so that the first group of
 # images to appear in the glider are agency images
 if @active_agency.agency_images

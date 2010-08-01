@@ -769,6 +769,7 @@ i = 0
   i += 1
 end
 
+# TODO: make sure records are associated with listing types correctly
 Category.delete_all
 i = 0
 [
@@ -796,15 +797,13 @@ i = 0
 ].each do |record|
   record.merge!(:position => i + 1) unless record[:position]
   types = []
-  record.each_pair do |key, value|
-    case :type
-    when :sale, :both
-      types << 'for sale'
-    when :rent, :both
-      types << 'for rent'
-    end
-    record.delete(:type)
+  case record[:type]
+  when :sale, :both
+    types << 'for sale'
+  when :rent, :both
+    types << 'for rent'
   end
+  record.delete(:type)
   if category = Category.create!(record)
     types.each do |type|
       listing_type = ListingType.find_by_name(type)
@@ -820,6 +819,7 @@ i = 0
   i += 1
 end
 
+# TODO: make sure records are associated with listing types correctly
 Feature.delete_all
 i = 0
 [
@@ -866,14 +866,13 @@ i = 0
   record.merge!(:position => i + 1) unless record[:position]
   types = []
   record.each_pair do |key, value|
-    case :type
-    when :sale, :both
-      types << 'for sale'
-    when :rent, :both
-      types << 'for rent'
-    end
-    record.delete(:type)
+  case record[:type]
+  when :sale, :both
+    types << 'for sale'
+  when :rent, :both
+    types << 'for rent'
   end
+  record.delete(:type)
   if feature = Feature.create!(record)
     types.each do |type|
       listing_type = ListingType.find_by_name(type)
@@ -889,39 +888,38 @@ i = 0
   i += 1
 end
 
+# TODO: make sure records are associated with listing types correctly
 Style.delete_all
 i = 0
 [
-  { :name => 'A-Frame' },
-  { :name => 'Bungalow' },
-  { :name => 'Chalet' },
-  { :name => 'Colonial' },
-  { :name => 'Cottage' },
-  { :name => 'Duplex' },
-  { :name => 'Farmhouse' },
-  { :name => 'Georgian' },
-  { :name => 'Log Cabin' },
-  { :name => 'Mobile' },
-  { :name => 'Modern' },
-  { :name => 'Queen Anne' },
-  { :name => 'Quinta' },
-  { :name => 'Ranch' },
-  { :name => 'Split-level' },
-  { :name => 'Studio' },
-  { :name => 'Townhouse' },
-  { :name => 'Victorian' }
+  { :name => 'A-Frame', :type => :both },
+  { :name => 'Bungalow', :type => :both },
+  { :name => 'Chalet', :type => :both },
+  { :name => 'Colonial', :type => :both },
+  { :name => 'Cottage', :type => :both },
+  { :name => 'Duplex', :type => :both },
+  { :name => 'Farmhouse', :type => :both },
+  { :name => 'Georgian', :type => :both },
+  { :name => 'Log Cabin', :type => :both },
+  { :name => 'Mobile', :type => :both },
+  { :name => 'Modern', :type => :both },
+  { :name => 'Queen Anne', :type => :both },
+  { :name => 'Quinta', :type => :both },
+  { :name => 'Ranch', :type => :both },
+  { :name => 'Split-level', :type => :both },
+  { :name => 'Studio', :type => :both },
+  { :name => 'Townhouse', :type => :both },
+  { :name => 'Victorian', :type => :both }
 ].each do |record|
   record.merge!(:position => i + 1) unless record[:position]
   types = []
-  record.each_pair do |key, value|
-    case :type
-    when :sale, :both
-      types << 'for sale'
-    when :rent, :both
-      types << 'for rent'
-    end
-    record.delete(:type)
+  case record[:type]
+  when :sale, :both
+    types << 'for sale'
+  when :rent, :both
+    types << 'for rent'
   end
+  record.delete(:type)
   if style = Style.create!(record)
     types.each do |type|
       listing_type = ListingType.find_by_name(type)

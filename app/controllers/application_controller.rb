@@ -194,20 +194,6 @@ class ApplicationController < ActionController::Base
   def expire_image(image)
     expire_page polymorphic_path(image, :format => :jpg)
   end
-  
-  # Merge Property Images with Listing Images
-  def merge_images(listing)
-    listing.images = listing.property_images.dup
-    unless listing.property.blank?
-      unless listing.property.property_images.blank?
-        unless listing.images.blank?
-          listing.images += listing.property.property_images
-        else
-          listing.images = listing.property.property_images
-        end
-      end
-    end
-  end
 
   # Get images for glide utility
   def glide_image_pairs
@@ -215,7 +201,6 @@ class ApplicationController < ActionController::Base
     listings = Listing.find(:all)
     pair_offset = 0
     listings.each do |listing|
-      merge_images(listing)
       if listing.images.length > 1
         pair = []
         listing.images.each_with_index do |image, j|

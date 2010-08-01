@@ -127,7 +127,6 @@ module GliderHelper
           link_path = object # default linking to object
           parent_model = object.class.name
           if parent_model == 'Listing'
-            merge_images!(object)
             images = object.images
             if options['type'] == 'large'
               item_class = ' large_listing'

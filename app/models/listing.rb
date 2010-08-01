@@ -9,9 +9,6 @@ class Listing < ActiveRecord::Base
   # Pseudo fields for data stored in associated models
   include AssignablePseudoFields
   
-  # Pseudo relationship combining Property and Listing images
-  attr_accessor :images
-  
   # Scopes  
 #  default_scope :include => {
 #    :property => { :agency => { :broker => { :user => :user_icons } } } }
@@ -19,7 +16,11 @@ class Listing < ActiveRecord::Base
     :include => {
       :property => { :agency => { :broker => { :user => :user_icons } } } }
   named_scope :featured,
-    :include => [ :property_images, :property, :listing_type ],
+    :include => [
+      :property_images,
+      { :property => :property_images },
+      :listing_type
+    ],
     :conditions => "listing_types.name = 'for sale'",
     :order => 'listings.publish_date DESC',
     :limit => 10
@@ -116,8 +117,24 @@ class Listing < ActiveRecord::Base
   # Callbacks
   # TODO: need to perform this after saving record so that test data gets
   # copied over
-  before_validation :copy_name_from_property, :copy_associations_from_property
-    
+  before_validation :clone_from_property
+  
+  # Pseudo association combining property's images with listing images
+  def images
+    images = []
+    if self.property_images
+      images += self.property.property_images
+    end
+    if self.property.property_images
+      images += self.property.property_images
+    end
+    images
+  end
+  
+  def clone_from_property
+    copy_name_from_property
+    copy_associations_from_property
+  end
   
   private
   
@@ -135,6 +152,7 @@ class Listing < ActiveRecord::Base
     end
   end
   
+  # TODO: figure out why this isn't working when performing legacy migration
   # Copy associations from property if not specified for this listing
   def copy_associations_from_property
     unless self.property_id.blank?

@@ -39,6 +39,16 @@ module ApplicationHelper
     parameters.merge!( params_to_overwrite )
     return verbose_params( parameters )
   end
+  
+  def remove_listings_without_images!( listings )
+    listings.each_index do |i|
+      if listings[i].images
+        listings.delete_at(i) if listings[i].images.empty?
+      else
+        listings.delete_at(i)
+      end
+    end
+  end
     
   def spinner( id = 'spinner', class_attribute = ' class=""' )
     '<div' + class_attribute + '>' +
@@ -47,21 +57,6 @@ module ApplicationHelper
         :style => "display: none"
       ) +
     '</div>'
-  end
-  
-  # Merge Property Images with Listing Images
-  def merge_images!(listing = nil)
-    listing = @listing unless listing
-    listing.images = listing.property_images.dup
-    if listing.property
-      if listing.property.property_images
-        if listing.images
-          listing.images += listing.property.property_images
-        else
-          listing.images = listing.property.property_images
-        end
-      end
-    end
   end
 
   # TODO: figure out how to integrate select with text field

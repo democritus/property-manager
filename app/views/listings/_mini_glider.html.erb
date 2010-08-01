@@ -43,7 +43,8 @@ if session[:agencies]
 end
 if @search
   featured_listings = Listing.featured
-  if featured_listings.length > 1 # At least two images for aesthetics
+  remove_listings_without_images!(featured_listings)
+  if featured_listings.count > 1
     mini_glider << 'Featured listings'
     mini_glider += featured_listings
   end

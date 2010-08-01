@@ -1,7 +1,5 @@
 <div class="listing_container clearfix">
   <div class="content clearfix">
-    <% # Combine images from Property and Lisitng; merges into @images variable %>
-    <% merge_images!(listing) %>
       <div class="thumbnail">
         <% unless listing.images.blank? %>
           <%= listing_thumbnail(listing.images[0], listing) %>

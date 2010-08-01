@@ -238,6 +238,11 @@ class ListingsController < ApplicationController
   
   # Combine readable constraints and searchlogic constraints
   def set_search_params
-    @search_params = search_params
+    # TODO: figure out how to do this without having to change params to symbols
+    symbolic_params = {}
+    search_params.each_pair do |key, value|
+      symbolic_params.merge!(key.to_sym => value)
+    end
+    @search_params = symbolic_params
   end
 end
