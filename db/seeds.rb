@@ -773,27 +773,44 @@ end
 Category.delete_all
 i = 0
 [
-  { :name => 'Condominiums', :user_defined => false, :type => :both },
-  { :name => 'Commercial', :user_defined => false, :type => :both },
-  { :name => 'Apartments', :user_defined => false, :type => :both },
-  { :name => 'Beachfront', :user_defined => false, :type => :sale },
-  { :name => 'Oceanview', :user_defined => false, :type => :sale },
-  { :name => 'Fine Homes & Estates', :user_defined => false, :type => :both },
+  { :name => 'Condominiums', :user_defined => false, :type => :both,
+    :sale_highlighted => true, :rent_highlighted => false },
+  { :name => 'Commercial', :user_defined => false, :type => :both,
+    :sale_highlighted => false, :rent_highlighted => false },
+  { :name => 'Apartments', :user_defined => false, :type => :both,
+    :sale_highlighted => false, :rent_highlighted => true },
+  { :name => 'Beachfront', :user_defined => false, :type => :sale,
+    :sale_highlighted => true, :rent_highlighted => false },
+  { :name => 'Oceanview', :user_defined => false, :type => :sale,
+    :sale_highlighted => true, :rent_highlighted => false },
+  { :name => 'Fine Homes & Estates', :user_defined => false, :type => :both,
+    :sale_highlighted => false, :rent_highlighted => false },
   
-  { :name => 'Vacation Rentals', :user_defined => false, :type => :rent },
+  { :name => 'Vacation Rentals', :user_defined => false, :type => :rent,
+    :sale_highlighted => false, :rent_highlighted => true },
   
-  { :name => 'Homes', :user_defined => false, :type => :sale },
-  { :name => 'Residential Lots', :user_defined => false, :type => :sale },
-  { :name => 'Land', :user_defined => false, :type => :sale },
-  { :name => 'Business Opportunities', :user_defined => false, :type => :sale },
-  { :name => 'Hotels', :user_defined => false, :type => :sale },
-  { :name => 'Bed & Breakfasts', :user_defined => false, :type => :sale },
-  { :name => 'Restaurants & Bars', :user_defined => false, :type => :sale },
-  { :name => 'Pre-construction', :user_defined => false, :type => :sale },
-  { :name => 'Farms & Ranches', :user_defined => false, :type => :sale },
+  { :name => 'Homes', :user_defined => false, :type => :sale,
+    :sale_highlighted => true, :rent_highlighted => true },
+  { :name => 'Residential Lots', :user_defined => false, :type => :sale,
+    :sale_highlighted => true, :rent_highlighted => false },
+  { :name => 'Land', :user_defined => false, :type => :sale,
+    :sale_highlighted => true, :rent_highlighted => false },
+  { :name => 'Business Opportunities', :user_defined => false, :type => :sale,
+    :sale_highlighted => false, :rent_highlighted => false },
+  { :name => 'Hotels', :user_defined => false, :type => :sale,
+    :sale_highlighted => false, :rent_highlighted => false },
+  { :name => 'Bed & Breakfasts', :user_defined => false, :type => :sale,
+    :sale_highlighted => false, :rent_highlighted => false },
+  { :name => 'Restaurants & Bars', :user_defined => false, :type => :sale,
+    :sale_highlighted => false, :rent_highlighted => false },
+  { :name => 'Pre-construction', :user_defined => false, :type => :sale,
+    :sale_highlighted => false, :rent_highlighted => false },
+  { :name => 'Farms & Ranches', :user_defined => false, :type => :sale,
+    :sale_highlighted => true, :rent_highlighted => false },
   { :name => 'Residential Development', :user_defined => false,
-    :type => :sale },
-  { :name => 'Commercial Development', :user_defined => false, :type => :sale }
+    :type => :sale, :sale_highlighted => false, :rent_highlighted => false },
+  { :name => 'Commercial Development', :user_defined => false, :type => :sale,
+    :sale_highlighted => false, :rent_highlighted => false }
 ].each do |record|
   record.merge!(:position => i + 1) unless record[:position]
   types = []
@@ -804,15 +821,26 @@ i = 0
     types << 'for rent'
   end
   record.delete(:type)
+  sale_highlighted = record[:sale_highlighted]
+  rent_highlighted = record[:rent_highlighted]
+  record.delete(:sale_highlighted)
+  record.delete(:rent_highlighted)
   if category = Category.create!(record)
     types.each do |type|
       listing_type = ListingType.find_by_name(type)
       if listing_type
-        CategoryAssignment.create!(
+        attributes = {
           :category_assignable_type => 'ListingType',
           :category_assignable_id => listing_type.id,
           :category_id => category.id
-        )
+        }
+        case listing_type
+        when :sale
+          attributes.merge!( :highlighted => true ) if sale_highlighted
+        when :rent
+          attributes.merge!( :highlighted => true ) if rent_highlighted
+        end
+        CategoryAssignment.create!( attributes )
       end
     end
   end
@@ -823,44 +851,79 @@ end
 Feature.delete_all
 i = 0
 [
-  { :name => 'swimming pool', :user_defined => false, :type => :both },
-  { :name => 'hot water', :user_defined => false, :type => :both },
-  { :name => 'hardwood floors', :user_defined => false, :type => :both },
-  { :name => 'central air', :user_defined => false, :type => :both },
-  { :name => 'central heat', :user_defined => false, :type => :both },
-  { :name => 'spa/hot tub', :user_defined => false, :type => :both },
-  { :name => 'carport', :user_defined => false, :type => :both },
-  { :name => 'RV/boat parking', :user_defined => false, :type => :both },
-  { :name => 'tennis court', :user_defined => false, :type => :both },
-  { :name => 'disability features', :user_defined => false, :type => :both },
-  { :name => 'den/office', :user_defined => false, :type => :both },
-  { :name => 'energy efficient home', :user_defined => false, :type => :both },
-  { :name => 'fireplace', :user_defined => false, :type => :both },
-  { :name => 'burglar alarm', :user_defined => false, :type => :both },
-  { :name => 'laundry room', :user_defined => false, :type => :both },
-  { :name => 'insulated glass', :user_defined => false, :type => :both },
-  { :name => 'front garden', :user_defined => false, :type => :both },
-  { :name => 'back garden', :user_defined => false, :type => :both },
-  { :name => 'front yard', :user_defined => false, :type => :both },
-  { :name => 'backyard', :user_defined => false, :type => :both },
-  { :name => 'basement', :user_defined => false, :type => :both },
+  { :name => 'swimming pool', :user_defined => false, :type => :both,
+    :sale_highlighted => true, :rent_highlighted => false },
+  { :name => 'hot water', :user_defined => false, :type => :both,
+    :sale_highlighted => true, :rent_highlighted => true },
+  { :name => 'hardwood floors', :user_defined => false, :type => :both,
+    :sale_highlighted => true, :rent_highlighted => false },
+  { :name => 'central air', :user_defined => false, :type => :both,
+    :sale_highlighted => false, :rent_highlighted => false },
+  { :name => 'central heat', :user_defined => false, :type => :both,
+    :sale_highlighted => false, :rent_highlighted => false },
+  { :name => 'spa/hot tub', :user_defined => false, :type => :both,
+    :sale_highlighted => false, :rent_highlighted => false },
+  { :name => 'carport', :user_defined => false, :type => :both,
+    :sale_highlighted => false, :rent_highlighted => false },
+  { :name => 'RV/boat parking', :user_defined => false, :type => :both,
+    :sale_highlighted => false, :rent_highlighted => false },
+  { :name => 'tennis court', :user_defined => false, :type => :both,
+    :sale_highlighted => false, :rent_highlighted => false },
+  { :name => 'disability features', :user_defined => false, :type => :both,
+    :sale_highlighted => false, :rent_highlighted => false },
+  { :name => 'den/office', :user_defined => false, :type => :both,
+    :sale_highlighted => false, :rent_highlighted => false },
+  { :name => 'energy efficient home', :user_defined => false, :type => :both,
+    :sale_highlighted => true, :rent_highlighted => true },
+  { :name => 'fireplace', :user_defined => false, :type => :both,
+    :sale_highlighted => false, :rent_highlighted => false },
+  { :name => 'burglar alarm', :user_defined => false, :type => :both,
+    :sale_highlighted => true, :rent_highlighted => true },
+  { :name => 'laundry room', :user_defined => false, :type => :both,
+    :sale_highlighted => true, :rent_highlighted => true },
+  { :name => 'insulated glass', :user_defined => false, :type => :both,
+    :sale_highlighted => false, :rent_highlighted => false },
+  { :name => 'front garden', :user_defined => false, :type => :both,
+    :sale_highlighted => false, :rent_highlighted => false },
+  { :name => 'back garden', :user_defined => false, :type => :both,
+    :sale_highlighted => false, :rent_highlighted => false },
+  { :name => 'front yard', :user_defined => false, :type => :both,
+    :sale_highlighted => true, :rent_highlighted => true },
+  { :name => 'backyard', :user_defined => false, :type => :both,
+    :sale_highlighted => true, :rent_highlighted => true },
+  { :name => 'basement', :user_defined => false, :type => :both,
+    :sale_highlighted => false, :rent_highlighted => false },
   { :name => 'close to or on a paved road', :user_defined => false,
-    :type => :both },
-  { :name => 'privacy', :user_defined => false, :type => :both },
-  { :name => 'natural area', :user_defined => false, :type => :both },
-  { :name => 'close to surf break', :user_defined => false, :type => :both },
-  { :name => 'close to school', :user_defined => false, :type => :both },
-  { :name => 'close to hospital', :user_defined => false, :type => :both },
-  { :name => 'close to services', :user_defined => false, :type => :both },
-  { :name => 'close to airport', :user_defined => false, :type => :both },
-  { :name => 'gated community', :user_defined => false, :type => :both },
-  { :name => 'non-gated community', :user_defined => false, :type => :both },
-  { :name => '24-hour security', :user_defined => false, :type => :both },
-  { :name => 'air conditioning', :user_defined => false, :type => :both },
-  { :name => 'ocean view', :user_defined => false, :type => :both },
-  { :name => 'mountain view', :user_defined => false, :type => :both },
+    :type => :both, :sale_highlighted => false, :rent_highlighted => false },
+  { :name => 'privacy', :user_defined => false, :type => :both,
+    :sale_highlighted => false, :rent_highlighted => false },
+  { :name => 'natural area', :user_defined => false, :type => :both,
+    :sale_highlighted => false, :rent_highlighted => false },
+  { :name => 'close to surf break', :user_defined => false, :type => :both,
+    :sale_highlighted => false, :rent_highlighted => false },
+  { :name => 'close to school', :user_defined => false, :type => :both,
+    :sale_highlighted => false, :rent_highlighted => false },
+  { :name => 'close to hospital', :user_defined => false, :type => :both,
+    :sale_highlighted => false, :rent_highlighted => false },
+  { :name => 'close to services', :user_defined => false, :type => :both,
+    :sale_highlighted => true, :rent_highlighted => true },
+  { :name => 'close to airport', :user_defined => false, :type => :both,
+    :sale_highlighted => false, :rent_highlighted => false },
+  { :name => 'gated community', :user_defined => false, :type => :both,
+    :sale_highlighted => false, :rent_highlighted => false },
+  { :name => 'non-gated community', :user_defined => false, :type => :both,
+    :sale_highlighted => false, :rent_highlighted => false },
+  { :name => '24-hour security', :user_defined => false, :type => :both,
+    :sale_highlighted => true, :rent_highlighted => true },
+  { :name => 'air conditioning', :user_defined => false, :type => :both,
+    :sale_highlighted => true, :rent_highlighted => true },
+  { :name => 'ocean view', :user_defined => false, :type => :both,
+    :sale_highlighted => true, :rent_highlighted => false },
+  { :name => 'mountain view', :user_defined => false, :type => :both,
+    :sale_highlighted => false, :rent_highlighted => false },
   
-  { :name => 'washer/dryer', :user_defined => false, :type => :rent }
+  { :name => 'washer/dryer', :user_defined => false, :type => :rent,
+    :sale_highlighted => true, :rent_highlighted => true }
   
 ].each do |record|
   record.merge!(:position => i + 1) unless record[:position]
@@ -873,15 +936,26 @@ i = 0
     types << 'for rent'
   end
   record.delete(:type)
+  sale_highlighted = record[:sale_highlighted]
+  rent_highlighted = record[:rent_highlighted]
+  record.delete(:sale_highlighted)
+  record.delete(:rent_highlighted)
   if feature = Feature.create!(record)
     types.each do |type|
       listing_type = ListingType.find_by_name(type)
       if listing_type
-        FeatureAssignment.create!(
+        attributes = {
           :feature_assignable_type => 'ListingType',
           :feature_assignable_id => listing_type.id,
           :feature_id => feature.id
-        )
+        }
+        case listing_type
+        when :sale
+          attributes.merge!( :highlighted => true ) if sale_highlighted
+        when :rent
+          attributes.merge!( :highlighted => true ) if rent_highlighted
+        end
+        FeatureAssignment.create!( attributes )
       end
     end
   end
@@ -892,24 +966,42 @@ end
 Style.delete_all
 i = 0
 [
-  { :name => 'A-Frame', :type => :both },
-  { :name => 'Bungalow', :type => :both },
-  { :name => 'Chalet', :type => :both },
-  { :name => 'Colonial', :type => :both },
-  { :name => 'Cottage', :type => :both },
-  { :name => 'Duplex', :type => :both },
-  { :name => 'Farmhouse', :type => :both },
-  { :name => 'Georgian', :type => :both },
-  { :name => 'Log Cabin', :type => :both },
-  { :name => 'Mobile', :type => :both },
-  { :name => 'Modern', :type => :both },
-  { :name => 'Queen Anne', :type => :both },
-  { :name => 'Quinta', :type => :both },
-  { :name => 'Ranch', :type => :both },
-  { :name => 'Split-level', :type => :both },
-  { :name => 'Studio', :type => :both },
-  { :name => 'Townhouse', :type => :both },
-  { :name => 'Victorian', :type => :both }
+  { :name => 'A-Frame', :type => :both,
+    :sale_highlighted => false, :rent_highlighted => false },
+  { :name => 'Bungalow', :type => :both,
+    :sale_highlighted => true, :rent_highlighted => true },
+  { :name => 'Chalet', :type => :both,
+    :sale_highlighted => false, :rent_highlighted => false },
+  { :name => 'Colonial', :type => :both,
+    :sale_highlighted => true, :rent_highlighted => true },
+  { :name => 'Cottage', :type => :both,
+    :sale_highlighted => true, :rent_highlighted => true },
+  { :name => 'Duplex', :type => :both,
+    :sale_highlighted => true, :rent_highlighted => true },
+  { :name => 'Farmhouse', :type => :both,
+    :sale_highlighted => true, :rent_highlighted => false },
+  { :name => 'Georgian', :type => :both,
+    :sale_highlighted => false, :rent_highlighted => false },
+  { :name => 'Log Cabin', :type => :both,
+    :sale_highlighted => false, :rent_highlighted => false },
+  { :name => 'Mobile', :type => :both,
+    :sale_highlighted => false, :rent_highlighted => false },
+  { :name => 'Modern', :type => :both,
+    :sale_highlighted => true, :rent_highlighted => true },
+  { :name => 'Queen Anne', :type => :both,
+    :sale_highlighted => false, :rent_highlighted => false },
+  { :name => 'Quinta', :type => :both,
+    :sale_highlighted => true, :rent_highlighted => false },
+  { :name => 'Ranch', :type => :both,
+    :sale_highlighted => true, :rent_highlighted => true },
+  { :name => 'Split-level', :type => :both,
+    :sale_highlighted => false, :rent_highlighted => false },
+  { :name => 'Studio', :type => :both,
+    :sale_highlighted => true, :rent_highlighted => true },
+  { :name => 'Townhouse', :type => :both,
+    :sale_highlighted => true, :rent_highlighted => true },
+  { :name => 'Victorian', :type => :both,
+    :sale_highlighted => true, :rent_highlighted => true }
 ].each do |record|
   record.merge!(:position => i + 1) unless record[:position]
   types = []
@@ -920,15 +1012,26 @@ i = 0
     types << 'for rent'
   end
   record.delete(:type)
+  sale_highlighted = record[:sale_highlighted]
+  rent_highlighted = record[:rent_highlighted]
+  record.delete(:sale_highlighted)
+  record.delete(:rent_highlighted)
   if style = Style.create!(record)
     types.each do |type|
       listing_type = ListingType.find_by_name(type)
       if listing_type
-        StyleAssignment.create!(
+        attributes = {
           :style_assignable_type => 'ListingType',
           :style_assignable_id => listing_type.id,
           :style_id => style.id
-        )
+        }
+        case listing_type
+        when :sale
+          attributes.merge!( :highlighted => true ) if sale_highlighted
+        when :rent
+          attributes.merge!( :highlighted => true ) if rent_highlighted
+        end
+        StyleAssignment.create!( attributes )
       end
     end
   end

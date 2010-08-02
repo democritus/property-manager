@@ -61,18 +61,22 @@ class Listing < ActiveRecord::Base
   # This allows images to associated with this listing, in addition to the
   # main images that are associated with the property.
   has_many :property_images, :as => :imageable, :order => 'position ASC'
-  has_many :category_assignments, :as => :category_assignable, 
-    :order => 'primary_category DESC'
-  has_many :categories, :through => :category_assignments, 
-    :order => 'category_assignments.primary_category DESC'
+  has_many :category_assignments, :as => :category_assignable,
+    :order => 'category_assignments.primary_category DESC' + 
+      ', category_assignments.highlighted DESC'
+  has_many :categories, :through => :category_assignments,
+    :order => 'category_assignments.primary_category DESC' + 
+      ', category_assignments.highlighted DESC'
   has_many :feature_assignments, :as => :feature_assignable, 
-    :order => 'highlighted_feature DESC'
-  has_many :features, :through => :feature_assignments, 
-    :order => 'feature_assignments.highlighted_feature DESC'
-  has_many :style_assignments, :as => :style_assignable, 
-    :order => 'primary_style DESC'
-  has_many :styles, :through => :style_assignments, 
-    :order => 'style_assignments.primary_style DESC'
+    :order => 'feature_assignments.highlighted DESC'
+  has_many :features, :through => :feature_assignments,
+    :order => 'feature_assignments.highlighted DESC'
+  has_many :style_assignments, :as => :style_assignable,
+    :order => 'style_assignments.primary_style DESC' +
+      ', style_assignments.highlighted DESC'
+  has_many :styles, :through => :style_assignments,
+    :order => 'style_assignments.primary_style DESC' +
+      ', style_assignments.highlighted DESC'
     
   validates_presence_of :label
   validates_numericality_of :listing_type_id,
@@ -135,6 +139,7 @@ class Listing < ActiveRecord::Base
     copy_name_from_property
     copy_associations_from_property
   end
+  
   
   private
   

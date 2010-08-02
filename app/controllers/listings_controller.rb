@@ -1,7 +1,12 @@
 class ListingsController < ApplicationController
   
-  caches_page :index, :show
+  caches_page :index, :show,
+    :if => Proc.new { |c| c.request_path_parts.first == 'real_estate' }
   
+  def gen_times(factor)
+     return Proc.new {|n| n*factor }
+   end
+   
   before_filter :set_search_params
   
   def index

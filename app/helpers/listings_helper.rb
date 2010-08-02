@@ -134,7 +134,6 @@ module ListingsHelper
     # right now, just defaulting to user with id #1
   def listing_contact( listing = nil )
     listing = @listing unless listing
-    contact = nil
     if listing.property
       if listing.property.agency
         if listing.property.agency.broker
@@ -362,7 +361,7 @@ module ListingsHelper
             :joins => [:listing_types, :feature_assignments],
             :conditions => [
               'listing_types.cached_slug = ?' +
-                ' AND feature_assignments.highlighted_feature = 1',
+                ' AND feature_assignments.highlighted = 1',
               @search_params[LISTING_TYPE_EQUALS]
             ]
           )
@@ -371,7 +370,7 @@ module ListingsHelper
       unless features
         features = Feature.find(:all,
           :include => { :listing_types => :feature_assignments },
-          :conditions => 'feature_assignments.highlighted_feature = 1')
+          :conditions => 'feature_assignments.highlighted = 1')
       end
       return if features.empty?
       html = ''

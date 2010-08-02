@@ -16,18 +16,22 @@ class Property < ActiveRecord::Base
     :conditions => 'primary_style = 1'
   has_many :listings
   has_many :property_images, :as => :imageable, :order => 'position ASC'
-  has_many :category_assignments, :as => :category_assignable, 
-    :order => 'primary_category DESC'
-  has_many :categories, :through => :category_assignments, 
-    :order => 'category_assignments.primary_category DESC'
+  has_many :category_assignments, :as => :category_assignable,
+    :order => 'category_assignments.primary_category DESC' + 
+      ', category_assignments.highlighted DESC'
+  has_many :categories, :through => :category_assignments,
+    :order => 'category_assignments.primary_category DESC' + 
+      ', category_assignments.highlighted DESC'
   has_many :feature_assignments, :as => :feature_assignable, 
-    :order => 'highlighted_feature DESC'
+    :order => 'highlighted DESC'
   has_many :features, :through => :feature_assignments, 
-    :order => 'feature_assignments.highlighted_feature DESC'
-  has_many :style_assignments, :as => :style_assignable, 
-    :order => 'primary_style DESC'
-  has_many :styles, :through => :style_assignments, 
-    :order => 'style_assignments.primary_style DESC'
+    :order => 'feature_assignments.highlighted DESC'
+  has_many :style_assignments, :as => :style_assignable,
+    :order => 'style_assignments.primary_style DESC' +
+      ', style_assignments.highlighted DESC'
+  has_many :styles, :through => :style_assignments,
+    :order => 'style_assignments.primary_style DESC' +
+      ', style_assignments.highlighted DESC'
 
   validates_presence_of :name
 #  validates_format_of :name, :with => /^[a-zA-Z0-9\s]+$/,
@@ -84,6 +88,17 @@ class Property < ActiveRecord::Base
   #  :message => "{{value}} must be an integer"
     
   validate :bathroom_number_must_be_whole_or_half
+  
+  after_save :create_default_listing
+  
+  
+  private
+  
+  # TODO: combine this and listing code that copies data from property so that
+  # both models can share the same code to clone property data.
+  def create_default_listing
+    
+  end
   
   def bathroom_number_must_be_whole_or_half
     if bathroom_number.nil? then

@@ -107,42 +107,43 @@
         </div>
       <% end %>
       
-      
-      <div class="show_more_wrapper">
-        <div id="show_more_bar_<%= listing_counter.to_s %>"
-        class="show_more_image"></div>
-        <div class="open_zone"
-        onclick="toggleListingInfo('show_more_bar_<%= listing_counter.to_s %>',
-        '<%= 'more_info_' + listing_counter.to_s %>')"></div>
-      </div>
-      <% javascript_tag do %>
-        function toggleListingInfo(barElementName, infoElement) {
-          classA = 'show_more_image';
-          classB = 'show_less_image';
-          barElement = $(barElementName);
-          if (barElement.className == 'show_less_image') {
-            barElement.className = classA;
-            Effect.Fade(infoElement, { duration: 0.5 });
-          } else {
-            barElement.className = classB;
-            Effect.Appear(infoElement, { duration: 0.5 });
+      <% if listing_contact(listing) %>
+        <div class="show_more_wrapper">
+          <div id="show_more_bar_<%= listing_counter.to_s %>"
+          class="show_more_image"></div>
+          <div class="open_zone"
+          onclick="toggleListingInfo('show_more_bar_<%= listing_counter.to_s %>',
+          '<%= 'more_info_' + listing_counter.to_s %>')"></div>
+        </div>
+        <% javascript_tag do %>
+          function toggleListingInfo(barElementName, infoElement) {
+            classA = 'show_more_image';
+            classB = 'show_less_image';
+            barElement = $(barElementName);
+            if (barElement.className == 'show_less_image') {
+              barElement.className = classA;
+              Effect.Fade(infoElement, { duration: 0.5 });
+            } else {
+              barElement.className = classB;
+              Effect.Appear(infoElement, { duration: 0.5 });
+            }
           }
-        }
-      <% end %>
-      <div id="more_info_<%= listing_counter.to_s %>" style="display: none">
-        <% unless listing.property.description.blank? %>
-        <div class="section description">
-          <div>
+        <% end %>
+        <div id="more_info_<%= listing_counter.to_s %>" style="display: none">
+          <% unless listing.property.description.blank? %>
+          <div class="section description">
             <div>
-              <strong>Description:</strong> <%=h listing.property.description %>
+              <div>
+                <strong>Description:</strong> <%=h listing.property.description %>
+              </div>
             </div>
           </div>
+          <% end %>
+          <%= render(:partial => 'liaison', :locals => {
+            :listing => listing, :listing_counter => listing_counter
+          }) %>
         </div>
-        <% end %>
-        <%= render(:partial => 'liaison', :locals => {
-          :listing => listing, :listing_counter => listing_counter
-        }) %>
-      </div>
+      <% end %>
     </div>
   </div>
   <div class="footer">
@@ -152,6 +153,12 @@
       </div>
       <div class="links">
         <ul class="horizontal float-right clearfix">
+          <% if request_path_parts.first != 'real_estate' %>
+            <% if current_user %>
+              <li><%= link_to 'Edit', edit_admin_property_listing_path(
+                listing.property, listing ) %></li>
+            <% end %>
+          <% end %>
           <li><%= link_to t(:full_listing).capitalize, listing %></li>
           <li><%= link_to t(:request_info).capitalize,
             listing_path(listing, :anchor => 'information_request') %></li>

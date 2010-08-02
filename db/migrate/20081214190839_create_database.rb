@@ -89,7 +89,8 @@ class CreateDatabase < ActiveRecord::Migration
       t.integer :market_id
       t.string  :name, :null => false
       t.integer :position
-      t.string   :cached_slug
+      t.string  :cached_slug
+      t.boolean :highlighted, :default => false, :null => false
       t.timestamps
     end
 
@@ -108,7 +109,8 @@ class CreateDatabase < ActiveRecord::Migration
       t.integer :zone_id, :null => false
       t.string  :name, :null => false
       t.integer :position
-      t.string   :cached_slug
+      t.string  :cached_slug
+      t.boolean :highlighted, :default => false, :null => false
     end
 
     add_index :cantons, [:province_id, :position],
@@ -141,6 +143,7 @@ class CreateDatabase < ActiveRecord::Migration
       :force => true do |t|
       t.integer :category_id, :null => false
       t.boolean  :primary_category, :default => false, :null => false
+      t.boolean  :highlighted, :default => false, :null => false
       # Polymorphic fields
       t.references :category_assignable, :polymorphic => true
       t.timestamps
@@ -204,7 +207,7 @@ class CreateDatabase < ActiveRecord::Migration
     create_table :feature_assignments,
       :options => "ENGINE=InnoDB DEFAULT CHARSET=utf8", :force => true do |t|
       t.integer :feature_id, :null => false
-      t.boolean  :highlighted_feature, :default => false, :null => false
+      t.boolean  :highlighted, :default => false, :null => false
       # Polymorphic fields
       t.references :feature_assignable, :polymorphic => true
       t.timestamps
@@ -423,8 +426,9 @@ class CreateDatabase < ActiveRecord::Migration
 
     create_table :style_assignments,
       :options => "ENGINE=InnoDB DEFAULT CHARSET=utf8", :force => true do |t|
-      t.integer    :style_id, :null => false
-      t.boolean    :primary_style, :default => false, :null => false
+      t.integer  :style_id, :null => false
+      t.boolean  :primary_style, :default => false, :null => false
+      t.boolean  :highlighted, :default => false, :null => false
       
       # Polymorphic fields
       t.references :style_assignable, :polymorphic => true

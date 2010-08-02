@@ -2,16 +2,30 @@ ActionController::Routing::Routes.draw do |map|
 
   # Listings search
   # Cachable search urls compatible with Searchlogic (including pagination)
-  bound_params_string = 'real_estate'
+  normal_bound_params_string = 'real_estate'
+  admin_bound_params_string = 'listings'
   bound_params_requirements = {}
   bound_params_defaults = {}
   LISTING_PARAMS_MAP.each do |param|
-    bound_params_string += '/:' + param[:key].to_s
+    normal_bound_params_string += '/:' + param[:key].to_s
+    admin_bound_params_string += '/:' + param[:key].to_s
     bound_params_requirements.merge!(param[:key] => %r([^/;,?]+))
     #bound_params_defaults.merge!(param[:key] => nil)
   end
+  
+  # Normal view - cached
   map.connect(
-    bound_params_string,
+    normal_bound_params_string,
+    bound_params_defaults.merge(
+      :controller => :listings,
+      :action => :index,
+      :requirements => bound_params_requirements
+    )
+  )
+  
+  # Admin view - not cached
+  map.connect(
+    admin_bound_params_string,
     bound_params_defaults.merge(
       :controller => :listings,
       :action => :index,
@@ -50,8 +64,20 @@ ActionController::Routing::Routes.draw do |map|
       :requirements => { :context_type => 'agencies' }
   end
   
+  # Normal view - cached
+  map.resources :real_estate,
+    :controller => :listings,
+    :only => [ :show, :index, :featured_glider ],
+    :member => { :glider_image_swap => :get },
+    :collection => { :featured_glider => :get } do |listings|
+    listings.resources :information_requests,
+      :only => :create,
+      :requirements => { :context_type => 'listings' }
+  end
+  
+  # Admin view - not cached
   map.resources :listings,
-    :as => :real_estate,
+    :controller => :listings,
     :only => [ :show, :index, :featured_glider ],
     :member => { :glider_image_swap => :get },
     :collection => { :featured_glider => :get } do |listings|

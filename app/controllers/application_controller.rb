@@ -31,8 +31,7 @@ class ApplicationController < ActionController::Base
   # Module that changes behavior of page caching and adds methods to allow
   # Fleximage caching to be turned on and off independently of page caching
   include CustomPageCaching
-
-
+  
   private
   
   # Need variable in view to know if caching is enabled. Used to save

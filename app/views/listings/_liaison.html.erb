@@ -10,7 +10,7 @@ listing_counter = 0 unless listing_counter
 my_broker = listing_contact(listing)
 %>
 
-<% unless my_broker.blank? %>
+<% if my_broker %>
   <div style="clear: both" class="section agent-info clearfix">
     <div id="<%= 'agent_info_' + listing_counter.to_s %>">
       <div>

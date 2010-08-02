@@ -6,7 +6,7 @@ CREATE USER 'be_user_php'@'localhost' IDENTIFIED BY 'jupit3r';
 GRANT ALL ON barrioearth_php.* TO 'be_user_php'@'localhost';
 
 # Load tables from production server into local database for testing
-mysqldump --opt --user=be_user_php -pmastod0n --host=luna.qlogicinc.com --compress barrioearth_php --ignore-table=barrioearth_php.visitorlog --ignore-table=barrioearth_php.ip_to_country | mysql -u be_user_php -pjupit3r barrioearth_php
+$ mysqldump --opt --user=be_user_php -pmastod0n --host=luna.qlogicinc.com --compress barrioearth_php --ignore-table=barrioearth_php.visitorlog --ignore-table=barrioearth_php.ip_to_country | mysql -u be_user_php -pjupit3r barrioearth_php
 
 # Pipe output directly into local database
 # | mysql -u be_user_php -pjupit3r barrioearth_php
@@ -14,10 +14,17 @@ mysqldump --opt --user=be_user_php -pmastod0n --host=luna.qlogicinc.com --compre
 # Output to file
 # > /home/brian/tmp/barrioearth_php.sql
 
+# Convert to utf8 - this is a custom script taken from
+# http://snippets.dzone.com/posts/show/6070. Prevents special characters from
+# messing up migration
+$ rake db:convert:to_utf8
+
 
 # Load more tables from production server to local
-mysqldump --opt --user=be_user_php -pmastod0n --host=luna.qlogicinc.com --compress barrioearth_php --ignore-table=barrioearth_php.property_feature --ignore-table=barrioearth_php.property_style --ignore-table=barrioearth_php.real_estate_category --ignore-table=barrioearth_php.real_estate_listing --ignore-table=barrioearth_php.real_estate_listing_category --ignore-table=barrioearth_php.real_estate_listing_feature --ignore-table=barrioearth_php.real_estate_listing_images --ignore-table=barrioearth_php.visitorlog --ignore-table=barrioearth_php.ip_to_country | mysql -u be_user_php -pjupit3r barrioearth_php
+$ mysqldump --opt --user=be_user_php -pmastod0n --host=luna.qlogicinc.com --compress barrioearth_php --ignore-table=barrioearth_php.property_feature --ignore-table=barrioearth_php.property_style --ignore-table=barrioearth_php.real_estate_category --ignore-table=barrioearth_php.real_estate_listing --ignore-table=barrioearth_php.real_estate_listing_category --ignore-table=barrioearth_php.real_estate_listing_feature --ignore-table=barrioearth_php.real_estate_listing_images --ignore-table=barrioearth_php.visitorlog --ignore-table=barrioearth_php.ip_to_country | mysql -u be_user_php -pjupit3r barrioearth_php
 
 # Dump entire database
-mysqldump --opt --user=be_user_php -pmastod0n --host=luna.qlogicinc.com --compress barrioearth_php > /home/brian/tmp/barrioearth_php.sql
-scp -p /home/tmp/barrioearth_php.sql brian@igor.qlogicinc.com:/home/backup/barrioearth_php.sql
+$ mysqldump --opt --user=be_user_php -pmastod0n --host=luna.qlogicinc.com --compress barrioearth_php > /home/brian/tmp/barrioearth_php.sql
+
+# Backup file to igor (this should be done with the automatic backup, but just in case)
+$ scp -p /home/backup/2010-08-01_barrioearth_php.zip rsyncbackup@igor.qlogicinc.com:/home/rsyncbackup/backup/

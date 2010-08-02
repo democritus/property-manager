@@ -527,134 +527,134 @@ end
     FeatureAssignment.create(:feature_assignable_type => 'ListingType',
       :feature_assignable_id => 1,
       :feature_id => 1,
-      :highlighted_feature => true
+      :popular => true
     )
 
     FeatureAssignment.create(:feature_assignable_type => 'ListingType',
       :feature_assignable_id => 1,
       :feature_id => 2,
-      :highlighted_feature => true
+      :popular => true
     )
 
     FeatureAssignment.create(:feature_assignable_type => 'ListingType',
       :feature_assignable_id => 1,
       :feature_id => 3,
-      :highlighted_feature => true
+      :popular => true
     )
 
     FeatureAssignment.create(:feature_assignable_type => 'ListingType',
       :feature_id => 4,
       :feature_assignable_id => 1,
-      :highlighted_feature => true
+      :popular => true
     )
 
     FeatureAssignment.create(:feature_assignable_type => 'ListingType',
       :feature_assignable_id => 1,
       :feature_id => 5,
-      :highlighted_feature => true
+      :popular => true
   )
 
     FeatureAssignment.create(:feature_assignable_type => 'ListingType',
       :feature_assignable_id => 1,
       :feature_id => 6,
-      :highlighted_feature => false
+      :popular => false
     )
 
 
     FeatureAssignment.create(:feature_assignable_type => 'ListingType',
       :feature_assignable_id => 1,
       :feature_id => 7,
-      :highlighted_feature => false
+      :popular => false
     )
 
     FeatureAssignment.create(:feature_assignable_type => 'ListingType',
       :feature_assignable_id => 2,
       :feature_id => 1,
-      :highlighted_feature => true
+      :popular => true
     )
 
     FeatureAssignment.create(:feature_assignable_type => 'ListingType',
       :feature_assignable_id => 2,
       :feature_id => 2,
-      :highlighted_feature => true
+      :popular => true
     )
 
     FeatureAssignment.create(:feature_assignable_type => 'ListingType',
       :feature_assignable_id => 2,
       :feature_id => 3,
-      :highlighted_feature => true
+      :popular => true
     )
 
     FeatureAssignment.create(:feature_assignable_type => 'ListingType',
       :feature_assignable_id => 2,
       :feature_id => 5,
-      :highlighted_feature => true
+      :popular => true
     )
 
     FeatureAssignment.create(:feature_assignable_type => 'ListingType',
       :feature_assignable_id => 2,
       :feature_id => 7,
-      :highlighted_feature => false
+      :popular => false
     )
 
     FeatureAssignment.create(:feature_assignable_type => 'Property',
       :feature_assignable_id => 1,
       :feature_id => 1,
-      :highlighted_feature => true
+      :popular => true
     )
 
     FeatureAssignment.create(:feature_assignable_type => 'Property',
       :feature_assignable_id => 1,
       :feature_id => 2,
-      :highlighted_feature => true
+      :popular => true
     )
 
     FeatureAssignment.create(:feature_assignable_type => 'Property',
       :feature_assignable_id => 1,
       :feature_id => 3,
-      :highlighted_feature => true
+      :popular => true
     )
 
     FeatureAssignment.create(:feature_assignable_type => 'Property',
       :feature_assignable_id => 1,
       :feature_id => 4,
-      :highlighted_feature => true
+      :popular => true
     )
 
     FeatureAssignment.create(:feature_assignable_type => 'Property',
       :feature_assignable_id => 1,
       :feature_id => 5,
-      :highlighted_feature => false
+      :popular => false
     )
 
     FeatureAssignment.create(:feature_assignable_type => 'Property',
       :feature_assignable_id => 2,
       :feature_id => 1,
-      :highlighted_feature => true
+      :popular => true
     )
 
     FeatureAssignment.create(:feature_assignable_type => 'Property',
       :feature_assignable_id => 2,
       :feature_id => 2,
-      :highlighted_feature => true
+      :popular => true
     )
 
     FeatureAssignment.create(:feature_assignable_type => 'Property',
       :feature_assignable_id => 2,
       :feature_id => 3,
-      :highlighted_feature => false
+      :popular => false
     )
 
     FeatureAssignment.create(:feature_assignable_type => 'Listing',
       :feature_assignable_id => 1,
       :feature_id => 6,
-      :highlighted_feature => true
+      :popular => true
     )
 
     FeatureAssignment.create(:feature_assignable_type => 'Listing',
       :feature_assignable_id => 1,
       :feature_id => 7,
-      :highlighted_feature => false
+      :popular => false
     )
 
 

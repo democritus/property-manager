@@ -314,8 +314,8 @@
         <% unless in_range %>
           <li>
             <%= link_to(price_range[:label],
-              listings_options(nearby_params.merge(boundaries)
-            )) %>
+              listings_options(nearby_params.merge(boundaries))
+            ) %>
           </li>
         <% else %>
           <li><%= price_range[:label] %></li>

@@ -1,5 +1,12 @@
 module HostHelp
-
+  
+  def self.included(base_class)
+    base_class.class_eval do
+      # Add request_path_parts to ActionController
+      include RequestPath
+    end
+  end
+  
   def current_domain
     # When tacking on "dev" in development environment, request.domain returns
     # "real_tld.dev" instead of "domain.real_tld", i.e. "com.dev" instead of

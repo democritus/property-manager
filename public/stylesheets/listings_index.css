@@ -15,6 +15,7 @@ div.listing_container {
   color: #404040;
   margin: 26px 0;
   padding: 0 0 10px 0;
+  font-size: 95%;
 }
 
 div.listing_container div.content {
@@ -69,10 +70,10 @@ div.listing_container div.show_more_wrapper div.open_zone {
 div.listing_container div.flowed_content h2 {
   /*background-color: #ddeeff;*/
   font-size: 130%;
-  margin: 0;
-  padding: 0.3em 5px;
+  margin: 0.3em 5px 0.3em 0;
 }
 div.listing_container div.flowed_content h2 a {
+  color: #c7532c;
 }
 div.listing_container div.flowed_content div.section {
   line-height: 1.2em;
@@ -86,7 +87,7 @@ div.listing_container div.flowed_content ul {
 }
 div.listing_container div.flowed_content div.price {
   float: right;
-  margin: 3px 5px;
+  margin: 3px 5px 1em 10px;
   font-size: 130%;
   font-weight: bold;
   color: #666;
@@ -128,6 +129,7 @@ div.listing_container div.footer div.reference-id {
 div.listing_container div.footer div.links {
   float: right;
 }
+
 div.listing_container div.footer ul {
   list-style-type: none;
 }

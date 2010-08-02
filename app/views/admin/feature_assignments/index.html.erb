@@ -15,23 +15,23 @@
     polymorphic_path( [ :admin, @feature_assignable, feature_assignment ] ),
       :confirm => 'Are you sure?',
       :method => :delete
-  if feature_assignment.highlighted_feature.blank?
-    highlight_boolean = '1'
-    highlight_label = 'Make highlighted feature'
+  if feature_assignment.highlighted.blank?
+    highlighted_boolean = '1'
+    highlighted_label = 'Flag feature as highlighted'
   else
-    highlight_boolean = '0'
-    highlight_label = 'Un-highlight feature'
+    highlighted_boolean = '0'
+    highlighted_label = 'Unflag feature as highlighted'
     flag = '*'
   end
-  highlight_action = link_to highlight_label,
+  highlighted_action = link_to highlighted_label,
     polymorphic_path( [ :admin, @feature_assignable, feature_assignment ],
-      :feature_assignment => { :highlighted_feature => highlight_boolean } ),
+      :feature_assignment => { :highlighted => highlighted_boolean } ),
       { :method => :put }
   %>
   <div class="feature_assignment">
     <%= flag %>
     <%= feature_assignment.feature.name %>
-    <%= highlight_action %>
+    <%= highlighted_action %>
     <%= delete_action %>
   </div>
 <% end %>
@@ -51,13 +51,13 @@
       # REMOVED - form helper doesn't work here because checked value gets 
       # clobbered by the hidden field. Hidden field not necessary in this case, 
       # since this form only creates new records
-      # f.check_box :highlighted_feature
+      # f.check_box :highlighted
       %>
-      <input id="feature_assignment_highlighted_feature" 
-        name="feature_assignment[highlighted_feature]" 
+      <input id="feature_assignment_highlighted"
+        name="feature_assignment[highlighted]" 
         type="checkbox" 
         value="1" />
-      <%= f.label :highlighted_feature %>
+      <%= f.label :highlighted %>
     </p>
     <p><%= f.submit "Submit" %></p>
   <% end %>

@@ -5,7 +5,8 @@ module ApplicationHelper
   include ContextResources
   include HostHelp
   include ReadableSearch
-
+  include RequestPath
+  
   def active_agency_logo(agency_logo)
     link_to(
       image_tag(
