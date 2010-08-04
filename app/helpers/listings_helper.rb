@@ -288,22 +288,15 @@ module ListingsHelper
         )
       end
       unless categories
-        categories = Category.all
+        categories = Category.find(:all,
+          :joins => { :category_assignments => :listing_types }
+        )
       end
       return if categories.empty?
-      html = ''
-      categories.each do |category|
-        html += '<li>' +
-          link_to(category.name.capitalize, listings_options(
-            @search_params.merge(
-              CATEGORIES_EQUALS_ANY => category.cached_slug
-            )
-          )) + '</li>'
-      end
+      html = get_highlighted_html(:category, categories)
     end
     return unless html
-    '<div class="menu_list"><h3>Filter by category</h3><ul>' + html +
-      '</ul></div>'
+    "<div class=\"menu_list\"><h3>Filter by category</h3>#{html}</div>"
   end
   
   def style_filter
@@ -330,18 +323,10 @@ module ListingsHelper
         styles = Style.all
       end
       return if styles.empty?
-      html = ''
-      styles.each do |style|
-        html += '<li>' +
-          link_to(style.name.capitalize, listings_options(
-            @search_params.merge(
-              STYLES_EQUALS_ANY => style.cached_slug)
-          )) + '</li>'
-      end
+      html = get_highlighted_html(:style, styles)
     end
     return unless html
-    '<div class="menu_list"><h3>Filter by style</h3><ul>' + html +
-      '</ul></div>'
+    "<div class=\"menu_list\"><h3>Filter by style</h3>#{html}</ul></div>"
   end
   
   def feature_filter
@@ -373,18 +358,10 @@ module ListingsHelper
           :conditions => 'feature_assignments.highlighted = 1')
       end
       return if features.empty?
-      html = ''
-      features.each do |feature|
-        html += '<li>' +
-          link_to(feature.name.capitalize, listings_options(
-            @search_params.merge(
-              FEATURES_EQUALS_ANY => feature.cached_slug)
-          )) + '</li>'
-      end
+      html = get_highlighted_html(:feature, features)
     end
     return unless html
-    '<div class="menu_list"><h3>Filter by feature</h3><ul>' + html +
-      '</ul></div>'
+    "<div class=\"menu_list\"><h3>Filter by feature</h3>#{html}</ul></div>"
   end
   
   def place_filter( type )
@@ -561,5 +538,47 @@ module ListingsHelper
     end
     return unless html
     html
+  end
+  
+  def get_highlighted_html(model_name, collection)
+    highlighted = []
+    normal = []
+    collection.each_with_index do |record, i|
+      if i < 5 || record.send("#{model_name}_assignments")[0].highlighted
+        highlighted << record
+      else
+        normal << record
+      end
+    end
+    highlighted_html = normal_html = ''
+    highlighted.each do |record|
+      highlighted_html += '<li>' +
+        link_to(record.name.capitalize, listings_options(
+          @search_params.merge(
+            "#{model_name.to_s.pluralize.upcase}_EQUALS_ANY".constantize =>
+              record.cached_slug
+          )
+        )) + '</li>'
+    end
+    normal.each do |record|
+      normal_html += '<li>' +
+        link_to(record.name.capitalize, listings_options(
+          @search_params.merge(
+            "#{model_name.to_s.pluralize.upcase}_EQUALS_ANY".constantize =>
+              record.cached_slug
+          )
+        )) + '</li>'
+    end
+    if highlighted_html
+      normal_id = 'normal_' + model_name.to_s + '_filter'
+      html = '<ul>' + highlighted_html + '</ul>' +
+        "<div class=\"more\" onclick=\"$j('##{normal_id}').toggle('blind')\"" +
+          ' id="more_' + model_name.to_s.pluralize +
+          '_trigger">more/less</div>'
+      if normal_html
+        html += '<ul style="display: none" id="normal_' + model_name.to_s + '_filter">' +
+          normal_html + '</ul>'
+      end
+    end
   end
 end

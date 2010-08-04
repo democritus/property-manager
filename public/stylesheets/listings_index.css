@@ -175,3 +175,12 @@ div.listing_container div.footer ul li {
   line-height: 1.0em;
   cursor: pointer;
 }
+
+#right_margin div.nested_menu div.more {
+  font-family: sans-serif;
+  font-size: 65%;
+  color: #999;
+  text-align: center;
+  letter-spacing: 1px;
+  cursor: pointer;
+}
