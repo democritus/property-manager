@@ -140,8 +140,6 @@ div.listing_container div.footer ul li {
 }
 
 
-
-
 #right_margin div.nested_menu {
   position: relative;
   cursor: pointer;
@@ -152,10 +150,26 @@ div.listing_container div.footer ul li {
   top: 0;
   right: 150px;
   width: 150px;
-  background-color: #dddddd;
+  background-color: #ccc;
   cursor: default;
-  padding: 0.75em;
-  padding-bottom: 1em;
+  padding: 0.50em 0.60em 1.00em 0.6em;
+}
+
+#right_margin div.nested_menu div.submenu ul,
+#right_margin div.nested_menu div.submenu div.more {
+  margin: 0 7px;
+  padding: 0;
+}
+
+#right_margin div.nested_menu div.more {
+  font-family: sans-serif;
+  font-size: 75%;
+  color: #444;
+  letter-spacing: 1px;
+  cursor: pointer;
+}
+
+#right_margin div.nested_menu div.submenu li {
 }
 
 #right_margin div.nested_menu div.submenu a {
@@ -164,24 +178,15 @@ div.listing_container div.footer ul li {
 
 #right_margin div.nested_menu div.submenu div.close_element {
   position: absolute;
-  top: 4px;
-  right: 4px;
+  top: 7px;
+  right: 7px;
   background-color: #f0f0f0;
   border: 1px solid #ff0000;
-  color: #ff0000;
+  color: #c7532c; /* rusty orange */
   font-style: Verdana;
   font-weight: bold;
   font-size: 80%;
   padding: 1px 2px;
   line-height: 1.0em;
-  cursor: pointer;
-}
-
-#right_margin div.nested_menu div.more {
-  font-family: sans-serif;
-  font-size: 65%;
-  color: #999;
-  text-align: center;
-  letter-spacing: 1px;
   cursor: pointer;
 }

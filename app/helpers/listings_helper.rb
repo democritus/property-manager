@@ -571,13 +571,13 @@ module ListingsHelper
     end
     if highlighted_html
       normal_id = 'normal_' + model_name.to_s + '_filter'
-      html = '<ul>' + highlighted_html + '</ul>' +
-        "<div class=\"more\" onclick=\"$j('##{normal_id}').toggle('blind')\"" +
-          ' id="more_' + model_name.to_s.pluralize +
-          '_trigger">more/less</div>'
+      html = "<ul>#{highlighted_html}</ul>\n" +
+        "<div class=\"more\"" +
+          " onclick=\"$j(this).hide();$j('##{normal_id}').show('blind')\"" +
+          " id=\"more_#{model_name.to_s.pluralize}_trigger\">more...</div>\n"
       if normal_html
-        html += '<ul style="display: none" id="normal_' + model_name.to_s + '_filter">' +
-          normal_html + '</ul>'
+        html += "<ul style=\"display: none\"" +
+          " id=\"normal_#{model_name.to_s}_filter\">#{normal_html}</ul>\n"
       end
     end
   end

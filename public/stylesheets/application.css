@@ -261,18 +261,18 @@
 #right_margin div.bold_link {
   margin: 0.5em 1px 0;
   text-align: center;
-  color: #c0c0c0;
+  color: #666; /* rusty orange */
 }
 #right_margin div.bold_link, #right_margin div.bold_link a {
   font-size: 100%;
   font-weight: bold;
 }
 #right_margin div.bold_link a {
-  color: #ff0000;
+  color: #c7532c; /* rusty orange */
 }
 #right_margin div.bold_link span {
   font-weight: normal;
-  color: #666666;
+  color: #777;
 }
 #right_margin div.menu_list {
   margin: 0;
