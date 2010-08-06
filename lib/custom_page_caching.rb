@@ -66,22 +66,23 @@ module CustomPageCaching
       return unless perform_caching && caching_allowed &&
         APP_CONFIG['perform_page_caching']
       cache_page_without_custom_config( content,
-        cache_path_with_hostname(options) )
+        cache_path(options, request.host) )
     end
   
     def cache_fleximage( content = nil, options = nil )
       return unless perform_caching && caching_allowed &&
         APP_CONFIG['perform_fleximage_caching']
       self.class.cache_fleximage(content || response.body,
-        cache_path_with_hostname(options) )
+        cache_path(options) )
     end
     
     
     private
     
     # Insert hostname into path
-    def cache_path_with_hostname( options )
-      path = "/#{request.host}"
+    def cache_path( options, subdirectory = nil )
+      path = ''
+      path = "/#{subdirectory}" if subdirectory
       path << case options
         when Hash
           url_for(

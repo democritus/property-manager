@@ -1,0 +1,313 @@
+/* 
+    Document   : main_layout
+    Created on : Mar 16, 2009, 10:56:06 AM
+    Author     : brian
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+/* Customized page structure */
+#container {
+  width: auto;
+  margin: 0 auto;
+  padding: 20px 25px;
+  /*max-width: 1115px;*/
+  max-width: 969px;
+}
+
+#header {
+  /*border: 5px dotted blue;*/
+  position: relative;
+}
+
+#header div.user_bar {
+  position: absolute;
+  right: 0;
+  top: -1.7em;
+  z-index: 500;
+}
+
+#header div.user_bar a {
+  text-decoration: none;
+  color: red;
+}
+
+#logo_area {
+  width: 240px;
+  float: left;
+  clear: both;
+}
+
+#site_logo {
+  width: 240px;
+}
+
+#contact_icons {
+  /*border: 1px dotted red;*/
+  position: relative;
+  /*
+  width: 260px;
+  height: 39px;
+  margin-top: 3px;
+  text-align: center;
+  */
+  margin-top: 7px;
+  margin-left: 1px;
+  height: 39px;
+}
+#contact_icons div.strip {
+  background-color: #f6f6ff;
+  border: 2px dotted #f0f0f6;
+  position: absolute;
+  margin: 0;
+  /*
+  left: 10px;
+  top: 11px;
+  width: 234px;
+  height: 14px;
+  */
+  left: 0px;
+  top: 11px;
+  width: 234px;
+  height: 14px;
+  z-index: 1;
+}
+
+#contact_icons div.links {
+  position: absolute;
+  margin: 0;
+  top: 0px;
+  left: 0px;
+  width: 260px;
+  z-index: 20; /* Must be higher than elements in image glider */
+}
+#contact_icons div.links div.item {
+  float: left;
+  margin-top: 4px;
+  margin-left: 26px;
+  cursor: pointer;
+  z-index: 200;
+}
+#contact_icons div.links div.first_item {
+  margin-left: 16px;
+}
+#contact_icons div.links div.toggleable_content {
+  position: absolute;
+  width: 240px;
+  top: 29px;
+  left: -1px;
+  z-index: 100;
+}
+#contact_icons div.links div.toggleable_content div.toggleable_content_item {
+  padding: 0 0 0 0;
+  font-size: 85%;
+  text-align: center;
+  /* Opacity - if used with Effect.Appear, opacity must be set to the same
+   * value in JavaScript
+  filter: alpha(opacity:95);
+  KHTMLOpacity: 0.95;
+  MozOpacity: 0.95;
+  opacity: 0.95;
+  */
+}
+#contact_icons div.toggleable_content_item h3 {
+  margin: 0 0 0.25em 0;
+}
+
+#header div.main_panel {
+  float: left;
+  clear: none;
+  z-index: 1;
+  position: relative;
+  /*height: 165px;*/
+  /*overflow: hidden;*/
+}
+
+#feature_glider {
+  /* NOTE: position may be altered inline (in style attribute of HTML tag) to
+  facilitate changing of image sizes while maintaining positioning */
+  position: absolute; top: 0;
+}
+#mini_glider {
+  position: absolute; top: 0;
+}
+
+/* Container for each item that scrolls horizontally through window */
+#header_image_glide div.glide-item h3 { /* Item header, scrolls with content */
+  position: absolute;
+  top: 1.2em;
+  left: 3px;
+  z-index: 80;
+  cursor: default;
+  margin: 0;
+  
+  color: #666666;
+  font-family: Arial;
+  font-size: 100%;
+  font-weight: bold;
+}
+#header_image_glide div.glide-item div.info-trigger { /* Scrolls with content */
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  z-index: 80;
+  /*
+  padding: 2px 5px;
+  background-color: #214fb1;
+  text-align: center;
+  cursor: pointer;
+  */
+}
+#header_image_glide div.info-trigger img.trigger-image {
+  filter: alpha(opacity: 0.70);
+  KHTMLOpacity: 0.70;
+  MozOpacity: 0.70;
+  opacity: 0.70;
+}
+/* Bubble settings within image glide */
+#header_image_glide a.bubble:hover {
+  background-color: #214fb1;
+  /*color: #f16422;*/
+  color: #c7532c; /* rusty orange */
+}
+#header_image_glide a.bubble:hover div.bubble-contents {
+  top: -15px;
+  left: -340px;
+  width: 350px;
+  font-size: 100%;
+  color: #993300;
+  text-align: center;
+}
+#header_image_glide a.bubble:hover div.top {
+  background: url("../images/bubble_350.gif") no-repeat top;
+}
+#header_image_glide a.bubble:hover div.middle {
+  background: url("../images/bubble_filter_350.gif") repeat bottom;
+}
+#header_image_glide a.bubble:hover div.bottom {
+  background: url("../images/bubble_350.gif") no-repeat bottom;
+}
+#header div.bottom-border {
+  /*background-color: #f16422;*/
+  background-color: #c7532c; /* rusty orange */
+  height: 10px;
+}
+
+/* Wrapper for faux columns */
+#faux_column_left {
+  background: url("../images/site_nav_bg.gif") repeat-y 0 0;
+}
+
+/* Main site navigation (left nav bar) */
+#site_nav {
+  float: left;
+  clear: left;
+  width: 200px;
+  padding: 0;
+  font-family: Verdana, Arial, Helvetica;
+}
+#site_nav div.menu_list {
+  margin: 12px 10% 20px;
+}
+#site_nav div.menu_list h3 {
+  /*color: #f16422;*/
+  color: #c7532c; /* rusty orange */
+  color: #d7633c; /* rusty orange - lightened for dark background */
+  /*text-decoration: underline;*/
+  font-weight: bold;
+  font-size: 110%;
+  margin-left: -4%;
+}
+#site_nav div.menu_list ul li {
+  line-height: 1.2em;
+  margin-top: 0.2em;
+  margin-bottom: 0.4em;
+}
+#site_nav div.menu_list a {
+  color: white;
+  font-family: Verdana, Arial, Helvetica;
+  font-weight: bold;
+  font-size: 100%;
+}
+#site_nav div.menu_list a.external_link {
+  color: #ffffff;
+}
+
+/* Main window (everything to right of #site-nav and below #header) */
+#content {
+  margin-left: 200px;
+}
+#right_margin {
+  float: right;
+  clear: right;
+  width: 150px;
+  padding: 0;
+  font-family: Arial, Helvetica, sans-serif;
+}
+#right_margin h2 {
+  margin: 0;
+  padding: 1em 5px 0.25em;
+  font-size: 110%;
+  color: black;
+  text-align: center;
+}
+#right_margin a {
+  color: white;
+  font-family: Arial;
+  font-weight: normal;
+  font-size: 85%;
+}
+
+#right_margin div.bold_link {
+  margin: 0.5em 1px 0;
+  text-align: center;
+  color: #c0c0c0;
+}
+#right_margin div.bold_link, #right_margin div.bold_link a {
+  font-size: 100%;
+  font-weight: bold;
+}
+#right_margin div.bold_link a {
+  color: #ff0000;
+}
+#right_margin div.bold_link span {
+  font-weight: normal;
+  color: #666666;
+}
+#right_margin div.menu_list {
+  margin: 0;
+}
+#right_margin div.menu_list h3 {
+  color: #666666;
+  font-size: 90%;
+  margin: 0.75em 8px 0;
+}
+#right_margin div.menu_list ul {
+  margin: 0 10px 0 12px;
+}
+#right_margin div.menu_list ul li {
+  margin-bottom: 0.25em;
+}
+#right_margin img {
+  display: block;
+  border: 0;
+  padding-bottom: 3px;
+}
+
+#main_window {
+  overflow: hidden;
+  padding: 0;
+  min-height: 500px;
+}
+
+#main_text {
+  padding: 20px;
+}
+#main_text h3 {
+  margin-top: 1.4em;
+}
+
+#footer {
+  padding: 10px 20px;
+  min-height: 50px;
+}

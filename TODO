@@ -1,9 +1,22 @@
--When migrating legacy data, accented characters cause strings to be cut off. FIX!
+Migration
+-When migrating legacy data, accented characters cause strings to be cut off.
+*I converted the legacy database to utf8, so check if this fixes the problem
+-Make sure category/style/feature_assignments get assigned for "rent" and "sale"
+when "both" is indicated
 -Save default market segment images in separate directory and add logic to
   seed data to create these records. Need to find more/better stock images
+  
+Visual
+-Sweet-looking home page (agency:show)
+  -featured listing(s)
+  -intro text
+  -links
+-Make arrows more prominent in gliders (or highlight them on page load)
+-Allow admin to choose color scheme
+
 -Smooth out featured/similar/etc. glider shiznit
   -number of images
-  -deal with missing images
+  xdeal with missing images
   -prevent manipulation of glider while gliding
   -better watermark
   -overlay text? price, name, etc.
@@ -11,23 +24,30 @@
 -Pretty up filters/sorts
 -Make "more info" arrow more obvious on listings
 -Make "more info" section look slick (agent pic, description, etc.)
+-Better main navigation links
+-Better right margin links, pics, ads, etc.
+-Keep contact buttons?
+
+Logic
 -Clean up crazy SQL selects
   -Why are some so long?
   -Move as much as possible to model, i.e. named routes
   -Eager load appropriately
--Better main navigation links
--Better right margin links, pics, ads, etc.
--Keep contact buttons?
--Admin section
-  -better navigation
-  -fix any inevitable problems due to new changes such as new/deleted fields
--Add "highlighted" flag to cat/feat/style_assignments tables so that the most
+
+Admin section
+-better navigation
+-fix any inevitable problems due to new changes such as new/deleted fields
+
+Database changes
+xAdd "highlighted" flag to cat/feat/style_assignments tables so that the most
   commonly used options can be presented in menus first (order by popular
   DESC). Use a javascript "-more-" toggle to see the full list.
   -integrate into admin forms (already done for feature assignments)
 -Add "highlighted" flag to barrios & cantons as well?
--Create admin-only version of client views that is never cached, so that
+
+Miscellaneous
+xCreate admin-only version of client views that is never cached, so that
   admins can easily navigate listings with admin-only links and content
-  available (which obviously can't be cached). xEasiest implementation seems
+  available (which obviously can't be cached). Easiest implementation seems
   like it would be to have separate routing for this like /listings instead of
   /real_estate

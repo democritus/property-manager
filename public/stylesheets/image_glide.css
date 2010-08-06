@@ -120,7 +120,8 @@ div.glide-window div.glide-item div.text_overlay_background {
 div.glide-window div.glide-item div.text_overlay {
   top: 16px;
   left: 14px;
-  color: #f16422;
+  /*color: #f16422;*/
+  color: #c7532c; /* rusty orange */
   z-index: 100;
 }
 
@@ -155,7 +156,8 @@ div.glide-window div.agency div.text_overlay_shadow {
 div.glide-window div.agency div.text_overlay {
   top: 40px;
   left: 40px;
-  color: #f16422;
+  /*color: #f16422;*/
+  color: #c7532c; /* rusty orange */
 }
 
 div.glide-window div.agency div.text_overlay_shadow {
@@ -188,7 +190,8 @@ div.glide-window div.large_listing div.text_overlay_background {
 div.glide-window div.large_listing div.text_overlay {
   top: 19px;
   left: 16px;
-  color: #f16422;
+  /*color: #f16422;*/
+  color: #c7532c; /* rusty orange */
 }
 
 div.glide-window div.large_listing div.text_overlay_shadow {
