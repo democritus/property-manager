@@ -142,7 +142,6 @@
   margin: 0;
   
   color: #666666;
-  font-family: Arial;
   font-size: 100%;
   font-weight: bold;
 }
@@ -204,7 +203,6 @@
   clear: left;
   width: 200px;
   padding: 0;
-  font-family: Verdana, Arial, Helvetica;
 }
 #site_nav div.menu_list {
   margin: 12px 10% 20px;
@@ -225,7 +223,6 @@
 }
 #site_nav div.menu_list a {
   color: white;
-  font-family: Verdana, Arial, Helvetica;
   font-weight: bold;
   font-size: 100%;
 }
@@ -237,43 +234,28 @@
 #content {
   margin-left: 200px;
 }
+
 #right_margin {
   float: right;
   clear: right;
   width: 150px;
   padding: 0;
-  font-family: Arial, Helvetica, sans-serif;
 }
+
 #right_margin h2 {
   margin: 0;
   padding: 1em 5px 0.25em;
   font-size: 110%;
-  color: black;
+  color: #444;
   text-align: center;
 }
+
 #right_margin a {
-  color: white;
-  font-family: Arial;
+  color: #444;
   font-weight: normal;
   font-size: 85%;
 }
 
-#right_margin div.bold_link {
-  margin: 0.5em 1px 0;
-  text-align: center;
-  color: #666; /* rusty orange */
-}
-#right_margin div.bold_link, #right_margin div.bold_link a {
-  font-size: 100%;
-  font-weight: bold;
-}
-#right_margin div.bold_link a {
-  color: #c7532c; /* rusty orange */
-}
-#right_margin div.bold_link span {
-  font-weight: normal;
-  color: #777;
-}
 #right_margin div.menu_list {
   margin: 0;
 }

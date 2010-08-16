@@ -244,8 +244,6 @@ class CreateDatabase < ActiveRecord::Migration
 
     create_table :information_requests,
       :options => "ENGINE=InnoDB DEFAULT CHARSET=utf8", :force => true do |t|
-      t.string   :recipient_name
-      t.string   :recipient_email
       t.integer  :user_id
       t.string   :name
       t.string   :email
@@ -257,8 +255,6 @@ class CreateDatabase < ActiveRecord::Migration
       t.timestamps
     end
 
-    add_index :information_requests, [:recipient_email],
-      :name => "recipient_email"
     add_index :information_requests,
       [:information_requestable_type, :information_requestable_id],
       :name => "information_requestable"

@@ -127,7 +127,7 @@ class Listing < ActiveRecord::Base
   def images
     images = []
     if self.property_images
-      images += self.property.property_images
+      images += self.property_images
     end
     if self.property.property_images
       images += self.property.property_images

@@ -11,7 +11,7 @@
 }
 
 div.listing_container {
-  border: 1px dotted #c8c8c8;
+  border: 1px dotted #e5e5e5;
   color: #404040;
   margin: 26px 0;
   padding: 0 0 10px 0;
@@ -115,7 +115,7 @@ div.listing_container div.footer {
   color: #333;
 }
 div.listing_container div.footer div {
-  background-color: #dddddd;
+  background-color: #f1f1f1; /* very light gray */
   padding: 0.1em 3px;
 }
 div.listing_container div.footer div div {
@@ -140,9 +140,57 @@ div.listing_container div.footer ul li {
 }
 
 
+
+#right_margin div.bold_link {
+  margin: 0.7em 0px;
+  text-align: center;
+  color: #aaa;
+}
+
+#right_margin div.bold_link, #right_margin div.bold_link a {
+  font-size: 100%;
+  font-weight: bold;
+}
+
+#right_margin div.bold_link a {
+  color: #c7532c; /* rusty orange */
+}-
+
+#right_margin div.bold_link span {
+  font-weight: normal;
+  color: #666;
+}
+
 #right_margin div.nested_menu {
   position: relative;
   cursor: pointer;
+}
+
+
+#right_margin div.nested_menu div.button {
+  margin: 0px 10px 10px;
+  padding: 10px 0px;
+  background: #d0d0d0 url("../images/black_arrow_left.png") no-repeat 14px 50%;
+  border: 1px solid #c0c0c0;
+  filter: alpha(opacity: 0.70);
+  KHTMLOpacity: 0.70;
+  MozOpacity: 0.70;
+  opacity: 0.70;
+}
+
+#right_margin div.nested_menu div.button:hover {
+  filter: alpha(opacity: 1.00);
+  KHTMLOpacity: 1.00;
+  MozOpacity: 1.00;
+  opacity: 1.00;
+}
+
+#right_margin div.nested_menu div.button div {
+  margin-left: 18px;
+  color: #000;
+  font-weight: bold;
+  font-size: 140%;
+  text-align: center;
 }
 
 #right_margin div.nested_menu div.submenu {
@@ -150,21 +198,20 @@ div.listing_container div.footer ul li {
   top: 0;
   right: 150px;
   width: 150px;
-  background-color: #ccc;
+  background-color: #f1f1f1; /* very light gray */
+  border: 1px solid #e5e5e5;
   cursor: default;
-  padding: 0.50em 0.60em 1.00em 0.6em;
+  padding: 0.30em 0.50em 0.8em;
 }
 
-#right_margin div.nested_menu div.submenu ul,
-#right_margin div.nested_menu div.submenu div.more {
+#right_margin div.nested_menu div.submenu ul {
   margin: 0 7px;
   padding: 0;
 }
 
 #right_margin div.nested_menu div.more {
-  font-family: sans-serif;
   font-size: 75%;
-  color: #444;
+  color: #c7532c; /* rusty orange */
   letter-spacing: 1px;
   cursor: pointer;
 }
@@ -178,14 +225,14 @@ div.listing_container div.footer ul li {
 
 #right_margin div.nested_menu div.submenu div.close_element {
   position: absolute;
-  top: 7px;
-  right: 7px;
+  top: 7px; right: 7px;
   background-color: #f0f0f0;
   border: 1px solid #ff0000;
   color: #c7532c; /* rusty orange */
   font-style: Verdana;
   font-weight: bold;
   font-size: 80%;
+  padding: 1px 2px;
   padding: 1px 2px;
   line-height: 1.0em;
   cursor: pointer;

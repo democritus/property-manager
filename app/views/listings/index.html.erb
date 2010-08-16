@@ -25,29 +25,37 @@
 
 <% content_for :right_margin do %>
   <div id="right_margin">
-    <% content_for :title, index_title %>
-    <div class="bold_link">
-      <%= listing_type_toggle %>
-    </div>
-    <!--
-    <div class="nested_menu" onclick="toggleAndUndisplayOthers('#filter_menu')">
-    -->
     <% javascript_tag do %>
       $j(document).ready(function() {
         //click dblclick mousedown mouseenter mouseleave
         $j('body').bind('click', detectEvent);
         function detectEvent(e) {
-          $j('.nested_menu').children('.submenu').hide();
+          hideNestedSubMenus();
         }
         $j('.nested_menu').click(function(event){
           event.stopPropagation();
         });
       });
+      function hideNestedSubMenus() {
+        $j('.nested_menu').children('.submenu').hide();
+      }
+      function resetSubMenu(el) {
+        $j(el).find('.normal').hide();
+        $j(el).find('.more').show();
+      }
     <% end %>
-    <div id="filter_menu" class="nested_menu" onclick="hideNephews('#filter_menu', '.nested_menu', '.submenu'); toggleChildrenNoBubble('#filter_menu', '.submenu')">
-      <h2><%= rounded_box('<- Filter Results', 'rounded_corners_gray') %></h2>
+    <% content_for :title, index_title %>
+    <div class="bold_link">
+      <%= listing_type_toggle %>
+    </div>
+    <div id="filter_menu" class="nested_menu"
+    onclick="hideNephews('#filter_menu', '.nested_menu', '.submenu');
+    resetSubMenu('#filter_menu');
+    toggleChildrenNoBubble('#filter_menu', '.submenu')">
+      <div class="button"><div>Filter</div></div>
       <div class="submenu" style="display: none">
-        <div class="close_element" onclick="hideChildren('#filter_menu', '.submenu')">X</div>
+        <div class="close_element"
+        onclick="hideChildren('#filter_menu', '.submenu');">X</div>
         <%= category_filter %>
         <%= place_filter :country %>
         <%= place_filter :zone %>
@@ -60,13 +68,12 @@
         <%= style_filter %>
       </div>
     </div>
-<!--    <div class="nested_menu" onclick="$j('#order_menu').toggle('fold');"> -->
     <div id="order_menu" class="nested_menu" onclick="hideNephews('#order_menu', '.nested_menu', '.submenu'); toggleChildrenNoBubble('#order_menu', '.submenu')">
-      <h2><%= rounded_box '<- Order Results', 'rounded_corners_gray' %></h2>
+      <div class="button"><div>Sort</div></div>
       <div class="submenu" style="display: none">
         <div class="close_element" onclick="hideChildren('#order_menu', '.submenu');">X</div>
         <div class="menu_list">
-          <h3>Order by</h3>
+          <h3>Sort by</h3>
           <ul>
             <%
             # TODO: fix ordering so sorts can be performed on fields from

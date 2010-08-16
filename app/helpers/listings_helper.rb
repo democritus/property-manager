@@ -267,10 +267,10 @@ module ListingsHelper
       has_filter = true
     end
     if has_filter
-      html = '<li>' +
+      html = '<ul><li>' +
         link_to('All categories', listings_options(
           @search_params.merge(CATEGORIES_EQUALS_ANY => nil)
-        )) + '</li>'
+        )) + '</li></ul>'
     else
       # TODO: select subset of records associated with current listings
       if @search_params[LISTING_TYPE_EQUALS]
@@ -304,10 +304,10 @@ module ListingsHelper
       has_filter = true
     end
     if has_filter
-      html = '<li>' +
+      html = '<ul><li>' +
         link_to('All styles', listings_options(
           @search_params.merge(STYLES_EQUALS_ANY => nil)
-        )) + '</li>'
+        )) + '</li></ul>'
     else
       # TODO: select subset of records associated with current listings
       if @search_params[LISTING_TYPE_EQUALS]
@@ -326,7 +326,7 @@ module ListingsHelper
       html = get_highlighted_html(:style, styles)
     end
     return unless html
-    "<div class=\"menu_list\"><h3>Filter by style</h3>#{html}</ul></div>"
+    "<div class=\"menu_list\"><h3>Filter by style</h3>#{html}</div>"
   end
   
   def feature_filter
@@ -334,10 +334,10 @@ module ListingsHelper
       has_filter = true
     end
     if has_filter
-      html = '<li>' +
+      html = '<ul><li>' +
         link_to('All features', listings_options(
           @search_params.merge(FEATURES_EQUALS_ANY => nil)
-        )) + '</li>'
+        )) + '</li></ul>'
     else
       # TODO: select subset of records associated with current listings
       if @search_params
@@ -361,7 +361,7 @@ module ListingsHelper
       html = get_highlighted_html(:feature, features)
     end
     return unless html
-    "<div class=\"menu_list\"><h3>Filter by feature</h3>#{html}</ul></div>"
+    "<div class=\"menu_list\"><h3>Filter by feature</h3>#{html}</div>"
   end
   
   def place_filter( type )
@@ -540,14 +540,19 @@ module ListingsHelper
     html
   end
   
-  def get_highlighted_html(model_name, collection)
+  def get_highlighted_html( model_name, collection )
     highlighted = []
     normal = []
-    collection.each_with_index do |record, i|
-      if i < 5 || record.send("#{model_name}_assignments")[0].highlighted
-        highlighted << record
-      else
-        normal << record
+    min = 5
+    if collection.length <= min
+      highlighted = collection
+    else
+      collection.each_with_index do |record, i|
+        if i < min || record.send("#{model_name}_assignments")[0].highlighted
+          highlighted << record
+        else
+          normal << record
+        end
       end
     end
     highlighted_html = normal_html = ''
@@ -571,14 +576,15 @@ module ListingsHelper
     end
     if highlighted_html
       normal_id = 'normal_' + model_name.to_s + '_filter'
-      html = "<ul>#{highlighted_html}</ul>\n" +
-        "<div class=\"more\"" +
+      html = "<ul>#{highlighted_html}\n"
+      unless normal_html.blank?
+        html += "<div class=\"more\"" +
           " onclick=\"$j(this).hide();$j('##{normal_id}').show('blind')\"" +
-          " id=\"more_#{model_name.to_s.pluralize}_trigger\">more...</div>\n"
-      if normal_html
-        html += "<ul style=\"display: none\"" +
-          " id=\"normal_#{model_name.to_s}_filter\">#{normal_html}</ul>\n"
+          " id=\"more_#{model_name.to_s.pluralize}_trigger\">more...</div>\n" +
+          "<div style=\"display: none\"" +
+          " class=\"normal\" id=\"#{normal_id}\">#{normal_html}</div>\n"
       end
+      html += '</ul>'
     end
   end
 end

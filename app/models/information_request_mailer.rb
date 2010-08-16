@@ -4,8 +4,8 @@ class InformationRequestMailer < ActionMailer::Base
   
   def recipient_parts(information_request)
     {
-      :email => information_request[:intended_recipient_email],
-      :name => information_request[:intended_recipient_name]
+      :email => information_request[:recipient_email],
+      :name => information_request[:recipient_name]
     }
   end
   
@@ -15,10 +15,10 @@ class InformationRequestMailer < ActionMailer::Base
       sender[:name] = 'User Services on behalf of ' + sender[:email]
       return sender
     end
-    if information_request[:intended_recipient_email].blank?
+    if information_request[:recipient_email].blank?
       return nil
     else
-      sender[:email] = information_request[:intended_recipient_email]
+      sender[:email] = information_request[:recipient_email]
       unless information_request[:name].blank?
         sender[:name] = 'User Services on behalf of ' +
           information_request[:name]

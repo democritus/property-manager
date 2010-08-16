@@ -4,7 +4,9 @@ Migration
 -Make sure category/style/feature_assignments get assigned for "rent" and "sale"
 when "both" is indicated
 -Save default market segment images in separate directory and add logic to
-  seed data to create these records. Need to find more/better stock images
+seed data to create these records. Need to find more/better stock images
+-Jaco barrio is being mapped to Parrita... this is the name of the canton, but
+the barrio should be Jaco
   
 Visual
 -Sweet-looking home page (agency:show)
@@ -13,6 +15,22 @@ Visual
   -links
 -Make arrows more prominent in gliders (or highlight them on page load)
 -Allow admin to choose color scheme
+-Allow users to choose to filter by a different category/place than the
+currently selected one. Right now they have to undo the current filter, for
+example by clicking "All barrios" and then select another barrio. The options
+available should be like this:
+  *Category/Style/Country -> other categories/styles/countries
+  *Zone -> other zones in current country
+  *Province -> other provinces in current country
+  *Canton -> other cantons in current a)province if province selected or
+    b)zone if zone selected
+  *Barrio -> other barrios in current a)canton if canton selected or b)market
+    if market selected
+-Allow users to select more than one feature to filter by. Use checkboxes
+in filter menu plus "filter" link that submits a form with GET method instead
+of just simple links that only allow constraining by a single feature at a time.
+-Constrain filter options to only those that actually exist in current result
+set.
 
 -Smooth out featured/similar/etc. glider shiznit
   -number of images
@@ -47,7 +65,12 @@ xAdd "highlighted" flag to cat/feat/style_assignments tables so that the most
 
 Miscellaneous
 xCreate admin-only version of client views that is never cached, so that
-  admins can easily navigate listings with admin-only links and content
-  available (which obviously can't be cached). Easiest implementation seems
-  like it would be to have separate routing for this like /listings instead of
-  /real_estate
+admins can easily navigate listings with admin-only links and content
+available (which obviously can't be cached). Easiest implementation seems
+like it would be to have separate routing for this like /listings instead of
+/real_estate
+  
+Web server configuration
+-Automatically update apache config file for domain aliases so that when admins
+change domain and/or subdomains, the apache configuration is updated
+automatically

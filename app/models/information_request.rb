@@ -14,8 +14,8 @@ class InformationRequest < ActiveRecord::Base
   
   # Pseudo fields
   attr_accessor :subject
-  attr_accessor :intended_recipient_email
-  attr_accessor :intended_recipient_name
+  attr_accessor :recipient_email
+  attr_accessor :recipient_name
   
   validates_presence_of :message
   validates_presence_of :name
@@ -24,7 +24,7 @@ class InformationRequest < ActiveRecord::Base
     :with => /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i,
     :allow_blank => true
   
-  before_save :set_intended_recipient
+  before_save :set_recipient
   
   
   private
@@ -32,7 +32,7 @@ class InformationRequest < ActiveRecord::Base
   # Don't save email recipient since email hasn't been sent yet, but remember
   # the intended recipient so that it can be saved later upon succesful
   # delivery  
-  def set_intended_recipient
+  def set_recipient
     return nil unless self.agency_id
     agency = Agency.find( self.agency_id, :include => { :broker => :user } )
     if agency
@@ -46,8 +46,8 @@ class InformationRequest < ActiveRecord::Base
             name = agency[:name]
           end
           # Set recipient fields and record in database
-          write_attribute(:intended_recipient_email, email)
-          write_attribute(:intended_recipient_name, name)
+          write_attribute(:recipient_email, email)
+          write_attribute(:recipient_name, name)
         end
       end
     end

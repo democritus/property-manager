@@ -1,0 +1,29 @@
+# EX: /properties/default_thumb
+
+Fleximage::Blank.new('175x131').operate do |image|
+# TODO: is this the best way to create an image from an existing file?
+  image.image_overlay('seed_images/properties/default_property_image.jpg',
+    :size => :scale_to_fit # :scale_to_fit, :stretch_to_fit
+#    :alignment => :center, # :center, :top, :top_right, :right, :bottom_right,
+                            # :bottom, :bottom_left, :left, :top_left
+#    :offset => "123x456"
+#    :blending => :dissolve # :screen, :multiply, :copy_cyan, :copy_black, etc. See
+                            # RMagick documentation for more information
+  )
+  image.resize '175x175'
+  image.border :size => 4, :color => 'white'
+  image.shadow
+  image.text("barrioearth.com",
+    :alignment => :bottom_right,
+    :offset => '20x20',
+    :antialias => true,
+    :color => 'gray',
+    :font_size => 12
+    #:font => 'path/to/myfont.ttf',
+    #:rotate => -15,
+    #:shadow => {
+    #  :blur => 1,
+    #  :opacity => 0.5,
+    #}
+  )
+end
