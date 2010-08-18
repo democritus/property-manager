@@ -52,7 +52,9 @@
     onclick="hideNephews('#filter_menu', '.nested_menu', '.submenu');
     resetSubMenu('#filter_menu');
     toggleChildrenNoBubble('#filter_menu', '.submenu')">
-      <div class="button"><div>Filter</div></div>
+      <div class="button">
+        <div><div>Filter</div></div>
+      </div>
       <div class="submenu" style="display: none">
         <div class="close_element"
         onclick="hideChildren('#filter_menu', '.submenu');">X</div>
@@ -64,12 +66,29 @@
         <%= place_filter :canton %>
         <%= place_filter :barrio %>
         <%= price_range_filter %>
-        <%= feature_filter %>
         <%= style_filter %>
       </div>
     </div>
+    <div>
+      <% javascript_tag do %>
+        function updateCheckedValues(field) {
+          $j('input[name=' + this.name ']:checked');
+          str = '';
+          for (i=0; i<items.length; i++) {
+            if (i>0) {
+              str = str + ',';
+            }
+            str = str + items[i];
+          }
+          $j(field).val() = str;
+        }
+      <% end %>
+      <%= feature_filter %>
+    </div>
     <div id="order_menu" class="nested_menu" onclick="hideNephews('#order_menu', '.nested_menu', '.submenu'); toggleChildrenNoBubble('#order_menu', '.submenu')">
-      <div class="button"><div>Sort</div></div>
+      <div class="button">
+        <div><div>Sort</div></div>
+      </div>
       <div class="submenu" style="display: none">
         <div class="close_element" onclick="hideChildren('#order_menu', '.submenu');">X</div>
         <div class="menu_list">

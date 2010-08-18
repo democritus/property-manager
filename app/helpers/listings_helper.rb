@@ -293,7 +293,7 @@ module ListingsHelper
         )
       end
       return if categories.empty?
-      html = get_highlighted_html(:category, categories)
+      html = get_highlighted_html( categories, :form )
     end
     return unless html
     "<div class=\"menu_list\"><h3>Filter by category</h3>#{html}</div>"
@@ -323,7 +323,7 @@ module ListingsHelper
         styles = Style.all
       end
       return if styles.empty?
-      html = get_highlighted_html(:style, styles)
+      html = get_highlighted_html( styles )
     end
     return unless html
     "<div class=\"menu_list\"><h3>Filter by style</h3>#{html}</div>"
@@ -358,7 +358,7 @@ module ListingsHelper
           :conditions => 'feature_assignments.highlighted = 1')
       end
       return if features.empty?
-      html = get_highlighted_html(:feature, features)
+      html = get_highlighted_html( features, :form )
     end
     return unless html
     "<div class=\"menu_list\"><h3>Filter by feature</h3>#{html}</div>"
@@ -540,7 +540,17 @@ module ListingsHelper
     html
   end
   
-  def get_highlighted_html( model_name, collection )
+  def get_highlighted_html( collection, type = :links )
+    return if collection.empty?
+    model_name = collection[0].class.class_name.underscore
+    case type
+    when :form
+      parent_tag_type = :form
+      child_tag_type = :input
+    else
+      parent_tag_type = :ul
+      child_tag_type = :li
+    end
     highlighted = []
     normal = []
     min = 5
@@ -557,34 +567,63 @@ module ListingsHelper
     end
     highlighted_html = normal_html = ''
     highlighted.each do |record|
-      highlighted_html += '<li>' +
-        link_to(record.name.capitalize, listings_options(
-          @search_params.merge(
-            "#{model_name.to_s.pluralize.upcase}_EQUALS_ANY".constantize =>
-              record.cached_slug
-          )
-        )) + '</li>'
+      highlighted_html += item_for_list( record, child_tag_type )
     end
     normal.each do |record|
-      normal_html += '<li>' +
-        link_to(record.name.capitalize, listings_options(
-          @search_params.merge(
-            "#{model_name.to_s.pluralize.upcase}_EQUALS_ANY".constantize =>
-              record.cached_slug
-          )
-        )) + '</li>'
+      normal_html += item_for_list( record, child_tag_type )
     end
     if highlighted_html
-      normal_id = 'normal_' + model_name.to_s + '_filter'
-      html = "<ul>#{highlighted_html}\n"
+      html = highlighted_html
       unless normal_html.blank?
+        normal_id = 'normal_' + model_name.to_s + '_filter'
         html += "<div class=\"more\"" +
           " onclick=\"$j(this).hide();$j('##{normal_id}').show('blind')\"" +
           " id=\"more_#{model_name.to_s.pluralize}_trigger\">more...</div>\n" +
           "<div style=\"display: none\"" +
           " class=\"normal\" id=\"#{normal_id}\">#{normal_html}</div>\n"
       end
-      html += '</ul>'
+    end
+    return if html.blank?
+    case type
+    when :form
+      html = "<form>#{html}</form>"
+      form_inner_html = text_field_tag(
+          "#{model_name.to_s.pluralize.upcase}_EQUALS_ANY".constantize.to_s,
+          nil,
+          :style => 'display: none'
+        ) + "\n" + submit_tag('Filter') + "\n"
+      html += form_tag( listings_path, :method => :get ) do |form|
+        form_inner_html
+      end
+    else
+      content_tag( parent_tag_type, html + "\n" )
+    end
+  end
+  
+  
+  private
+  
+  def item_for_list( object, type, escape = true )
+    model_name = object.class.class_name.underscore
+    named_route = "#{model_name.to_s.pluralize.upcase}_EQUALS_ANY".constantize
+    label = object.name.capitalize
+    name = named_route.to_s + '[]'
+    value = object.cached_slug
+    id = model_name + '_' + value
+    case type
+    when :li
+      content = content_tag( type, link_to(label,
+          listings_options(
+            @search_params.merge(
+              named_route => object.cached_slug
+            )
+          )
+        )
+      )
+    when :input
+      content = label_tag(id, label) + "\n" +
+        check_box_tag(name, value, nil, :id => id,
+          :onclick => "updateCheckedValues('#{named_route.to_s})'") + "\n"
     end
   end
 end

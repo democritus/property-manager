@@ -166,26 +166,32 @@ div.listing_container div.footer ul li {
   cursor: pointer;
 }
 
-
 #right_margin div.nested_menu div.button {
   margin: 0px 10px 10px;
-  padding: 10px 0px;
-  background: #d0d0d0 url("../images/black_arrow_left.png") no-repeat 14px 50%;
+  background-color: white;
   border: 1px solid #c0c0c0;
+}
+
+#right_margin div.nested_menu div.button div {
+  background: #c0c0c0 url("../images/black_arrow_left.png") no-repeat 14px 50%;
+  padding: 10px 0px;
   filter: alpha(opacity: 0.70);
   KHTMLOpacity: 0.70;
   MozOpacity: 0.70;
   opacity: 0.70;
 }
 
-#right_margin div.nested_menu div.button:hover {
+#right_margin div.nested_menu div.button:hover div {
   filter: alpha(opacity: 1.00);
   KHTMLOpacity: 1.00;
   MozOpacity: 1.00;
   opacity: 1.00;
 }
 
-#right_margin div.nested_menu div.button div {
+#right_margin div.nested_menu div.button div div {
+  background: none;
+  border: none;
+  padding: 0;
   margin-left: 18px;
   color: #000;
   font-weight: bold;
@@ -198,8 +204,10 @@ div.listing_container div.footer ul li {
   top: 0;
   right: 150px;
   width: 150px;
-  background-color: #f1f1f1; /* very light gray */
-  border: 1px solid #e5e5e5;
+  background-color: #c7532c; /* rusty orange */
+  background-color: #e7936c;
+  border: 1px solid #e7734c;
+  border: 1px solid #d7734c;
   cursor: default;
   padding: 0.30em 0.50em 0.8em;
 }
@@ -227,7 +235,7 @@ div.listing_container div.footer ul li {
   position: absolute;
   top: 7px; right: 7px;
   background-color: #f0f0f0;
-  border: 1px solid #ff0000;
+  border: 1px solid #e7734c;
   color: #c7532c; /* rusty orange */
   font-style: Verdana;
   font-weight: bold;
