@@ -10,22 +10,21 @@ module ReadableSearch
   def listings_params( parameters = nil )
     if parameters.nil?
       parameters = params.dup
-    end 
+    end
     SEARCHLOGIC_PARAMS_MAP.each do |param|
       if parameters[param[:key]]
         # Remove elements set to their defaults
         if parameters[param[:key]] == param[:default_value]
           parameters.delete(param[:key])
         else
+          value = parameters[param[:key]]
           case param[:key]
           # Slice off "under " and " dollars"
           when ASK_AMOUNT_LESS_THAN_OR_EQUAL_TO
-            parameters[param[:key]] = parameters[
-              param[:key]].slice(6..-1).slice(0..-9)
+            parameters[param[:key]] = value.slice(6..-1).slice(0..-9)
           # Slice off "over " and " dollars"
           when ASK_AMOUNT_GREATER_THAN_OR_EQUAL_TO
-            parameters[param[:key]] = parameters[
-              param[:key]].slice(5..-1).slice(0..-9)
+            parameters[param[:key]] = value.slice(5..-1).slice(0..-9)
           end
         end
       end
@@ -80,7 +79,7 @@ module ReadableSearch
     non_readable_params = {}
         
     country = nil
-    category = nil
+    categories = categories_string = nil
     listing_type = nil
     barrio = nil
     canton = nil
@@ -89,15 +88,20 @@ module ReadableSearch
     zone = nil
     ask_amount_maximum = nil
     ask_amount_minimum = nil
-    style = nil
-    features = nil
+    styles = styles_string = nil
+    features = features_string = nil
     parameters.each_pair do |key, value|
       case key.to_sym
       when COUNTRY_EQUALS
         country = value
         country = country.titleize if type == 'text'
       when CATEGORIES_EQUALS_ANY
-        category = value
+        categories = value
+        if categories.kind_of?(Array)
+          categories_string = categories.to_sentence
+        else
+          categories_string = categories
+        end
       when LISTING_TYPE_EQUALS
         listing_type = value
       when BARRIO_EQUALS
@@ -120,9 +124,19 @@ module ReadableSearch
       when ASK_AMOUNT_GREATER_THAN_OR_EQUAL_TO
         ask_amount_minimum = value.to_s
       when STYLES_EQUALS_ANY
-        style = value
+        styles = value
+        if styles.kind_of?(Array)
+          styles_string = styles.to_sentence
+        else
+          styles_string = styles
+        end
       when FEATURES_EQUALS_ANY
         features = value
+        if features.kind_of?(Array)
+          features_string = features.to_sentence
+        else
+          features_string = features
+        end
       else
         non_readable_params.merge!( key => value.to_s )
       end
@@ -146,11 +160,12 @@ module ReadableSearch
       money_label = spacer + 'dollars'
     end
     country = 'all' unless country
-    category = 'property' unless category
+    categories_string = 'property' unless categories_string
     unless listing_type
       listing_type = 'for' + spacer + 'sale' + spacer + 'or' + spacer + 'rent'
     end
-    readable_string = country + delimiter + category + delimiter + listing_type
+    readable_string = country + delimiter + categories_string + delimiter +
+      listing_type
     unless country == 'all'
       place_separator = 'in'
       place_delimiter = delimiter
@@ -196,29 +211,37 @@ module ReadableSearch
         ) +
         money_label
     end
-    if style
+    if features_string
       if type == 'text'
-        readable_string += ',' + delimiter + style + spacer + 'style'
+        readable_string += delimiter + linebreak + 'Features: ' +
+          features_string
       else
-        readable_string += delimiter + style + spacer + 'style'
+        readable_string += delimiter + features_string
       end
     end
-    if features
+    if styles_string
       if type == 'text'
-        prompt = linebreak + 'Features:'
-        feature_delimiter = ',' + delimiter
+        readable_string += delimiter + linebreak + 'Styles: ' + styles_string
       else
-        prompt = 'features'
-        feature_delimiter = delimiter
-      end
-      features.each_with_index do |feature, j|
-        if j.zero?
-          readable_string += delimiter + prompt + spacer + feature
-        else
-          readable_string += feature_delimiter + feature
-        end
+        readable_string += delimiter + styles_string
       end
     end
+#    if features
+#      if type == 'text'
+#        prompt = linebreak + 'Features:'
+#        feature_delimiter = ',' + delimiter
+#      else
+#        prompt = 'features'
+#        feature_delimiter = delimiter
+#      end
+#      features.each_with_index do |feature, j|
+#        if j.zero?
+#          readable_string += delimiter + prompt + spacer + feature
+#        else
+#          readable_string += feature_delimiter + feature
+#        end
+#      end
+#    end
     readable_string.gsub!('-', ' ') if type == 'text'
     return [ readable_string, non_readable_params ]
   end

@@ -161,6 +161,63 @@ div.listing_container div.footer ul li {
   color: #666;
 }
 
+#right_margin div.menu_block {
+  margin: 5px 7px 7px;
+}
+
+#right_margin div.row {
+  position: relative;
+  margin: 0;
+  padding: 0;
+  font-size: 75%;
+  width: 100%;
+  white-space: normal;
+  overflow: hidden;
+}
+
+#right_margin div.row label,
+#right_margin div.row input[type=checkbox] {
+}
+
+#right_margin input[type=checkbox] {
+  position: absolute;
+  display: block;
+  left: 0px;
+  top: 0px;
+}
+
+#right_margin label {
+  float: left;
+  clear: left;
+  display: block;
+  margin-left: 17px;
+}
+
+#right_margin div.submit_row {
+  float: left;
+  clear: left;
+  width: 100%;
+  text-align: center;
+}
+
+#right_margin input[type=submit] {
+  display: block;
+  float: none;
+  clear: none;
+  font-size: 75%;
+  margin: 0px;
+  width: 100%;
+}
+
+#right_margin div.more {
+  float: left;
+  clear: none;
+  font-size: 75%;
+  color: #c7532c; /* rusty orange */
+  letter-spacing: 1px;
+  cursor: pointer;
+}
+
 #right_margin div.nested_menu {
   position: relative;
   cursor: pointer;
@@ -209,19 +266,16 @@ div.listing_container div.footer ul li {
   border: 1px solid #e7734c;
   border: 1px solid #d7734c;
   cursor: default;
-  padding: 0.30em 0.50em 0.8em;
+}
+
+#right_margin div.nested_menu div.submenu div.menu_list {
+  float: left;
+  clear: left;
 }
 
 #right_margin div.nested_menu div.submenu ul {
   margin: 0 7px;
   padding: 0;
-}
-
-#right_margin div.nested_menu div.more {
-  font-size: 75%;
-  color: #c7532c; /* rusty orange */
-  letter-spacing: 1px;
-  cursor: pointer;
 }
 
 #right_margin div.nested_menu div.submenu li {

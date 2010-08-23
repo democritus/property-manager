@@ -23,7 +23,6 @@ i = 0
     :symbol => '₡'
   }
 ].each do |record|
-  record.merge!(:position => i + 1) unless record[:position]
   Currency.create!(record)
   i += 1
 end
@@ -71,7 +70,6 @@ countries.each do |record|
   if currency
     record.merge!(:currency_id => currency.id) unless currency.id.blank?
   end
-  record.merge!(:position => i + 1) unless record[:position]
   record.delete(:currency_code)
   Country.create!(record)
   i += 1
@@ -94,7 +92,6 @@ end
 #  if currency
 #    record.merge!(:currency_id => currency.id) unless currency.id.blank?
 #  end
-#  record.merge!(:position => i + 1) unless record[:position]
 #  record.delete(:currency_code)
 #  Country.create!(record)
 #  i += 1
@@ -133,7 +130,6 @@ i = 0
   )
   next unless country
   record.merge!(:country_id => country.id)
-  record.merge!(:position => i + 1) unless record[:position]
   record.delete(:iso2)
   Zone.create!(record)
   i += 1
@@ -176,7 +172,6 @@ i = 0
   )
   next unless country
   record.merge!(:country_id => country.id)
-  record.merge!(:position => i + 1) unless record[:position]
   record.delete(:iso2)
   Province.create!(record)
   i += 1
@@ -697,7 +692,6 @@ i = 0
     :select => 'zones.id'
   )
   next unless zone
-  record.merge!(:position => i + 1) unless record[:position]
   record.merge!(:province_id => province.id)
   record.merge!(:zone_id => zone.id)
   record.delete(:iso2)
@@ -715,7 +709,6 @@ i = 0
   { :name => 'businesses' },
   { :name => 'land for sale' }
 ].each do |record|
-  record.merge!( :position => i + 1 ) unless record[:position]
   if market_segment = MarketSegment.create!( record )
     market_segment_images = []
     image_dir = RAILS_ROOT + '/seed_images/market_segment_images'
@@ -725,7 +718,6 @@ i = 0
       market_segment_images << {
         :imageable_id => market_segment.id,
         :imageable_type => 'MarketSegment',
-        :position => j,
         :image_file => File.new( image_dir + '/' + filename, 'r' )
       }
       j++
@@ -752,7 +744,6 @@ i = 0
     :select => :id )
   record.merge!( :country_id => country.id )
   record.merge!( :market_segment_id => market_segment.id ) if market_segment
-  record.merge!( :position => i + 1 ) unless record[:position]
   record.delete( :iso2 )
   Agency.create!( record )
   i += 1
@@ -764,7 +755,6 @@ i = 0
   { :name => 'for sale' },
   { :name => 'for rent' }
 ].each do |record|
-  record.merge!(:position => i + 1) unless record[:position]
   ListingType.create!(record)
   i += 1
 end
@@ -812,7 +802,6 @@ i = 0
   { :name => 'Commercial Development', :user_defined => false, :type => :sale,
     :sale_highlighted => false, :rent_highlighted => false }
 ].each do |record|
-  record.merge!(:position => i + 1) unless record[:position]
   types = []
   case record[:type]
   when :sale, :both
@@ -921,12 +910,10 @@ i = 0
     :sale_highlighted => true, :rent_highlighted => false },
   { :name => 'mountain view', :user_defined => false, :type => :both,
     :sale_highlighted => false, :rent_highlighted => false },
-  
-  { :name => 'washer/dryer', :user_defined => false, :type => :rent,
+  { :name => 'washer/dryer', :user_defined => false, :type => :both,
     :sale_highlighted => true, :rent_highlighted => true }
   
 ].each do |record|
-  record.merge!(:position => i + 1) unless record[:position]
   types = []
   record.each_pair do |key, value|
   case record[:type]
@@ -1003,7 +990,6 @@ i = 0
   { :name => 'Victorian', :type => :both,
     :sale_highlighted => true, :rent_highlighted => true }
 ].each do |record|
-  record.merge!(:position => i + 1) unless record[:position]
   types = []
   case record[:type]
   when :sale, :both

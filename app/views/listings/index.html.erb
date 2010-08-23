@@ -1,3 +1,7 @@
+<%= filter_form %>
+  <% javascript_tag do %>
+<% end %>
+
 <div id="listings-index-content">
   <h3 style="margin: 0 0 1em; line-height: 1.2em"><%= page_header %></h3>
   <% unless @listings.empty? %>
@@ -26,6 +30,9 @@
 <% content_for :right_margin do %>
   <div id="right_margin">
     <% javascript_tag do %>
+      var default_params = <%= JAVASCRIPT_LISTING_PARAMS_MAP %>;
+      var form_params = $j('#filter_form').serializeArray();
+      var listing_params = mergeParamsArrays(default_params, form_params);
       $j(document).ready(function() {
         //click dblclick mousedown mouseenter mouseleave
         $j('body').bind('click', detectEvent);
@@ -43,12 +50,53 @@
         $j(el).find('.normal').hide();
         $j(el).find('.more').show();
       }
+      function updateCheckedValues(src_id, trg_id) {
+        src = '#' + src_id;
+        trg = '#' + trg_id;
+        checked = $j('input[name=' + $j(src).attr('name') + ']:checked');
+        str = '';
+        for (i=0; i<checked.length; i++) {
+          if (i>0) {
+            str = str + ' ';
+          }
+          str = str + checked[i].value;
+        }
+        // If all options unchecked, set corresponding field's value to default
+        if (str == '') {
+          for (i=0; i<default_params.length; i++) {
+            if (default_params[i]['name'] == trg_id) {
+              str = default_params[i]['value'];
+              break;
+            }
+          }
+        }
+        $j(trg).val(str);
+      }
+      function mergeParamsArrays(arr1, arr2) {
+        // Merge arrays
+        for (i=0; i<arr1.length; i++) {
+          for (j=0; j<arr2.length; j++) {
+            if (arr1[i].name == arr2[j].name) {
+              arr1[i].value = arr2[j].value;
+              break;
+            }
+          }
+        }
+        return arr1;
+      }
+      function paramsArrayToPath(arr) {
+        values = [];
+        for (i=0; i<arr.length; i++) {
+          values[i] = arr[i].value;
+        }
+        return escape('/' + values.join('/'));
+      }
     <% end %>
     <% content_for :title, index_title %>
     <div class="bold_link">
       <%= listing_type_toggle %>
     </div>
-    <div id="filter_menu" class="nested_menu"
+    <div id="filter_menu" class="nested_menu clearfix"
     onclick="hideNephews('#filter_menu', '.nested_menu', '.submenu');
     resetSubMenu('#filter_menu');
     toggleChildrenNoBubble('#filter_menu', '.submenu')">
@@ -56,132 +104,142 @@
         <div><div>Filter</div></div>
       </div>
       <div class="submenu" style="display: none">
-        <div class="close_element"
-        onclick="hideChildren('#filter_menu', '.submenu');">X</div>
-        <%= category_filter %>
-        <%= place_filter :country %>
-        <%= place_filter :zone %>
-        <%= place_filter :province %>
-        <%= place_filter :market %>
-        <%= place_filter :canton %>
-        <%= place_filter :barrio %>
-        <%= price_range_filter %>
-        <%= style_filter %>
+        <div class="menu_block clearfix">
+          <div class="close_element"
+          onclick="hideChildren('#filter_menu', '.submenu');">X</div>
+          <%= place_filter :country %>
+          <%= place_filter :zone %>
+          <%= place_filter :province %>
+          <%= place_filter :market %>
+          <%= place_filter :canton %>
+          <%= place_filter :barrio %>
+          <%= price_range_filter %>
+        </div>
       </div>
-    </div>
-    <div>
-      <% javascript_tag do %>
-        function updateCheckedValues(field) {
-          $j('input[name=' + this.name ']:checked');
-          str = '';
-          for (i=0; i<items.length; i++) {
-            if (i>0) {
-              str = str + ',';
-            }
-            str = str + items[i];
-          }
-          $j(field).val() = str;
-        }
-      <% end %>
-      <%= feature_filter %>
     </div>
     <div id="order_menu" class="nested_menu" onclick="hideNephews('#order_menu', '.nested_menu', '.submenu'); toggleChildrenNoBubble('#order_menu', '.submenu')">
       <div class="button">
         <div><div>Sort</div></div>
       </div>
       <div class="submenu" style="display: none">
-        <div class="close_element" onclick="hideChildren('#order_menu', '.submenu');">X</div>
-        <div class="menu_list">
-          <h3>Sort by</h3>
-          <ul>
-            <%
-            # TODO: fix ordering so sorts can be performed on fields from
-            # associated tables
-            order_by_items = [
-              {
-                :label => 'Category',
-                :order => 'property_primary_category_name'
-              },
-              {
-                :label => 'Style',
-                :order => 'property_primary_style_name'
-              },
-              {
-                :label => 'Country',
-                :order => 'property_barrio_canton_province_country_name'
-              },
-              {
-                :label => 'Zone',
-                :order => 'property_barrio_canton_zone_name'
-              },
-              {
-                :label => 'Province',
-                :order => 'property_barrio_canton_province_name'
-              },
-              {
-                :label => 'Market',
-                :order => 'property_barrio_market_name'
-              },
-              {
-                :label => 'Barrio',
-                :order => 'property_barrio_name'
-              },
-              {
-                :label => 'Price',
-                :order => 'ask_amount'
-              },
-              {
-                :label => 'Bedrooms',
-                :order => 'property_bedroom_number'
-              },
-              {
-                :label => 'Construction size',
-                :order => 'property_construction_size'
-              },
-              {
-                :label => 'Land size',
-                :order => 'property_land_size'
-              },
-              {
-                :label => 'Ref id',
-                :order => 'id'
-              },
-              {
-                :label => 'Sold',
-                :order => 'sold'
-              },
-              {
-                :label => 'Date posted',
-                :order => 'publish_date'
-              }
-            ]
-            %>
-            <% order_by_items.each do |item| %>
+        <div class="menu_block clearfix">
+          <div class="close_element" onclick="hideChildren('#order_menu', '.submenu');">X</div>
+          <div class="menu_list">
+            <h3>Sort by</h3>
+            <ul>
               <%
-              case item[:order]
-              when 'sold', 'publish_date'
-                order_dir = 'desc'
-              else
-                order_dir = 'asc'
-              end
-              if params[:order] == item[:order]
-                order_dir = 'desc'
-                if params[:order_dir]
-                  order_dir = 'asc' if params[:order_dir].downcase == 'desc'
-                end
-              end
+              # TODO: fix ordering so sorts can be performed on fields from
+              # associated tables
+              order_by_items = [
+                {
+                  :label => 'Category',
+                  :order => 'property_primary_category_name'
+                },
+                {
+                  :label => 'Style',
+                  :order => 'property_primary_style_name'
+                },
+                {
+                  :label => 'Country',
+                  :order => 'property_barrio_canton_province_country_name'
+                },
+                {
+                  :label => 'Zone',
+                  :order => 'property_barrio_canton_zone_name'
+                },
+                {
+                  :label => 'Province',
+                  :order => 'property_barrio_canton_province_name'
+                },
+                {
+                  :label => 'Market',
+                  :order => 'property_barrio_market_name'
+                },
+                {
+                  :label => 'Barrio',
+                  :order => 'property_barrio_name'
+                },
+                {
+                  :label => 'Price',
+                  :order => 'ask_amount'
+                },
+                {
+                  :label => 'Bedrooms',
+                  :order => 'property_bedroom_number'
+                },
+                {
+                  :label => 'Construction size',
+                  :order => 'property_construction_size'
+                },
+                {
+                  :label => 'Land size',
+                  :order => 'property_land_size'
+                },
+                {
+                  :label => 'Ref id',
+                  :order => 'id'
+                },
+                {
+                  :label => 'Sold',
+                  :order => 'sold'
+                },
+                {
+                  :label => 'Date posted',
+                  :order => 'publish_date'
+                }
+              ]
               %>
-              <li><%= link_to item[:label],
-                listings_options(
-                  @search_params.merge(
-                    'order' => item[:order],
-                    'order_dir' => order_dir
-                  )
-                ) %></li>
-            <% end %>
-          </ul>
-        </div>
+              <% order_by_items.each do |item| %>
+                <%
+                case item[:order]
+                when 'sold', 'publish_date'
+                  order_dir = 'desc'
+                else
+                  order_dir = 'asc'
+                end
+                if params[:order] == item[:order]
+                  order_dir = 'desc'
+                  if params[:order_dir]
+                    order_dir = 'asc' if params[:order_dir].downcase == 'desc'
+                  end
+                end
+                %>
+                <li><%= link_to item[:label],
+                  listings_options(
+                    @search_params.merge(
+                      'order' => item[:order],
+                      'order_dir' => order_dir
+                    )
+                  ) %></li>
+              <% end %>
+            </ul>
+          </div>
+          </div>
       </div>
     </div>
+    <div class="menu_block clearfix">
+      <%= feature_filter %>
+    </div>
+    <div class="menu_block clearfix">
+      <%= category_filter %>
+    </div>
+    <div class="menu_block clearfix">
+      <%= style_filter %>
+    </div>
   </div>
+<% end %>
+
+<% javascript_tag do %>
+  $j('form.multiple_filter').submit(function() {
+    // Get array with form values
+    form_params = $j('#filter_form').serializeArray();
+    listing_params = mergeParamsArrays(default_params, form_params);
+    path = '/<%= request_path_parts.first %>' +
+      paramsArrayToPath(listing_params);
+    // Disable inputs so that nothing is sent as querystring
+    $j('#filter_form').find(':input').attr('disabled', true);
+    $j('#filter_form').attr('action', path);
+    $j('#filter_form').submit();
+    return false;
+  });
 <% end %>

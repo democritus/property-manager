@@ -47,10 +47,22 @@ set.
 -Keep contact buttons?
 
 Logic
+-Checked boxes should be added to "highlighted" array so they always appear
+at top of filter lists
 -Clean up crazy SQL selects
   -Why are some so long?
   -Move as much as possible to model, i.e. named routes
   -Eager load appropriately
+-Disallow commas from categories, features, and styles so that parameters can
+be safely assumed to be delimited with commas
+-Disallow slashes and other characters from names (or change friendly_id's
+default behavior with these characters) because when converted into cached
+slugs these cause the parts of the word to lose a space (and therefore become
+unrecognizable as distinct words to search engines). For example, "den/office"
+becomes "denoffice"
+-Figure out why duplicate records are displayed for some listings searches.
+For example, the following URL shows listing ID 28 twice:
+http://barrioearth.com.dev/real_estate/costa-rica/condominiums%20hotels%20commercial%20bed-breakfasts%20apartments/for-sale/any%20market/any%20barrio/any%20canton/any%20province/any%20zone/under%20any%20amount/over%20any%20amount/a-frame%20modern%20bungalow%20queen-anne%20chalet/swimming-pool%20close-to-airport%20backyard%20denoffice%20hot-water/1/publish_date/desc
 
 Admin section
 -better navigation
@@ -69,7 +81,10 @@ admins can easily navigate listings with admin-only links and content
 available (which obviously can't be cached). Easiest implementation seems
 like it would be to have separate routing for this like /listings instead of
 /real_estate
-  
+-Maybe change features so that they are more alphabetically sensible. EX:
+"front garden" should be re-written as "garden (front)"
+-Why isn't washer/dryer one of the features that appear on the feature filter?
+
 Web server configuration
 -Automatically update apache config file for domain aliases so that when admins
 change domain and/or subdomains, the apache configuration is updated

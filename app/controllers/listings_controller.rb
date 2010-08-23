@@ -7,7 +7,7 @@ class ListingsController < ApplicationController
      return Proc.new {|n| n*factor }
    end
    
-  before_filter :set_search_params
+  before_filter :set_search_params, :multiple_filter_string_to_array
   
   def index
     # Record user's search results for the most recent listings index they
@@ -105,6 +105,21 @@ class ListingsController < ApplicationController
 
 
   private
+  
+  # Some of the Searchlogic parameters that are embedded in URL path have
+  # multiple values delimited by a space. This method changes these strings
+  # into arrays for easier handling
+  def multiple_filter_string_to_array
+    LISTING_PARAMS_MAP.each do |param|
+      key, default_value = param[:key], param[:default_value]
+      case key
+      when CATEGORIES_EQUALS_ANY, FEATURES_EQUALS_ANY, STYLES_EQUALS_ANY
+        unless default_value == params[key]
+          params[key] = params[key].split(' ')
+        end
+      end
+    end
+  end
   
   def order
     order_params = {}

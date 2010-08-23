@@ -10,18 +10,26 @@ require File.join(File.dirname(__FILE__), 'boot')
 
 # Shorthand for long parameters corresponding with named routes generated
 # by Searchlogic plugin
-COUNTRY_EQUALS = :property_barrio_canton_province_country_cached_slug_equals
-CATEGORIES_EQUALS_ANY = :categories_cached_slug_equals_any
-LISTING_TYPE_EQUALS = :listing_type_cached_slug_equals
-MARKET_EQUALS = :property_barrio_market_cached_slug_equals
-BARRIO_EQUALS = :property_barrio_cached_slug_equals
-CANTON_EQUALS = :property_barrio_canton_cached_slug_equals
-PROVINCE_EQUALS = :property_barrio_canton_province_cached_slug_equals
-ZONE_EQUALS = :property_barrio_canton_zone_cached_slug_equals
 ASK_AMOUNT_LESS_THAN_OR_EQUAL_TO = :ask_amount_less_than_or_equal_to
 ASK_AMOUNT_GREATER_THAN_OR_EQUAL_TO = :ask_amount_greater_than_or_equal_to
+BARRIO_EQUALS = :property_barrio_cached_slug_equals
+CANTON_EQUALS = :property_barrio_canton_cached_slug_equals
+CATEGORIES_EQUALS_ANY = :categories_cached_slug_equals_any
+CATEGORIES_EQUALS_ALL = :categories_cached_slug_equals_all
+COUNTRY_EQUALS = :property_barrio_canton_province_country_cached_slug_equals
+
+# TESTING: TODO: remove when done
+#FEATURES_EQUALS_ANY = :features_cached_slug_equals_any
+FEATURES_EQUALS_ANY = :features_cached_slug_equals_all_custom
+
+# Custom route - Searchlogic default didn't work right
+FEATURES_EQUALS_ALL = :features_cached_slug_equals_all_custom
+LISTING_TYPE_EQUALS = :listing_type_cached_slug_equals
+MARKET_EQUALS = :property_barrio_market_cached_slug_equals
+PROVINCE_EQUALS = :property_barrio_canton_province_cached_slug_equals
 STYLES_EQUALS_ANY = :styles_cached_slug_equals_any
-FEATURES_EQUALS_ANY = :features_cached_slug_equals_any
+STYLES_EQUALS_ALL = :styles_cached_slug_equals_all
+ZONE_EQUALS = :property_barrio_canton_zone_cached_slug_equals
 
 # Maps URL params in this order to Searchlogic named routes
 SEARCHLOGIC_PARAMS_MAP = [
@@ -81,6 +89,13 @@ PAGINATE_PARAMS_MAP = [
 ]
 LISTING_PARAMS_MAP = SEARCHLOGIC_PARAMS_MAP + PAGINATE_PARAMS_MAP
 
+js_pairs = []
+LISTING_PARAMS_MAP.each do |pair|
+  js_pairs << '{name: "' + pair[:key].to_s + '"' + ', value: "' +
+    pair[:default_value] + '"}'
+end
+JAVASCRIPT_LISTING_PARAMS_MAP = '[' + js_pairs.join(',') + ']'
+
 Rails::Initializer.run do |config|
   # Settings in config/environments/* take precedence over those specified here.
   # Application configuration should go into files in config/initializers
@@ -113,7 +128,7 @@ Rails::Initializer.run do |config|
   config.gem 'searchlogic',
     :lib     => 'searchlogic',
     :source  => 'http://gems.github.com',
-    :version => '~> 2.4.19'
+    :version => '~> 2.4.23'
   config.gem 'subdomain-fu',
     :lib     => 'subdomain-fu',
     :source  => 'http://gems.github.com',

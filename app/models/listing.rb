@@ -17,16 +17,36 @@ class Listing < ActiveRecord::Base
       :property => { :agency => { :broker => { :user => :user_icons } } } }
   named_scope :featured,
     :include => [
+      :listing_type,
       :property_images,
-      { :property => :property_images },
-      :listing_type
+      { :property => :property_images }
     ],
-    :conditions => "listing_types.name = 'for sale'",
+    :conditions => { :listing_types => { :name => 'for sale' } },
     :order => 'listings.publish_date DESC',
     :limit => 10
   named_scope :regular_index,
     :include => {
       :property => { :agency => { :broker => { :user => :user_icons } } } }
+  named_scope :features_cached_slug_equals_all_custom, lambda { |values|
+    {
+      :joins => :features,
+      :conditions => ["(
+          SELECT  COUNT(*)
+          FROM `features`
+          INNER JOIN `feature_assignments`
+            ON `feature_assignments`.`feature_id` = `features`.`id`
+            AND `feature_assignments`.`feature_assignable_type` = 'Listing'
+          WHERE `features`.`cached_slug` IN (:values_list)
+            AND `feature_assignments`.`feature_assignable_id` = `listings`.`id`
+        ) = :values_count",
+        {
+          :values_list => values,
+          :values_count => values.length
+        }
+      ]
+    }
+  }
+  
 #  REMOVED: not necessary. Use 'active_agency.listings' instead
 #  named_scope :by_agency, lambda {
 #    |agency_id| {

@@ -144,7 +144,7 @@ module ListingsHelper
     unless contact
       contact = Agent.find( :first,
         :include => { :user => :user_icons },
-        :conditions => 'agents.id = 1'
+        :conditions => { :agents => { :id => 1 } }
       )
     end
     return contact
@@ -263,105 +263,82 @@ module ListingsHelper
   end
   
   def category_filter
-    if @search_params[CATEGORIES_EQUALS_ANY]
-      has_filter = true
-    end
-    if has_filter
-      html = '<ul><li>' +
-        link_to('All categories', listings_options(
-          @search_params.merge(CATEGORIES_EQUALS_ANY => nil)
-        )) + '</li></ul>'
-    else
-      # TODO: select subset of records associated with current listings
-      if @search_params[LISTING_TYPE_EQUALS]
-        conditions = nil
-        if @search_params[LISTING_TYPE_EQUALS] == 'for-sale' ||
-          @search_params[LISTING_TYPE_EQUALS] == 'for-rent'
-          conditions = [
-            'listing_types.cached_slug = ?',
-            @search_params[LISTING_TYPE_EQUALS]
-          ]
-        end
-        categories = Category.find(:all,
-          :joins => :listing_types,
-          :conditions => conditions
-        )
+    # TODO: select subset of records associated with current listings
+    if @search_params[LISTING_TYPE_EQUALS]
+      conditions = nil
+      if @search_params[LISTING_TYPE_EQUALS] == 'for-sale' ||
+        @search_params[LISTING_TYPE_EQUALS] == 'for-rent'
+        conditions = [
+          'listing_types.cached_slug = ?',
+          @search_params[LISTING_TYPE_EQUALS]
+        ]
       end
-      unless categories
-        categories = Category.find(:all,
-          :joins => { :category_assignments => :listing_types }
-        )
-      end
-      return if categories.empty?
-      html = get_highlighted_html( categories, :form )
+      categories = Category.find(:all,
+        :joins => :listing_types,
+        :conditions => conditions,
+        :order => filter_order_clause(:category)
+      )
     end
+    unless categories
+      categories = Category.find(:all,
+        :joins => :listing_types,
+        :order => filter_order_clause(:category)
+      )
+    end
+    return if categories.empty?
+    html = filter_field_list( categories, :form )
     return unless html
     "<div class=\"menu_list\"><h3>Filter by category</h3>#{html}</div>"
   end
   
-  def style_filter
-    if @search_params[STYLES_EQUALS_ANY]
-      has_filter = true
-    end
-    if has_filter
-      html = '<ul><li>' +
-        link_to('All styles', listings_options(
-          @search_params.merge(STYLES_EQUALS_ANY => nil)
-        )) + '</li></ul>'
-    else
-      # TODO: select subset of records associated with current listings
+  def feature_filter
+    # TODO: select subset of records associated with current listings
+    if @search_params
       if @search_params[LISTING_TYPE_EQUALS]
-        styles = Style.find(:all,
+        features = Feature.find(:all,
           :joins => :listing_types,
           :conditions => [
             'listing_types.cached_slug = ?',
             @search_params[LISTING_TYPE_EQUALS]
-          ]
+          ],
+          :order => filter_order_clause(:feature)
         )
       end
-      unless styles
-        styles = Style.all
-      end
-      return if styles.empty?
-      html = get_highlighted_html( styles )
     end
-    return unless html
-    "<div class=\"menu_list\"><h3>Filter by style</h3>#{html}</div>"
-  end
-  
-  def feature_filter
-    if @search_params[FEATURES_EQUALS_ANY]
-      has_filter = true
+    unless features
+      features = Feature.find(:all,
+        :joins => :listing_types,
+        :order => filter_order_clause
+      )
     end
-    if has_filter
-      html = '<ul><li>' +
-        link_to('All features', listings_options(
-          @search_params.merge(FEATURES_EQUALS_ANY => nil)
-        )) + '</li></ul>'
-    else
-      # TODO: select subset of records associated with current listings
-      if @search_params
-        if @search_params[LISTING_TYPE_EQUALS]
-          features = Feature.find(:all,
-            :joins => [:listing_types, :feature_assignments],
-            :conditions => [
-              'listing_types.cached_slug = ?' +
-                ' AND feature_assignments.highlighted = 1',
-              @search_params[LISTING_TYPE_EQUALS]
-            ]
-          )
-        end
-      end
-      unless features
-        features = Feature.find(:all,
-          :include => { :listing_types => :feature_assignments },
-          :conditions => 'feature_assignments.highlighted = 1')
-      end
-      return if features.empty?
-      html = get_highlighted_html( features, :form )
-    end
+    return if features.empty?
+    html = filter_field_list( features, :form )
     return unless html
     "<div class=\"menu_list\"><h3>Filter by feature</h3>#{html}</div>"
+  end
+  
+  def style_filter
+    # TODO: select subset of records associated with current listings
+    if @search_params[LISTING_TYPE_EQUALS]
+      styles = Style.find(:all,
+        :joins => :listing_types,
+        :conditions => [
+          'listing_types.cached_slug = ?',
+          @search_params[LISTING_TYPE_EQUALS]
+        ],
+        :order => filter_order_clause(:style)
+      )
+    end
+    unless styles
+      styles = Style.find(:all,
+        :joins => :listing_types,
+        :order => filter_order_clause(:style)
+      )
+    end
+    return if styles.empty?
+    html = filter_field_list( styles, :form )
+    return unless html
+    "<div class=\"menu_list\"><h3>Filter by style</h3>#{html}</div>"
   end
   
   def place_filter( type )
@@ -413,7 +390,7 @@ module ListingsHelper
       return if filtered_parents.empty? && type != :country
       case type
       when :country
-        conditions = { :active => true }
+        conditions = { :countries => { :active => true } }
       when :zone, :province, :market
         joins = :country
         conditions = [
@@ -540,7 +517,7 @@ module ListingsHelper
     html
   end
   
-  def get_highlighted_html( collection, type = :links )
+  def filter_field_list( collection, type = :links )
     return if collection.empty?
     model_name = collection[0].class.class_name.underscore
     case type
@@ -551,63 +528,95 @@ module ListingsHelper
       parent_tag_type = :ul
       child_tag_type = :li
     end
-    highlighted = []
-    normal = []
+    fields_html = fields = {
+      :highlighted => [],
+      :normal => []
+    }
     min = 5
     if collection.length <= min
-      highlighted = collection
+      fields[:highlighted] = collection
     else
       collection.each_with_index do |record, i|
-        if i < min || record.send("#{model_name}_assignments")[0].highlighted
-          highlighted << record
+        if i < min ||
+        cached_slug_array( model_name ).include?(record.cached_slug) ||
+        record.send("#{model_name}_assignments")[0].highlighted
+          fields[:highlighted] << record
         else
-          normal << record
+          fields[:normal] << record
         end
       end
     end
-    highlighted_html = normal_html = ''
-    highlighted.each do |record|
-      highlighted_html += item_for_list( record, child_tag_type )
+    fields.each_pair do |key, records|
+      fields_html[key] = ''
+      records.each do |record|
+        fields_html[key] += item_for_list( record, child_tag_type )
+      end
     end
-    normal.each do |record|
-      normal_html += item_for_list( record, child_tag_type )
-    end
-    if highlighted_html
-      html = highlighted_html
-      unless normal_html.blank?
+    if fields_html
+      html = fields_html[:highlighted]
+      unless fields_html[:normal].blank?
         normal_id = 'normal_' + model_name.to_s + '_filter'
         html += "<div class=\"more\"" +
           " onclick=\"$j(this).hide();$j('##{normal_id}').show('blind')\"" +
           " id=\"more_#{model_name.to_s.pluralize}_trigger\">more...</div>\n" +
           "<div style=\"display: none\"" +
-          " class=\"normal\" id=\"#{normal_id}\">#{normal_html}</div>\n"
+          " class=\"normal\" id=\"#{normal_id}\">" +
+          "#{fields_html[:normal]}</div>\n"
       end
     end
     return if html.blank?
     case type
     when :form
-      html = "<form>#{html}</form>"
-      form_inner_html = text_field_tag(
-          "#{model_name.to_s.pluralize.upcase}_EQUALS_ANY".constantize.to_s,
-          nil,
-          :style => 'display: none'
-        ) + "\n" + submit_tag('Filter') + "\n"
-      html += form_tag( listings_path, :method => :get ) do |form|
-        form_inner_html
-      end
+      html += '<div class="submit_row">' + submit_tag('Filter') + "</div>\n"
+      content_tag( parent_tag_type, html + "\n", :class => 'multiple_filter' )
     else
       content_tag( parent_tag_type, html + "\n" )
     end
   end
   
+  def filter_form( id = 'filter_form' )
+    html = '<form id="' + id +'" action="" method="get">' + "\n"
+    LISTING_PARAMS_MAP.each do |pair|
+      if params[pair[:key]].kind_of?(Array)
+        string_value = params[pair[:key]].join(' ')
+      else
+        string_value = params[pair[:key]]
+      end
+#      html += label_tag(pair[:key], pair[:key].to_s) + text_field_tag(
+      html += hidden_field_tag(
+        pair[:key],
+        string_value,
+        { :style => 'display: block' }
+      ) + "\n"
+    end
+    html += '</form>' + "\n"
+  end
+  
+  def js_listing_params
+    js_pairs = []
+    LISTING_PARAMS_MAP.each do |pair|
+      js_pairs << '{' + pair[:key] + ':' + params[pair[:key]] + '}'
+    end
+    '[' + js_pairs.join(',') + ']'
+  end
+  
   
   private
   
-  def item_for_list( object, type, escape = true )
+  def item_for_list( object, type, options = {} )
     model_name = object.class.class_name.underscore
-    named_route = "#{model_name.to_s.pluralize.upcase}_EQUALS_ANY".constantize
+    if model_name == 'feature'
+      # TODO: figure out how to select only records where ALL values can be
+      # found in related table.
+      #conditional_type = 'ALL'
+      conditional_type = 'ANY'
+    else
+      conditional_type = 'ANY'
+    end
+    model_capitalized = model_name.to_s.pluralize.upcase
+    scope_name = "#{model_capitalized}_EQUALS_#{conditional_type}".constantize
     label = object.name.capitalize
-    name = named_route.to_s + '[]'
+    name = scope_name.to_s + '[]'
     value = object.cached_slug
     id = model_name + '_' + value
     case type
@@ -615,15 +624,44 @@ module ListingsHelper
       content = content_tag( type, link_to(label,
           listings_options(
             @search_params.merge(
-              named_route => object.cached_slug
+              scope_name => object.cached_slug
             )
           )
         )
       )
     when :input
-      content = label_tag(id, label) + "\n" +
-        check_box_tag(name, value, nil, :id => id,
-          :onclick => "updateCheckedValues('#{named_route.to_s})'") + "\n"
+      selected = params[scope_name].include?(value) ? true : false
+      options.merge!( :id => id )
+      content = '<div class="row clearfix">' + "\n" +
+        check_box_tag(name, value, selected, :id => options[:id],
+          :onclick => "updateCheckedValues(this.id" +
+            ", '#{scope_name.to_s}')") + label_tag(id, label) + "\n" +
+        '</div>' + "\n"
+    end
+  end
+  
+  def filter_order_clause( model_name )
+    table = model_name.to_s.tableize
+    order = []
+    if cached_slug_string( model_name )
+      order << "#{table}.cached_slug IN" +
+        " (#{cached_slug_string( model_name )}) DESC"
+    end
+    order << "#{model_name}_assignments.highlighted DESC"
+    order << "#{table}.name"
+    order.join(', ')
+  end
+  
+  def cached_slug_string( model_name )
+    cached_slug_array( model_name ).map { |slug| "'#{slug}'" }.join(',')
+  end
+  
+  def cached_slug_array( model_name )
+    scope_name = "#{model_name.to_s.pluralize.upcase}_EQUALS_ANY".constantize
+    if params[scope_name]
+      params[scope_name].map { |param| param }
+    else
+      []
     end
   end
 end
