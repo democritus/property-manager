@@ -1,3 +1,8 @@
+<%
+path_to_listing = contextual_listing_path( listing )
+path_to_listing_information_request = contextual_listing_path(listing,
+  :anchor => 'information_request')
+%>
 <div class="listing_container clearfix">
   <div class="content clearfix">
       <div class="thumbnail">
@@ -11,19 +16,19 @@
               #  :action => 'default_thumb'),
               :border => 0
             ),
-            listing_path(listing)
+            path_to_listing
           ) %>
         <% end %>      
       </div>
     <div class="flowed_content">
       <%= price_div( listing ) %>
-      <h2><%= link_to listing.name, listing %></h2>
+      <h2><%= link_to listing.name, path_to_listing %></h2>
       <div class="section highlighted-items">
         <div>
           <%
           highlighted_items = []
           unless primary_category(listing).blank?
-            highlighted_items << primary_category(listing)
+            highlighted_items << primary_category(listing).capitalize
           end
           highlighted_items << bed_and_bath_formatted(
             listing.property.bedroom_number,
@@ -83,7 +88,7 @@
               Contact:
               <%= link_to (
                 contact_name + '<div class="after_icon"></div>',
-                listing_path(listing, :anchor => 'information_request'),
+                path_to_listing_information_request,
                 :target => 'new',
                 :class => 'contact_link') %>
             </div>
@@ -101,7 +106,7 @@
         <div class="agent_name">
           Contact:
           <%= link_to agent_name(listing) + '<div class="after_icon"></div>',
-            listing_path(listing, :anchor => 'information_request'),
+            path_to_listing_information_request,
             :target => 'new',
             :class => 'contact_link' %>
         </div>
@@ -159,9 +164,9 @@
                 listing.property, listing ) %></li>
             <% end %>
           <% end %>
-          <li><%= link_to t(:full_listing).capitalize, listing %></li>
+          <li><%= link_to t(:full_listing).capitalize, path_to_listing %></li>
           <li><%= link_to t(:request_info).capitalize,
-            listing_path(listing, :anchor => 'information_request') %></li>
+            path_to_listing_information_request %></li>
         </ul>
       </div>
     </div>

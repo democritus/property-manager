@@ -31,6 +31,7 @@ in filter menu plus "filter" link that submits a form with GET method instead
 of just simple links that only allow constraining by a single feature at a time.
 -Constrain filter options to only those that actually exist in current result
 set.
+-Filter by bedroom and bathroom number
 
 -Smooth out featured/similar/etc. glider shiznit
   -number of images

@@ -1,5 +1,7 @@
 class ListingsController < ApplicationController
-  
+
+  include RequestPath
+    
   caches_page :index, :show,
     :if => Proc.new { |c| c.request_path_parts.first == 'real_estate' }
   
@@ -7,9 +9,12 @@ class ListingsController < ApplicationController
      return Proc.new {|n| n*factor }
    end
    
-  before_filter :set_search_params, :multiple_filter_string_to_array
+  before_filter :set_search_params
   
   def index
+    # Map multiple parameters from URL path to arrays
+    multiple_filter_string_to_array
+    
     # Record user's search results for the most recent listings index they
     # have viewed
     session[:last_seen_params] = search_params
@@ -114,8 +119,10 @@ class ListingsController < ApplicationController
       key, default_value = param[:key], param[:default_value]
       case key
       when CATEGORIES_EQUALS_ANY, FEATURES_EQUALS_ANY, STYLES_EQUALS_ANY
-        unless default_value == params[key]
-          params[key] = params[key].split(' ')
+        if params[key]
+          unless default_value == params[key]
+            params[key] = params[key].split(' ')
+          end
         end
       end
     end

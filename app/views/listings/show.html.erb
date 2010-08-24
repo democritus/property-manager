@@ -44,9 +44,14 @@
       </ul>
 
       <div class="nav-links">
-        <%= link_to 'Edit',
-          edit_admin_property_listing_path(@listing.property, @listing) %> |
-        <%= link_to 'Back', listings_path(session[:last_seen_params]) %>
+        <% if request_path_parts.first != 'real_estate' %>
+          <% if current_user %>
+            <%= link_to 'Edit',
+              edit_admin_property_listing_path(@listing.property, @listing) %> |
+          <% end %>
+          <%= link_to 'Back', contextual_listings_path(
+            session[:last_seen_params]) %>
+        <% end %>
       </div>
 
     </div>

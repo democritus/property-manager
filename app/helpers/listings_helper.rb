@@ -3,6 +3,22 @@ module ListingsHelper
   include PropertiesHelper
   include UnitConversionHelper
   
+  def contextual_listing_path( record_or_hash, options = {} )
+    if request_path_parts.first == 'real_estate'
+      real_estate_path( record_or_hash, options )
+    else
+      listing_path( record_or_hash, options )
+    end
+  end
+  
+  def contextual_listings_path( record_or_hash, options = {} )
+    if request_path_parts.first == 'real_estate'
+      real_estates_path( record_or_hash )
+    else
+      listings_path( record_or_hash )
+    end
+  end
+  
   # Convert searchlogic search params to a formatted, readable title
   def params_to_title(add_linebreaks = true)
     text = ''
@@ -105,7 +121,7 @@ module ListingsHelper
     feature_list = ''
     if features
       features.each do |feature|
-        feature_list += '<li>' + h(feature.name) + '</li>' + "\n\r"
+        feature_list += '<li>' + h(feature.name).capitalize + '</li>' + "\n"
       end
     end
     return feature_list || ''
@@ -218,7 +234,7 @@ module ListingsHelper
         :target => :image_viewer
       )
     else
-      link_to(image_html, listing_path(listing))
+      link_to(image_html, contextual_listing_path(listing))
     end
   end
   

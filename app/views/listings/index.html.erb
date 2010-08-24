@@ -193,24 +193,29 @@
                 <%
                 case item[:order]
                 when 'sold', 'publish_date'
-                  order_dir = 'desc'
+                  default_order_direction = 'desc'
                 else
-                  order_dir = 'asc'
+                  default_order_direction = 'asc'
                 end
-                if params[:order] == item[:order]
-                  order_dir = 'desc'
-                  if params[:order_dir]
-                    order_dir = 'asc' if params[:order_dir].downcase == 'desc'
+                if params[:order] != item[:order]
+                  new_order_direction = default_order_direction
+                else
+                  case params[:order_dir].downcase
+                  when 'desc'
+                    new_order_direction = 'asc'
+                  else
+                    new_order_direction = 'desc'
                   end
                 end
                 %>
-                <li><%= link_to item[:label],
+                <li><%= link_to( item[:label],
                   listings_options(
                     @search_params.merge(
-                      'order' => item[:order],
-                      'order_dir' => order_dir
+                      :order => item[:order],
+                      :order_dir => new_order_direction
                     )
-                  ) %></li>
+                  )
+                ) %></li>
               <% end %>
             </ul>
           </div>

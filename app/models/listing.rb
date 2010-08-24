@@ -24,12 +24,13 @@ class Listing < ActiveRecord::Base
     :conditions => { :listing_types => { :name => 'for sale' } },
     :order => 'listings.publish_date DESC',
     :limit => 10
-  named_scope :regular_index,
-    :include => {
-      :property => { :agency => { :broker => { :user => :user_icons } } } }
+   named_scope :regular_index,
+    :joins => :property
+#  named_scope :regular_index,
+#    :include => {
+#      :property => { :agency => { :broker => { :user => :user_icons } } } }
   named_scope :features_cached_slug_equals_all_custom, lambda { |values|
     {
-      :joins => :features,
       :conditions => ["(
           SELECT  COUNT(*)
           FROM `features`
