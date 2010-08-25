@@ -1,6 +1,8 @@
+<%
+# Hidden form containing params that are used to build path used in "action"
+# parameter of form.
+%>
 <%= filter_form %>
-  <% javascript_tag do %>
-<% end %>
 
 <div id="listings-index-content">
   <h3 style="margin: 0 0 1em; line-height: 1.2em"><%= page_header %></h3>
@@ -29,84 +31,17 @@
 
 <% content_for :right_margin do %>
   <div id="right_margin">
-    <% javascript_tag do %>
-      var default_params = <%= JAVASCRIPT_LISTING_PARAMS_MAP %>;
-      var form_params = $j('#filter_form').serializeArray();
-      var listing_params = mergeParamsArrays(default_params, form_params);
-      $j(document).ready(function() {
-        //click dblclick mousedown mouseenter mouseleave
-        $j('body').bind('click', detectEvent);
-        function detectEvent(e) {
-          hideNestedSubMenus();
-        }
-        $j('.nested_menu').click(function(event){
-          event.stopPropagation();
-        });
-      });
-      function hideNestedSubMenus() {
-        $j('.nested_menu').children('.submenu').hide();
-      }
-      function resetSubMenu(el) {
-        $j(el).find('.normal').hide();
-        $j(el).find('.more').show();
-      }
-      function updateCheckedValues(src_id, trg_id) {
-        src = '#' + src_id;
-        trg = '#' + trg_id;
-        checked = $j('input[name=' + $j(src).attr('name') + ']:checked');
-        str = '';
-        for (i=0; i<checked.length; i++) {
-          if (i>0) {
-            str = str + ' ';
-          }
-          str = str + checked[i].value;
-        }
-        // If all options unchecked, set corresponding field's value to default
-        if (str == '') {
-          for (i=0; i<default_params.length; i++) {
-            if (default_params[i]['name'] == trg_id) {
-              str = default_params[i]['value'];
-              break;
-            }
-          }
-        }
-        $j(trg).val(str);
-      }
-      function mergeParamsArrays(arr1, arr2) {
-        // Merge arrays
-        for (i=0; i<arr1.length; i++) {
-          for (j=0; j<arr2.length; j++) {
-            if (arr1[i].name == arr2[j].name) {
-              arr1[i].value = arr2[j].value;
-              break;
-            }
-          }
-        }
-        return arr1;
-      }
-      function paramsArrayToPath(arr) {
-        values = [];
-        for (i=0; i<arr.length; i++) {
-          values[i] = arr[i].value;
-        }
-        return escape('/' + values.join('/'));
-      }
-    <% end %>
     <% content_for :title, index_title %>
     <div class="bold_link">
       <%= listing_type_toggle %>
     </div>
-    <div id="filter_menu" class="nested_menu clearfix"
-    onclick="hideNephews('#filter_menu', '.nested_menu', '.submenu');
-    resetSubMenu('#filter_menu');
-    toggleChildrenNoBubble('#filter_menu', '.submenu')">
+    <div id="filter_menu" class="nested_menu clearfix">
       <div class="button">
         <div><div>Filter</div></div>
       </div>
       <div class="submenu" style="display: none">
         <div class="menu_block clearfix">
-          <div class="close_element"
-          onclick="hideChildren('#filter_menu', '.submenu');">X</div>
+          <div class="close_element"">X</div>
           <%= place_filter :country %>
           <%= place_filter :zone %>
           <%= place_filter :province %>
@@ -117,13 +52,13 @@
         </div>
       </div>
     </div>
-    <div id="order_menu" class="nested_menu" onclick="hideNephews('#order_menu', '.nested_menu', '.submenu'); toggleChildrenNoBubble('#order_menu', '.submenu')">
+    <div id="order_menu" class="nested_menu">
       <div class="button">
         <div><div>Sort</div></div>
       </div>
       <div class="submenu" style="display: none">
         <div class="menu_block clearfix">
-          <div class="close_element" onclick="hideChildren('#order_menu', '.submenu');">X</div>
+          <div class="close_element">X</div>
           <div class="menu_list">
             <h3>Sort by</h3>
             <ul>
@@ -241,24 +176,130 @@
 <% end %>
 
 <% javascript_tag do %>
-  $j('form.multiple_filter').submit(function() {
-    // Get array with form values
-    form_params = $j('#filter_form').serializeArray();
-    listing_params = mergeParamsArrays(default_params, form_params);
-    path = '/<%= request_path_parts.first %>' +
-      paramsArrayToPath(listing_params);
-    // Disable inputs so that nothing is sent as querystring
-    $j('#filter_form').find(':input').attr('disabled', true);
-    $j('#filter_form').attr('action', path);
-    $j('#filter_form').submit();
-    return false;
-  });
+
+  // Array of hashes containing key names and null equivalent values for
+  // search parameters
+  var params_map = <%= JAVASCRIPT_LISTING_PARAMS_MAP %>;
+
+  // Hidden form key/value pairs used to construct path for "action" parameter
+  // of form
+  var form_params = $j('#filter_form').serializeArray();
   
-  $j('select.bedroom_select').change(function () {
+  // Form values overwrite defaults
+  params_map = mergeParamMapAndFormPairs(params_map, form_params);
+  
+  // Used to merge default values with form values so that a path containing
+  // all the necessary parameters is submitted
+  function mergeParamMapAndFormPairs(default_arr, arr) {
+    for (i=0; i<=default_arr.length-1; i++) {
+      for (j=0; j<=arr.length-1; j++) {
+        if (default_arr[i].name == arr[j].name) {
+          default_arr[i].value = arr[j].value;
+        }
+      }
+    }
+    return default_arr;
+  }
+  
+  // Close menus if clicking anywhere outside their borders
+  $j(document).ready(function() {
+  
+    // TODO: get these DRYer functions working and delete redundant functions
+    $j('select.bedroom_select').change(function () {
+      roomNumberSelect('bedroom');
+    });
+    
+    $j('select.bathroom_select').change(function () {
+      roomNumberSelect('bathroom');
+    });
+  
+    //click dblclick mousedown mouseenter mouseleave
+    $j('body').bind('click', detectEvent);
+    function detectEvent(e) {
+      $j('.submenu').hide();
+    }
+  
+    $j('.close_element').click(function() {
+      $j(this).parents('.submenu').hide();
+    });
+  
+    $j('.submenu').click(function() {
+      // Keep event from bubbling up to parents which would cause the menu to
+      // close just by clicking inside the submen
+      event.stopPropagation();
+    });
+    
+    // TODO: finish moving javascript from inside HTML to here
+    $j('.nested_menu').click(function(event){
+      // Reset submenus to show condensed list with "more" link
+      $j(this).find('.normal').hide();
+      $j(this).find('.more').show();
+      
+      // Toggle submenus when clicking button
+      $j(this).children('.submenu').toggle('fold');
+      
+      // Close other submenus
+      $j(this).siblings('.nested_menu').children('.submenu').hide();
+      
+      // Keep event from bubbling up to body (clicking the body will close
+      // all menus)
+      event.stopPropagation();
+    });
+    
+    // On form submit, send parameters as a path in form's action parameter
+    $j('form.multiple_filter').submit(function() {
+      // Get array with form values
+      form_params = $j('#filter_form').serializeArray();
+      path = '/<%= request_path_parts.first %>' +
+        formParamsToPath(form_params);
+      // Disable inputs so that nothing is sent as querystring
+      $j('#filter_form').find(':input').attr('disabled', true);
+      $j('#filter_form').attr('action', path);
+      $j('#filter_form').submit();
+      return false;
+    });
+  });
+      
+  // Convert parameters in form into an equivalent path (form's action
+  // parameter is updated with this path)
+  function formParamsToPath(arr) {
+    values = [];
+    for (i=0; i<=arr.length-1; i++) {
+      values[i] = arr[i].value;
+    }
+    return escape('/' + values.join('/'));
+  }
+  
+  // Update hidden form values based on checked fields
+  function updateCheckedValues(src_id, trg_id) {
+    src = '#' + src_id;
+    trg = '#' + trg_id;
+    checked = $j('input[name=' + $j(src).attr('name') + ']:checked');
+    str = '';
+    for (i=0; i<=checked.length-1; i++) {
+      if (i>0) {
+        str = str + ' ';
+      }
+      str = str + checked[i].value;
+    }
+    // If all options unchecked, set corresponding field's value to value
+    // that is equivalent to null
+    if (str == '') {
+      for (i=0; i<=params_map.length-1; i++) {
+        if (params_map[i]['name'] == trg_id) {
+          str = params_map[i]['null_equivalent'];
+          break;
+        }
+      }
+    }
+    $j(trg).val(str);
+  }
+  
+  function roomNumberSelect(type) {
     var str = '';
     var values = [];
-    selects = $j('select.bedroom_select');
-    for (i=0; i<selects.length; i++) {
+    selects = $j('select.' + type + '_select');
+    for (i=0; i<=selects.length-1; i++) {
       values[i] = selects[i].value;
     }
     if (values[0] == '' || values[1] == '') {
@@ -271,46 +312,21 @@
           selects[1].value = '';
         }
       }
-      // If room number not selected, set corresponding field's value to default
-      for (i=0; i<default_params.length; i++) {
-        if (default_params[i]['name'] == 'bedroom_number') {      
-          str = default_params[i]['value'];
+      // If room number not selected, set corresponding field's value to
+      // null equivalent
+      for (i=0; i<=params_map.length-1; i++) {
+        if (params_map[i]['name'] == type + '_number') {      
+          str = params_map[i]['null_equivalent'];
           break;
         }
       }
-    } else {
-      str = values.join(' ') + ' bedrooms';
     }
-    $j('#bedroom_number').val(str);
-  });
-  
-  $j('select.bathroom_select').change(function () {
-    var str = '';
-    var values = [];
-    selects = $j('select.bathroom_select');
-    for (i=0; i<selects.length; i++) {
+    for (i=0; i<=selects.length-1; i++) {
       values[i] = selects[i].value;
     }
-    if (values[0] == '' || values[1] == '') {
-      if (values[0] != '') {
-        if (values[1] == '') {
-          selects[1].value = 1;
-        }
-      } else {
-        if (values[1] != '') {
-          selects[1].value = '';
-        }
-      }
-      // If room number not selected, set corresponding field's value to default
-      for (i=0; i<default_params.length; i++) {
-        if (default_params[i]['name'] == 'bathroom_number') {      
-          str = default_params[i]['value'];
-          break;
-        }
-      }
-    } else {
-      str = values.join(' ') + ' bathrooms';
+    if (values[0] != '' && values[1] != '') {
+      str = values.join(' ') + ' ' + type + 's';
     }
-    $j('#bathroom_number').val(str);
-  });
+    $j('#' + type + '_number').val(str);
+  }
 <% end %>

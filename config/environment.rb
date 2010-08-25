@@ -14,7 +14,7 @@ ASK_AMOUNT_LESS_THAN_OR_EQUAL_TO = :ask_amount_less_than_or_equal_to
 ASK_AMOUNT_GREATER_THAN_OR_EQUAL_TO = :ask_amount_greater_than_or_equal_to
 BARRIO_EQUALS = :property_barrio_cached_slug_equals
 
-# These scopes are translated from string key that comes in params into
+# Scopes that are translated from string key that comes in params into
 # differently named scope in search_params
 BEDROOM_NUMBER = :bedroom_number
 BEDROOM_NUMBER_EQUALS = :property_bedroom_number_equals
@@ -29,12 +29,8 @@ CANTON_EQUALS = :property_barrio_canton_cached_slug_equals
 CATEGORIES_EQUALS_ANY = :categories_cached_slug_equals_any
 CATEGORIES_EQUALS_ALL = :categories_cached_slug_equals_all
 COUNTRY_EQUALS = :property_barrio_canton_province_country_cached_slug_equals
-
-# Custom scope - Searchlogic default didn't work right
-FEATURES_EQUALS_ALL = :features_cached_slug_equals_all_custom
-#FEATURES_EQUALS_ANY = :features_cached_slug_equals_any
-FEATURES_EQUALS_ANY = :features_cached_slug_equals_all_custom
-
+FEATURES_EQUALS_ALL = :features_cached_slug_equals_all_custom # Custom scope:
+  # Searchlogic default didn't work right
 LISTING_TYPE_EQUALS = :listing_type_cached_slug_equals
 MARKET_EQUALS = :property_barrio_market_cached_slug_equals
 PROVINCE_EQUALS = :property_barrio_canton_province_cached_slug_equals
@@ -43,75 +39,75 @@ STYLES_EQUALS_ALL = :styles_cached_slug_equals_all
 ZONE_EQUALS = :property_barrio_canton_zone_cached_slug_equals
 
 # Maps URL params in this order to Searchlogic named scopes
-SEARCHLOGIC_PARAMS_MAP = [
+SEARCH_PARAMS_MAP = [
   {
     :key => COUNTRY_EQUALS,
-    :default_value => 'all'
+    :null_equivalent => 'all'
   },
   {
     :key => CATEGORIES_EQUALS_ANY,
-    :default_value => 'property'
+    :null_equivalent => 'property'
   },
   { 
     :key => LISTING_TYPE_EQUALS,
-    :default_value => 'for sale or rent'
+    :null_equivalent => 'for sale or rent'
   },
   { 
     :key => MARKET_EQUALS,
-    :default_value => 'any market'
+    :null_equivalent => 'any market'
   },
   { 
     :key => BARRIO_EQUALS,
-    :default_value => 'any barrio'
+    :null_equivalent => 'any barrio'
   },
   { 
     :key => CANTON_EQUALS,
-    :default_value => 'any canton'
+    :null_equivalent => 'any canton'
   },
   { 
     :key => PROVINCE_EQUALS,
-    :default_value => 'any province'
+    :null_equivalent => 'any province'
   },
   { 
     :key => ZONE_EQUALS,
-    :default_value => 'any zone'
+    :null_equivalent => 'any zone'
   },
   { 
     :key => BEDROOM_NUMBER,
-    :default_value => 'any bedroom number'
+    :null_equivalent => 'any bedroom number'
   },
   { 
     :key => BATHROOM_NUMBER,
-    :default_value => 'any bathroom number'
+    :null_equivalent => 'any bathroom number'
   },
   { 
     :key => ASK_AMOUNT_LESS_THAN_OR_EQUAL_TO,
-    :default_value => 'under any amount'
+    :null_equivalent => 'under any amount'
   },
   { 
     :key => ASK_AMOUNT_GREATER_THAN_OR_EQUAL_TO,
-    :default_value => 'over any amount'
+    :null_equivalent => 'over any amount'
   },
   { 
     :key => STYLES_EQUALS_ANY,
-    :default_value => 'any style'
+    :null_equivalent => 'any style'
   },
   { 
-    :key => FEATURES_EQUALS_ANY,
-    :default_value => 'any feature'
+    :key => FEATURES_EQUALS_ALL,
+    :null_equivalent => 'any feature'
   }
 ]
 PAGINATE_PARAMS_MAP = [
-  { :key => :page, :default_value => '1' },
-  { :key => :order, :default_value => 'publish_date' },
-  { :key => :order_dir, :default_value => 'desc' }
+  { :key => :page, :null_equivalent => '1' },
+  { :key => :order, :null_equivalent => 'publish_date' },
+  { :key => :order_dir, :null_equivalent => 'desc' }
 ]
-LISTING_PARAMS_MAP = SEARCHLOGIC_PARAMS_MAP + PAGINATE_PARAMS_MAP
+LISTING_PARAMS_MAP = SEARCH_PARAMS_MAP + PAGINATE_PARAMS_MAP
 
 js_pairs = []
 LISTING_PARAMS_MAP.each do |pair|
-  js_pairs << '{name: "' + pair[:key].to_s + '"' + ', value: "' +
-    pair[:default_value] + '"}'
+  js_pairs << '{name: "' + pair[:key].to_s + '"' + ', null_equivalent: "' +
+    pair[:null_equivalent] + '"}'
 end
 JAVASCRIPT_LISTING_PARAMS_MAP = '[' + js_pairs.join(',') + ']'
 

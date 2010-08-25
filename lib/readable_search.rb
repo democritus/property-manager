@@ -14,9 +14,9 @@ module ReadableSearch
     end
     
     # Remove non-Searchlogic elements
-    searchlogic_keys = SEARCHLOGIC_PARAMS_MAP.map { |param| param[:key] }
+    search_keys = SEARCH_PARAMS_MAP.map { |param| param[:key] }
     parameters.delete_if {
-      |key, value| ! searchlogic_keys.include?( key.to_sym ) }
+      |key, value| ! search_keys.include?( key.to_sym ) }
     
     return sanitize_search_params( parameters )
   end
@@ -26,10 +26,10 @@ module ReadableSearch
     if parameters.nil?
       parameters = params.dup
     end
-    SEARCHLOGIC_PARAMS_MAP.each do |param|
+    SEARCH_PARAMS_MAP.each do |param|
       if parameters[param[:key]]
         # Remove elements set to their defaults
-        if parameters[param[:key]] == param[:default_value]
+        if parameters[param[:key]] == param[:null_equivalent]
           parameters.delete(param[:key])
         else
           value = parameters[param[:key]]
@@ -43,9 +43,9 @@ module ReadableSearch
           when BEDROOM_NUMBER, BATHROOM_NUMBER
             pair = room_number_scope_from_string(
               "#{param[:key].to_s.chomp('_number').to_sym}", value )
-            parameters.merge!( pair ) if pair
-            parameters.delete( param[:key] )
-          when CATEGORIES_EQUALS_ANY, FEATURES_EQUALS_ANY, STYLES_EQUALS_ANY
+            parameters.merge!( pair )
+            parameters.delete( param[:key] ) # Remove non-Searchlogic param
+          when CATEGORIES_EQUALS_ANY, FEATURES_EQUALS_ALL, STYLES_EQUALS_ANY
             parameters[param[:key]] = value.split(' ') # Convert to array
           end
         end
@@ -54,12 +54,19 @@ module ReadableSearch
     return parameters.merge( params[:q] || {} )
   end
   
-  def room_number_scope_from_string( type, value )
+  def room_comparator_and_number_from_string( type, value )
     # Chop off trailing label, i.e. " bedrooms"
-    room_param = value.chomp("#{type.to_s.pluralize}").strip
-    number = room_param.match(/\d/).to_s.to_i
+    value = value.chomp("#{type.to_s.pluralize}").strip
+    number = value.match(/\d/).to_s.to_i
     return nil if number.zero?
-    case room_param.chomp(number.to_s).strip
+    return [ value.chomp(number.to_s).strip, number ]
+  end
+  
+  def room_number_scope_from_string( type, value )
+    result = room_comparator_and_number_from_string( type, value )
+    return {} unless result
+    comparator, number = result
+    case comparator
     when 'at least'
       scope = "property_#{type}_number_greater_than_or_equal_to".to_sym
     when 'no more than'
@@ -79,7 +86,7 @@ module ReadableSearch
     LISTING_PARAMS_MAP.each do |param|
       value = parameters[param[:key]]
       if value
-        unless value == param[:default_value]
+        unless value == param[:null_equivalent]
           case param[:key]
           # Slice off "under " and " dollars"
           when ASK_AMOUNT_LESS_THAN_OR_EQUAL_TO
@@ -91,7 +98,7 @@ module ReadableSearch
         end
       else
         # All possible listings
-        parameters.merge!( param[:key] => param[:default_value] )
+        parameters.merge!( param[:key] => param[:null_equivalent] )
       end
     end
     return parameters
@@ -175,7 +182,7 @@ module ReadableSearch
         else
           styles_string = styles
         end
-      when FEATURES_EQUALS_ANY
+      when FEATURES_EQUALS_ALL
         features = value
         if features.kind_of?(Array)
           features_string = features.to_sentence

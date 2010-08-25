@@ -239,15 +239,13 @@ module ListingsHelper
   end
   
   def room_number_select( type )
-    type = type.to_s
-    
+    room_number_param = "#{type.to_s.upcase}_NUMBER".constantize
     selected_comparator = ''
     selected_integer = ''
-    if params["#{type}_number"]
-      value = params["#{type}_number"]
-      room_param = value.chomp("#{type.to_s.pluralize}").strip
-      selected_number = room_param.match(/\d/).to_s.to_i
-      selected_comparator = room_param.chomp(selected_number.to_s).strip
+    if params[room_number_param]    
+      result = room_comparator_and_number_from_string( type,
+        params[room_number_param] )
+      selected_comparator, selected_number = result if result
     end
     select_tag( "#{type}_number_comparator".to_sym,
       options_for_select(
@@ -259,7 +257,7 @@ module ListingsHelper
       options_for_select([''] + (1..6).map, selected_number),
       :class => "#{type}_select" ) +
     label_tag( "#{type}_number_comparator".to_sym,
-      "#{type.pluralize}" )
+      "#{type.to_s.pluralize}" )
   end
   
   def bedroom_number_select
@@ -632,35 +630,6 @@ class=\"normal clearfix\" id=\"#{normal_id}\">
   def filter_form( id = 'filter_form' )
     html = '<form id="' + id +'" action="" method="get">' + "\n"
     LISTING_PARAMS_MAP.each do |pair|
-
-# REMOVED: params should always remain the same as in URL. Their sanitized
-# values will be held in search_params (converted to array, superfluous text
-# removed, etc.
-#      case pair[:key]
-#      # Some params have been removed from params since they don't directly
-#      # correspond to a named scope. These have to be "reconstructed"
-#      when BEDROOM_NUMBER, BATHROOM_NUMBER
-#        plural_room = pair[:key].to_s.chomp('_number').pluralize
-#        equals_scope = "property_#{pair[:key]}_equals".to_sym
-#        gte_scope = "property_#{pair[:key]}_greater_than_or_equal_to".to_sym
-#        lte_scope = "property_#{pair[:key]}_less_than_or_equal_to".to_sym
-#        if params[equals_scope]
-#          string_value = "exactly #{params[equals_scope]} #{plural_room}"
-#        elsif params[gte_scope]
-#          string_value = "at least #{params[gte_scope]} #{plural_room}"
-#        elsif params[lte_scope]
-#          string_value = "not more than #{params[gte_scope]} #{plural_room}"
-#        else
-#          string_value = "any #{pair[:key].to_s.gsub(/_/, ' ')}"
-#        end
-#      else
-#        if params[pair[:key]].kind_of?(Array)
-#          string_value = params[pair[:key]].join(' ')
-#        else
-#          string_value = params[pair[:key]]
-#        end
-#      end
-
 #      html += label_tag(pair[:key], pair[:key].to_s) + text_field_tag(
       html += hidden_field_tag(
         pair[:key],
@@ -727,8 +696,7 @@ class=\"normal clearfix\" id=\"#{normal_id}\">
   end
   
   def cached_slug_array( model_name )
-    case model_name
-    when :feature
+    if model_name.to_s == 'feature'
       inclusiveness = 'ALL'
     else
       inclusiveness = 'ANY'
