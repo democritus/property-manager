@@ -238,6 +238,38 @@ module ListingsHelper
     end
   end
   
+  def room_number_select( type )
+    type = type.to_s
+    
+    selected_comparator = ''
+    selected_integer = ''
+    if params["#{type}_number"]
+      value = params["#{type}_number"]
+      room_param = value.chomp("#{type.to_s.pluralize}").strip
+      selected_number = room_param.match(/\d/).to_s.to_i
+      selected_comparator = room_param.chomp(selected_number.to_s).strip
+    end
+    select_tag( "#{type}_number_comparator".to_sym,
+      options_for_select(
+        [['don\'t specify', ''], 'at least', 'exactly', 'no more than' ],
+        selected_comparator
+      ),
+      :class => "#{type}_select" ) +
+    select_tag( "#{type}_number_integer".to_sym,
+      options_for_select([''] + (1..6).map, selected_number),
+      :class => "#{type}_select" ) +
+    label_tag( "#{type}_number_comparator".to_sym,
+      "#{type.pluralize}" )
+  end
+  
+  def bedroom_number_select
+    room_number_select( :bedroom )
+  end
+  
+  def bathroom_number_select
+    room_number_select( :bathroom )
+  end
+  
   # Methods that make use of Searchlogic plugin
   # # #
   def listing_type_toggle
@@ -572,12 +604,19 @@ module ListingsHelper
       html = fields_html[:highlighted]
       unless fields_html[:normal].blank?
         normal_id = 'normal_' + model_name.to_s + '_filter'
-        html += "<div class=\"more\"" +
-          " onclick=\"$j(this).hide();$j('##{normal_id}').show('blind')\"" +
-          " id=\"more_#{model_name.to_s.pluralize}_trigger\">more...</div>\n" +
-          "<div style=\"display: none\"" +
-          " class=\"normal\" id=\"#{normal_id}\">" +
-          "#{fields_html[:normal]}</div>\n"
+        html += %Q{
+<div class=\"more\"
+onclick=\"$j(this).hide();$j('##{normal_id}').show('blind')\"
+id=\"more_#{model_name.to_s.pluralize}_trigger\">more...</div>\n
+<div style=\"display: none\"
+class=\"normal clearfix\" id=\"#{normal_id}\">
+  #{fields_html[:normal]}
+  <div class=\"more\"
+  onclick=\"$j('#more_#{model_name.to_s.pluralize}_trigger').show();
+    $j('##{normal_id}').hide('blind')\"
+  id=\"show_#{model_name.to_s.pluralize}_trigger\">less...</div>\n
+</div>\n
+        }
       end
     end
     return if html.blank?
@@ -593,27 +632,43 @@ module ListingsHelper
   def filter_form( id = 'filter_form' )
     html = '<form id="' + id +'" action="" method="get">' + "\n"
     LISTING_PARAMS_MAP.each do |pair|
-      if params[pair[:key]].kind_of?(Array)
-        string_value = params[pair[:key]].join(' ')
-      else
-        string_value = params[pair[:key]]
-      end
+
+# REMOVED: params should always remain the same as in URL. Their sanitized
+# values will be held in search_params (converted to array, superfluous text
+# removed, etc.
+#      case pair[:key]
+#      # Some params have been removed from params since they don't directly
+#      # correspond to a named scope. These have to be "reconstructed"
+#      when BEDROOM_NUMBER, BATHROOM_NUMBER
+#        plural_room = pair[:key].to_s.chomp('_number').pluralize
+#        equals_scope = "property_#{pair[:key]}_equals".to_sym
+#        gte_scope = "property_#{pair[:key]}_greater_than_or_equal_to".to_sym
+#        lte_scope = "property_#{pair[:key]}_less_than_or_equal_to".to_sym
+#        if params[equals_scope]
+#          string_value = "exactly #{params[equals_scope]} #{plural_room}"
+#        elsif params[gte_scope]
+#          string_value = "at least #{params[gte_scope]} #{plural_room}"
+#        elsif params[lte_scope]
+#          string_value = "not more than #{params[gte_scope]} #{plural_room}"
+#        else
+#          string_value = "any #{pair[:key].to_s.gsub(/_/, ' ')}"
+#        end
+#      else
+#        if params[pair[:key]].kind_of?(Array)
+#          string_value = params[pair[:key]].join(' ')
+#        else
+#          string_value = params[pair[:key]]
+#        end
+#      end
+
 #      html += label_tag(pair[:key], pair[:key].to_s) + text_field_tag(
       html += hidden_field_tag(
         pair[:key],
-        string_value,
+        params[pair[:key]],
         { :style => 'display: block' }
       ) + "\n"
     end
     html += '</form>' + "\n"
-  end
-  
-  def js_listing_params
-    js_pairs = []
-    LISTING_PARAMS_MAP.each do |pair|
-      js_pairs << '{' + pair[:key] + ':' + params[pair[:key]] + '}'
-    end
-    '[' + js_pairs.join(',') + ']'
   end
   
   
@@ -624,13 +679,12 @@ module ListingsHelper
     if model_name == 'feature'
       # TODO: figure out how to select only records where ALL values can be
       # found in related table.
-      #conditional_type = 'ALL'
-      conditional_type = 'ANY'
+      inclusiveness = 'ALL'
     else
-      conditional_type = 'ANY'
+      inclusiveness = 'ANY'
     end
     model_capitalized = model_name.to_s.pluralize.upcase
-    scope_name = "#{model_capitalized}_EQUALS_#{conditional_type}".constantize
+    scope_name = "#{model_capitalized}_EQUALS_#{inclusiveness}".constantize
     label = object.name.capitalize
     name = scope_name.to_s + '[]'
     value = object.cached_slug
@@ -659,7 +713,7 @@ module ListingsHelper
   def filter_order_clause( model_name )
     table = model_name.to_s.tableize
     order = []
-    if cached_slug_string( model_name )
+    unless cached_slug_string( model_name ).blank?
       order << "#{table}.cached_slug IN" +
         " (#{cached_slug_string( model_name )}) DESC"
     end
@@ -673,9 +727,16 @@ module ListingsHelper
   end
   
   def cached_slug_array( model_name )
-    scope_name = "#{model_name.to_s.pluralize.upcase}_EQUALS_ANY".constantize
-    if params[scope_name]
-      params[scope_name].map { |param| param }
+    case model_name
+    when :feature
+      inclusiveness = 'ALL'
+    else
+      inclusiveness = 'ANY'
+    end
+    model_capitalized = model_name.to_s.pluralize.upcase
+    scope_name = "#{model_capitalized}_EQUALS_#{inclusiveness}".constantize
+    if search_params[scope_name]
+      search_params[scope_name].map { |param| param }
     else
       []
     end

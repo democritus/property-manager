@@ -8,22 +8,33 @@ require File.join(File.dirname(__FILE__), 'boot')
 
 # Constants needed for routing
 
-# Shorthand for long parameters corresponding with named routes generated
+# Shorthand for long parameters corresponding with named scopes generated
 # by Searchlogic plugin
 ASK_AMOUNT_LESS_THAN_OR_EQUAL_TO = :ask_amount_less_than_or_equal_to
 ASK_AMOUNT_GREATER_THAN_OR_EQUAL_TO = :ask_amount_greater_than_or_equal_to
 BARRIO_EQUALS = :property_barrio_cached_slug_equals
+
+# These scopes are translated from string key that comes in params into
+# differently named scope in search_params
+BEDROOM_NUMBER = :bedroom_number
+BEDROOM_NUMBER_EQUALS = :property_bedroom_number_equals
+BEDROOM_NUMBER_GTE = :property_bedroom_number_greater_than_or_equal_to
+BEDROOM_NUMBER_LTE = :property_bedroom_number_less_than_or_equal_to
+BATHROOM_NUMBER = :bathroom_number
+BATHROOM_NUMBER_EQUALS = :property_bathroom_number_equals
+BATHROOM_NUMBER_GTE = :property_bathroom_number_greater_than_or_equal_to
+BATHROOM_NUMBER_LTE = :property_bathroom_number_less_than_or_equal_to
+
 CANTON_EQUALS = :property_barrio_canton_cached_slug_equals
 CATEGORIES_EQUALS_ANY = :categories_cached_slug_equals_any
 CATEGORIES_EQUALS_ALL = :categories_cached_slug_equals_all
 COUNTRY_EQUALS = :property_barrio_canton_province_country_cached_slug_equals
 
-# TESTING: TODO: remove when done
+# Custom scope - Searchlogic default didn't work right
+FEATURES_EQUALS_ALL = :features_cached_slug_equals_all_custom
 #FEATURES_EQUALS_ANY = :features_cached_slug_equals_any
 FEATURES_EQUALS_ANY = :features_cached_slug_equals_all_custom
 
-# Custom route - Searchlogic default didn't work right
-FEATURES_EQUALS_ALL = :features_cached_slug_equals_all_custom
 LISTING_TYPE_EQUALS = :listing_type_cached_slug_equals
 MARKET_EQUALS = :property_barrio_market_cached_slug_equals
 PROVINCE_EQUALS = :property_barrio_canton_province_cached_slug_equals
@@ -31,7 +42,7 @@ STYLES_EQUALS_ANY = :styles_cached_slug_equals_any
 STYLES_EQUALS_ALL = :styles_cached_slug_equals_all
 ZONE_EQUALS = :property_barrio_canton_zone_cached_slug_equals
 
-# Maps URL params in this order to Searchlogic named routes
+# Maps URL params in this order to Searchlogic named scopes
 SEARCHLOGIC_PARAMS_MAP = [
   {
     :key => COUNTRY_EQUALS,
@@ -64,6 +75,14 @@ SEARCHLOGIC_PARAMS_MAP = [
   { 
     :key => ZONE_EQUALS,
     :default_value => 'any zone'
+  },
+  { 
+    :key => BEDROOM_NUMBER,
+    :default_value => 'any bedroom number'
+  },
+  { 
+    :key => BATHROOM_NUMBER,
+    :default_value => 'any bathroom number'
   },
   { 
     :key => ASK_AMOUNT_LESS_THAN_OR_EQUAL_TO,

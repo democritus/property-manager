@@ -6,8 +6,23 @@ module ReadableSearch
     end
   end
   
+  # Prepare params for use with Searchlogic plugin by removing non-Searchlogic
+  # elements, i.e. :controller, :action, :page, :order, :order_dir, etc.
+  def search_params( parameters = nil )
+    if parameters.nil?
+      parameters = params.dup
+    end
+    
+    # Remove non-Searchlogic elements
+    searchlogic_keys = SEARCHLOGIC_PARAMS_MAP.map { |param| param[:key] }
+    parameters.delete_if {
+      |key, value| ! searchlogic_keys.include?( key.to_sym ) }
+    
+    return sanitize_search_params( parameters )
+  end
+  
   # Remove extraneous words that are not actually part of the lookup value
-  def listings_params( parameters = nil )
+  def sanitize_search_params( parameters = nil )
     if parameters.nil?
       parameters = params.dup
     end
@@ -25,6 +40,13 @@ module ReadableSearch
           # Slice off "over " and " dollars"
           when ASK_AMOUNT_GREATER_THAN_OR_EQUAL_TO
             parameters[param[:key]] = value.slice(5..-1).slice(0..-9)
+          when BEDROOM_NUMBER, BATHROOM_NUMBER
+            pair = room_number_scope_from_string(
+              "#{param[:key].to_s.chomp('_number').to_sym}", value )
+            parameters.merge!( pair ) if pair
+            parameters.delete( param[:key] )
+          when CATEGORIES_EQUALS_ANY, FEATURES_EQUALS_ANY, STYLES_EQUALS_ANY
+            parameters[param[:key]] = value.split(' ') # Convert to array
           end
         end
       end
@@ -32,17 +54,20 @@ module ReadableSearch
     return parameters.merge( params[:q] || {} )
   end
   
-  # Prepare params for use with Searchlogic plugin by removing non-Searchlogic
-  # elements, i.e. :controller, :action, :page, :order, :order_dir, etc.
-  def search_params( parameters = nil )
-    if parameters.nil?
-      parameters = params.dup
+  def room_number_scope_from_string( type, value )
+    # Chop off trailing label, i.e. " bedrooms"
+    room_param = value.chomp("#{type.to_s.pluralize}").strip
+    number = room_param.match(/\d/).to_s.to_i
+    return nil if number.zero?
+    case room_param.chomp(number.to_s).strip
+    when 'at least'
+      scope = "property_#{type}_number_greater_than_or_equal_to".to_sym
+    when 'no more than'
+      scope = "property_#{type}_number_less_than_or_equal_to".to_sym
+    else # when 'exactly'
+      scope = "property_#{type}_number_equals".to_sym
     end
-    # Remove non-Searchlogic elements
-    searchlogic_keys = SEARCHLOGIC_PARAMS_MAP.map { |param| param[:key] }
-    parameters.delete_if {
-      |key, value| ! searchlogic_keys.include?( key.to_sym ) }
-    return listings_params( parameters )
+    return { scope => number }
   end
   
   # Make params more human readable and keyword-rich so that URLs are better
@@ -56,12 +81,12 @@ module ReadableSearch
       if value
         unless value == param[:default_value]
           case param[:key]
-            # Slice off "under " and " dollars"
-            when ASK_AMOUNT_LESS_THAN_OR_EQUAL_TO
-              parameters[param[:key]] = 'under ' + value.to_s + ' dollars'
-            # Slice off "over " and " dollars"
-            when ASK_AMOUNT_GREATER_THAN_OR_EQUAL_TO
-              parameters[param[:key]] = 'over ' + value.to_s + ' dollars'
+          # Slice off "under " and " dollars"
+          when ASK_AMOUNT_LESS_THAN_OR_EQUAL_TO
+            parameters[param[:key]] = 'under ' + value.to_s + ' dollars'
+          # Slice off "over " and " dollars"
+          when ASK_AMOUNT_GREATER_THAN_OR_EQUAL_TO
+            parameters[param[:key]] = 'over ' + value.to_s + ' dollars'
           end
         end
       else
@@ -86,6 +111,8 @@ module ReadableSearch
     market = nil
     province = nil
     zone = nil
+    bedroom_number, bedroom_comparator = nil
+    bathroom_number, bathroom_comparator = nil
     ask_amount_maximum = nil
     ask_amount_minimum = nil
     styles = styles_string = nil
@@ -119,6 +146,24 @@ module ReadableSearch
       when ZONE_EQUALS
         zone = value
         zone = zone.titleize if type == 'text'
+      when BEDROOM_NUMBER_EQUALS
+        bedroom_comparator = 'exactly'
+        bedroom_number = value
+      when BEDROOM_NUMBER_GTE
+        bedroom_comparator = 'at least'
+        bedroom_number = value
+      when BEDROOM_NUMBER_LTE
+        bedroom_comparator = 'not more than'
+        bedroom_number = value
+      when BATHROOM_NUMBER_EQUALS
+        bathroom_comparator = 'exactly'
+        bathroom_number = value
+      when BATHROOM_NUMBER_GTE
+        bathroom_comparator = 'at least'
+        bathroom_number = value
+      when BATHROOM_NUMBER_LTE
+        bathroom_comparator = 'not more than'
+        bathroom_number = value
       when ASK_AMOUNT_LESS_THAN_OR_EQUAL_TO
         ask_amount_maximum = value.to_s
       when ASK_AMOUNT_GREATER_THAN_OR_EQUAL_TO
@@ -192,6 +237,19 @@ module ReadableSearch
       if zone
         readable_string += place_delimiter + place_separator + spacer + zone
       end
+    end
+    if bedroom_number || bathroom_number
+      readable_string += linebreak
+      bed_and_bath = []
+      if bedroom_number
+        bed_and_bath << bedroom_comparator + spacer + bedroom_number.to_s +
+          spacer + 'bedrooms'
+      end
+      if bathroom_number
+        bed_and_bath << bathroom_comparator + spacer + bathroom_number.to_s +
+          spacer + 'bathrooms'
+      end
+      readable_string += bed_and_bath.to_sentence.capitalize
     end
     if ask_amount_maximum
       readable_string += delimiter + 'under' + spacer +

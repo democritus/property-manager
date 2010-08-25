@@ -12,13 +12,10 @@ class ListingsController < ApplicationController
   before_filter :set_search_params
   
   def index
-    # Map multiple parameters from URL path to arrays
-    multiple_filter_string_to_array
-    
     # Record user's search results for the most recent listings index they
     # have viewed
     session[:last_seen_params] = search_params
-    
+        
     # Searchlogic filtering
   
     # TODO: figure out how to pass order by params as searchlogic parameter
@@ -111,22 +108,6 @@ class ListingsController < ApplicationController
 
   private
   
-  # Some of the Searchlogic parameters that are embedded in URL path have
-  # multiple values delimited by a space. This method changes these strings
-  # into arrays for easier handling
-  def multiple_filter_string_to_array
-    LISTING_PARAMS_MAP.each do |param|
-      key, default_value = param[:key], param[:default_value]
-      case key
-      when CATEGORIES_EQUALS_ANY, FEATURES_EQUALS_ANY, STYLES_EQUALS_ANY
-        if params[key]
-          unless default_value == params[key]
-            params[key] = params[key].split(' ')
-          end
-        end
-      end
-    end
-  end
   
   def order
     order_params = {}
@@ -264,7 +245,7 @@ class ListingsController < ApplicationController
   end
   
   # Combine readable constraints and searchlogic constraints
-  def set_search_params
+  def set_search_params 
     # TODO: figure out how to do this without having to change params to symbols
     symbolic_params = {}
     search_params.each_pair do |key, value|

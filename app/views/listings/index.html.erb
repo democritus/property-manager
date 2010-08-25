@@ -223,6 +223,12 @@
       </div>
     </div>
     <div class="menu_block clearfix">
+      <%= bedroom_number_select %>
+    </div>
+    <div class="menu_block clearfix">
+      <%= bathroom_number_select %>
+    </div>
+    <div class="menu_block clearfix">
       <%= feature_filter %>
     </div>
     <div class="menu_block clearfix">
@@ -246,5 +252,65 @@
     $j('#filter_form').attr('action', path);
     $j('#filter_form').submit();
     return false;
+  });
+  
+  $j('select.bedroom_select').change(function () {
+    var str = '';
+    var values = [];
+    selects = $j('select.bedroom_select');
+    for (i=0; i<selects.length; i++) {
+      values[i] = selects[i].value;
+    }
+    if (values[0] == '' || values[1] == '') {
+      if (values[0] != '') {
+        if (values[1] == '') {
+          selects[1].value = 1;
+        }
+      } else {
+        if (values[1] != '') {
+          selects[1].value = '';
+        }
+      }
+      // If room number not selected, set corresponding field's value to default
+      for (i=0; i<default_params.length; i++) {
+        if (default_params[i]['name'] == 'bedroom_number') {      
+          str = default_params[i]['value'];
+          break;
+        }
+      }
+    } else {
+      str = values.join(' ') + ' bedrooms';
+    }
+    $j('#bedroom_number').val(str);
+  });
+  
+  $j('select.bathroom_select').change(function () {
+    var str = '';
+    var values = [];
+    selects = $j('select.bathroom_select');
+    for (i=0; i<selects.length; i++) {
+      values[i] = selects[i].value;
+    }
+    if (values[0] == '' || values[1] == '') {
+      if (values[0] != '') {
+        if (values[1] == '') {
+          selects[1].value = 1;
+        }
+      } else {
+        if (values[1] != '') {
+          selects[1].value = '';
+        }
+      }
+      // If room number not selected, set corresponding field's value to default
+      for (i=0; i<default_params.length; i++) {
+        if (default_params[i]['name'] == 'bathroom_number') {      
+          str = default_params[i]['value'];
+          break;
+        }
+      }
+    } else {
+      str = values.join(' ') + ' bathrooms';
+    }
+    $j('#bathroom_number').val(str);
   });
 <% end %>

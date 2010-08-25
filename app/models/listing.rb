@@ -29,6 +29,37 @@ class Listing < ActiveRecord::Base
 #  named_scope :regular_index,
 #    :include => {
 #      :property => { :agency => { :broker => { :user => :user_icons } } } }
+
+  # related to Searchlogic
+  
+  # These are provided by Searchlogic, but needed to be modified to floor() the
+  # room number values. TODO: Why aren't the GTE and LTE scopes being provided
+  # by Searchlogic automatically?
+  named_scope :property_bedroom_number_equals,
+    lambda { |value| {
+    :conditions => "FLOOR(properties.bedroom_number) = #{value}"
+  }}
+  named_scope :property_bathroom_number_equals,
+    lambda { |value| {
+    :conditions => "FLOOR(properties.bathroom_number) = #{value}"
+  }}
+  named_scope :property_bedroom_number_greater_than_or_equal_to,
+    lambda { |value| {
+    :conditions => "FLOOR(properties.bedroom_number) >= #{value}"
+  }}
+  named_scope :property_bathroom_number_greater_than_or_equal_to,
+    lambda { |value| {
+    :conditions => "FLOOR(properties.bathroom_number) >= #{value}"
+  }}
+  named_scope :property_bedroom_number_less_than_or_equal_to,
+    lambda { |value| {
+    :conditions => "FLOOR(properties.bedroom_number) <= #{value}"
+  }}
+  named_scope :property_bathroom_number_less_than_or_equal_to,
+    lambda { |value| {
+    :conditions => "FLOOR(properties.bathroom_number) <= #{value}"
+  }}
+  
   named_scope :features_cached_slug_equals_all_custom, lambda { |values|
     {
       :conditions => ["(
