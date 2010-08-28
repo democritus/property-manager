@@ -61,9 +61,12 @@ default behavior with these characters) because when converted into cached
 slugs these cause the parts of the word to lose a space (and therefore become
 unrecognizable as distinct words to search engines). For example, "den/office"
 becomes "denoffice"
--Figure out why duplicate records are displayed for some listings searches.
-For example, the following URL shows listing ID 28 twice:
-http://barrioearth.com.dev/real_estate/costa-rica/condominiums%20hotels%20commercial%20bed-breakfasts%20apartments/for-sale/any%20market/any%20barrio/any%20canton/any%20province/any%20zone/under%20any%20amount/over%20any%20amount/a-frame%20modern%20bungalow%20queen-anne%20chalet/swimming-pool%20close-to-airport%20backyard%20denoffice%20hot-water/1/publish_date/desc
+
+
+Routing
+-Add flag to preserve pagination options in listings_options() (default false)
+-Change all spaces in URL to dashes
+
 
 Admin section
 -better navigation

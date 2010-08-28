@@ -10,7 +10,7 @@
     <% paginated_section @listings do %>
       <% #= will_paginate @posts %>
       <% #= page_entries_info @listings %>
-      <%= render :partial => "listing", :collection => @listings %>   
+      <%= render :partial => "listing", :collection => @listings %>
       <% #= will_paginate @posts %>
     <% end %>
   <% else %>
@@ -132,22 +132,22 @@
                 else
                   default_order_direction = 'asc'
                 end
-                if params[:order] != item[:order]
-                  new_order_direction = default_order_direction
-                else
-                  case params[:order_dir].downcase
-                  when 'desc'
-                    new_order_direction = 'asc'
-                  else
-                    new_order_direction = 'desc'
+                new_order_direction = default_order_direction
+                if params[:order]
+                  if params[:order] == item[:order]
+                    case params[:order].split(' ').last
+                    when 'desc'
+                      new_order_direction = 'asc'
+                    else
+                      new_order_direction = 'desc'
+                    end
                   end
                 end
                 %>
                 <li><%= link_to( item[:label],
                   listings_options(
                     @search_params.merge(
-                      :order => item[:order],
-                      :order_dir => new_order_direction
+                      :order => "#{item[:order]} #{new_order_direction}"
                     )
                   )
                 ) %></li>
@@ -263,9 +263,21 @@
   // Convert parameters in form into an equivalent path (form's action
   // parameter is updated with this path)
   function formParamsToPath(arr) {
+    keep_trailing_number = 3; // Always tack on the page number, order,
+                              // and order direction
     values = [];
+    offsets_to_trim = [];
     for (i=0; i<=arr.length-1; i++) {
       values[i] = arr[i].value;
+      if (jQuery.inArray(values[i], params_map[i].null_equivalent)) {
+        offsets_to_trim.push(i);
+      } else {
+        offsets_to_trim = [];
+      }
+    }
+    if (offsets_to_trim[0]) {
+      values.splice(offsets_to_trim[0],
+        values.length - offsets_to_trim[0] - keep_trailing_number);
     }
     return escape('/' + values.join('/'));
   }
@@ -287,7 +299,7 @@
     if (str == '') {
       for (i=0; i<=params_map.length-1; i++) {
         if (params_map[i]['name'] == trg_id) {
-          str = params_map[i]['null_equivalent'];
+          str = params_map[i]['null_equivalent'][0];
           break;
         }
       }
@@ -316,7 +328,7 @@
       // null equivalent
       for (i=0; i<=params_map.length-1; i++) {
         if (params_map[i]['name'] == type + '_number') {      
-          str = params_map[i]['null_equivalent'];
+          str = params_map[i]['null_equivalent'][0];
           break;
         }
       }
@@ -325,7 +337,7 @@
       values[i] = selects[i].value;
     }
     if (values[0] != '' && values[1] != '') {
-      str = values.join(' ') + ' ' + type + 's';
+      str = values.join('-') + '-' + type + 's';
     }
     $j('#' + type + '_number').val(str);
   }

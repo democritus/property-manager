@@ -249,7 +249,8 @@ module ListingsHelper
     end
     select_tag( "#{type}_number_comparator".to_sym,
       options_for_select(
-        [['don\'t specify', ''], 'at least', 'exactly', 'no more than' ],
+        [['don\'t specify', ''], ['at least', 'at-least'],
+          ['exactly', 'exactly'], ['no more than', 'no-more-than'] ],
         selected_comparator
       ),
       :class => "#{type}_select" ) +
@@ -354,7 +355,7 @@ module ListingsHelper
     unless features
       features = Feature.find(:all,
         :joins => :listing_types,
-        :order => filter_order_clause
+        :order => filter_order_clause(:feature)
       )
     end
     return if features.empty?
@@ -404,163 +405,158 @@ module ListingsHelper
       parents = [ :market, :canton ]
     end
     place_equals = "#{type.to_s.upcase}_EQUALS".constantize
-    if @search_params[place_equals]
-      nil_params = {}
-      in_scope = false
-      places.each do |place|
-        in_scope = true if place == type
-        if in_scope
-          key = "#{place.to_s.upcase}_EQUALS".constantize
-          nil_params.merge!( key => nil )
-        end
-      end
-      
-      html = '<li>' +
-        link_to("All #{type.to_s.pluralize}", listings_options(
-          @search_params.merge( nil_params )
-        )) + '</li>'
-    else
-      required_search_params = []
-      parents.each do |parent|
-        required_search_params << [
-          parent,
-          "#{parent.to_s.upcase}_EQUALS".constantize
-        ]
-      end
-      filtered_parents = []
-      required_search_params.each do |param|
-        if @search_params.include?(param[1])
-          filtered_parents << param[0]
-        end
-      end
-      return if filtered_parents.empty? && type != :country
-      case type
-      when :country
-        conditions = { :countries => { :active => true } }
-      when :zone, :province, :market
-        joins = :country
-        conditions = [
-          'countries.cached_slug = :country',
-          { :country => params[COUNTRY_EQUALS] }
-        ]
-      when :canton
-        joins = { :province => :country }
-        conditions = [
-          'countries.cached_slug = :country' +
-            ' AND provinces.cached_slug = :province',
-          {
-            :country => params[COUNTRY_EQUALS],
-            :province => params[PROVINCE_EQUALS]
-          }
-        ]
-      when :barrio
-        joins = { :canton => { :province => :country } }
-        conditions = [
-          'countries.cached_slug = :country' +
-            ' AND provinces.cached_slug = :province' +
-            ' AND cantons.cached_slug = :canton',
-          {
-            :country => params[COUNTRY_EQUALS],
-            :province => params[PROVINCE_EQUALS],
-            :canton => params[CANTON_EQUALS]
-          }
-        ]
-      end
-      if type == :market && ! @active_agency.master_agency?
-        places = @active_agency.markets
-      else
-        unless @active_agency.master_agency?
-          if type == :canton || type == :barrio
-            market_ids =
-              @active_agency.markets.map { |market| market.id }.join(',')
-            conditions << [
-              'markets.id IN :markets',
-              { :markets => market_ids }
-            ]
-          end
-        end
-        places = "#{type.to_s.camelize}".constantize.find( :all,
-          :joins => joins,
-          :conditions => conditions
-        )
-      end
-      return if places.empty?
-      html = ''
-      places.each do |place|
-        place_params = { place_equals => place.cached_slug }
-        parents.each do |parent|
-          if place.send("#{parent.to_s}")
-            place_params.merge!(
-              "#{parent.to_s.upcase}_EQUALS".constantize =>
-                place.send("#{parent.to_s}").cached_slug
-            )
-          end
-        end
-        html += '<li>' +
-          link_to(place.name.titleize, listings_options(
-            @search_params.merge( place_params )
-          )) + '</li>'
+    required_search_params = []
+    parents.each do |parent|
+      required_search_params << [
+        parent,
+        "#{parent.to_s.upcase}_EQUALS".constantize
+      ]
+    end
+    filtered_parents = []
+    required_search_params.each do |param|
+      if @search_params.include?(param[1])
+        filtered_parents << param[0]
       end
     end
+    return if filtered_parents.empty? && type != :country
+    case type
+    when :country
+      conditions = { :countries => { :active => true } }
+    when :zone, :province, :market
+      joins = :country
+      conditions = [
+        'countries.cached_slug = :country',
+        { :country => params[COUNTRY_EQUALS] }
+      ]
+    when :canton
+      joins = { :province => :country }
+      conditions = [
+        'countries.cached_slug = :country' +
+          ' AND provinces.cached_slug = :province',
+        {
+          :country => params[COUNTRY_EQUALS],
+          :province => params[PROVINCE_EQUALS]
+        }
+      ]
+    when :barrio
+      joins = { :canton => { :province => :country } }
+      conditions = [
+        'countries.cached_slug = :country' +
+          ' AND provinces.cached_slug = :province' +
+          ' AND cantons.cached_slug = :canton',
+        {
+          :country => params[COUNTRY_EQUALS],
+          :province => params[PROVINCE_EQUALS],
+          :canton => params[CANTON_EQUALS]
+        }
+      ]
+    end
+    if type == :market && ! @active_agency.master_agency?
+      places = @active_agency.markets
+    else
+      unless @active_agency.master_agency?
+        if type == :canton || type == :barrio
+          market_ids =
+            @active_agency.markets.map { |market| market.id }.join(',')
+          conditions << [
+            'markets.id IN :markets',
+            { :markets => market_ids }
+          ]
+        end
+      end
+      places = "#{type.to_s.camelize}".constantize.find( :all,
+        :joins => joins,
+        :conditions => conditions
+      )
+    end
+    return if places.empty?
+    html = any_place_html = ''
+    places.each do |place|
+      if @search_params[place_equals] # skip currently-selected place
+        any_place_html = '<li>' +
+          link_to("All #{type.to_s.pluralize}", listings_options(
+            @search_params.merge(
+              "#{type.to_s.upcase}_EQUALS".constantize => nil )
+          )) + '</li>'
+        next if @search_params[place_equals] == place.cached_slug
+      end
+      place_params = { place_equals => place.cached_slug }
+      parents.each do |parent|
+        if place.send("#{parent.to_s}")
+          place_params.merge!(
+            "#{parent.to_s.upcase}_EQUALS".constantize =>
+              place.send("#{parent.to_s}").cached_slug
+          )
+        end
+      end
+      html += '<li>' +
+        link_to(place.name.titleize, listings_options(
+          @search_params.merge( place_params )
+        )) + '</li>'
+    end
     return unless html
+    html = any_place_html + html
     "<div class=\"menu_list\"><h3>Filter by #{type}</h3><ul>" + html +
       '</ul></div>'
   end
   
   def price_range_filter
-    if @search_params[ASK_AMOUNT_GREATER_THAN_OR_EQUAL_TO] ||
-    @search_params[ASK_AMOUNT_LESS_THAN_OR_EQUAL_TO]
-      has_filter = true
+    if @search_params[LISTING_TYPE_EQUALS]
+      listing_type = @search_params[LISTING_TYPE_EQUALS]
+      if listing_type == 'for-sale' || listing_type == 'for-rent'
+        listing_types = [ listing_type.gsub(/-/, ' ') ]
+      end
     end
-    if has_filter
-      html = '<li>' +
-        link_to('Any price', listings_options(
-          @search_params.merge(
-            ASK_AMOUNT_GREATER_THAN_OR_EQUAL_TO => nil,
-            ASK_AMOUNT_LESS_THAN_OR_EQUAL_TO => nil
-          )
-        )) + '</li>'
-      html = '<div class="menu_list"><h3>Filter by price range' + '</h3><ul>' +
-        html + '</ul></div>'
-    else
-      if @search_params[LISTING_TYPE_EQUALS]
-        listing_type = @search_params[LISTING_TYPE_EQUALS]
-        if listing_type == 'for-sale' || listing_type == 'for-rent'
-          listing_types = [ listing_type.gsub(/-/, ' ') ]
-        end
-      end
-      unless listing_types
-        listing_types = [ 'for sale', 'for rent' ]
-      end
-      html = ''
-      listing_types.each do |listing_type|
-        list_items = ''
-        PRICE_RANGES[listing_type].each do |price_range|
-          boundaries = {}
-          unless price_range[:lower].zero?
-            boundaries.merge!(
-              ASK_AMOUNT_GREATER_THAN_OR_EQUAL_TO => price_range[:lower].to_s)
+    unless listing_types
+      listing_types = [ 'for sale', 'for rent' ]
+    end
+    html = any_price_range_html = listing_type_label = ''
+    listing_types.each do |listing_type|
+      list_items = ''
+      PRICE_RANGES[listing_type].each do |price_range|
+        if @search_params[ASK_AMOUNT_GREATER_THAN_OR_EQUAL_TO] ||
+          @search_params[ASK_AMOUNT_LESS_THAN_OR_EQUAL_TO]
+          if price_range[:lower] == @search_params[
+              ASK_AMOUNT_GREATER_THAN_OR_EQUAL_TO].to_i &&
+            price_range[:upper] == @search_params[
+              ASK_AMOUNT_LESS_THAN_OR_EQUAL_TO].to_i
+            any_price_range_html = '<li>' +
+              link_to('Any price range', listings_options(
+                @search_params.merge(
+                  ASK_AMOUNT_GREATER_THAN_OR_EQUAL_TO => nil,
+                  ASK_AMOUNT_LESS_THAN_OR_EQUAL_TO => nil
+                )
+              )) + '</li>'
+            next
           end
-          if price_range[:upper]
-            boundaries.merge!(
-              ASK_AMOUNT_LESS_THAN_OR_EQUAL_TO => price_range[:upper].to_s)
-          end
-          list_items += '<li>' +
-            link_to(price_range[:label], listings_options(
-              @search_params.merge(boundaries)
-            )) + '</li>'
         end
-        if listing_types.length > 1
-          listing_type_label = ' (' + listing_type + ')'
-        else
-          listing_type_label = ''
+        boundaries = {}
+        unless price_range[:lower].zero?
+          boundaries.merge!(
+            ASK_AMOUNT_GREATER_THAN_OR_EQUAL_TO => price_range[:lower].to_s)
         end
-        html += '<div class="menu_list"><h3>Filter by price range' +
-          listing_type_label + '</h3><ul>' + list_items + '</ul></div>'
+        if price_range[:upper]
+          boundaries.merge!(
+            ASK_AMOUNT_LESS_THAN_OR_EQUAL_TO => price_range[:upper].to_s)
+        end
+        list_items += '<li>' +
+          link_to(price_range[:label], listings_options(
+            @search_params.merge(boundaries)
+          )) + '</li>'
       end
+      if listing_types.length > 1
+        listing_type_label = ' (' + listing_type + ')'
+      else
+        listing_type_label = ''
+      end
+      html += list_items
     end
     return unless html
-    html
+    html = any_price_range_html + html
+    '<div class="menu_list">' +
+      "<h3>Filter by price range#{listing_type_label}</h3>" +
+      '<ul>' + html + '</ul>' +
+    '</div>'
   end
   
   def filter_field_list( collection, type = :links )
@@ -629,11 +625,15 @@ class=\"normal clearfix\" id=\"#{normal_id}\">
   
   def filter_form( id = 'filter_form' )
     html = '<form id="' + id +'" action="" method="get">' + "\n"
-    LISTING_PARAMS_MAP.each do |pair|
-#      html += label_tag(pair[:key], pair[:key].to_s) + text_field_tag(
-      html += hidden_field_tag(
-        pair[:key],
-        params[pair[:key]],
+    SEARCH_PARAMS_MAP.each do |pair|
+      key = pair[:key]
+      unless value = params[key]
+        value = pair[:null_equivalent][0]
+      end
+      html += label_tag(key, key.to_s) + text_field_tag(
+#      html += hidden_field_tag(
+        key,
+        value,
         { :style => 'display: block' }
       ) + "\n"
     end
@@ -669,7 +669,9 @@ class=\"normal clearfix\" id=\"#{normal_id}\">
         )
       )
     when :input
-      selected = params[scope_name].include?(value) ? true : false
+      if params[scope_name]
+        selected = params[scope_name].include?(value) ? true : false
+      end
       options.merge!( :id => id )
       content = '<div class="row clearfix">' + "\n" +
         check_box_tag(name, value, selected, :id => options[:id],

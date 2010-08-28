@@ -28,19 +28,6 @@ module ApplicationHelper
     Agency.find(:all)
   end
   
-  # Sensible defaults for links pointing to listings index page
-  def listings_options( params_to_overwrite = {} )
-    parameters = { :controller => :listings, :action => :index }
-    # Constrain "all listings" by agency's primary country by default
-    # Having a link with the country's name is better for search engines
-    if @active_agency.country
-      parameters.merge!( COUNTRY_EQUALS => @active_agency.country.cached_slug )
-    end
-    parameters.merge!( LISTING_TYPE_EQUALS => 'for-sale' )
-    parameters.merge!( params_to_overwrite )
-    return verbose_params( parameters )
-  end
-  
   def remove_listings_without_images!( listings )
     listings.each_index do |i|
       if listings[i].images

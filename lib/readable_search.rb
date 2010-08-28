@@ -7,7 +7,7 @@ module ReadableSearch
   end
   
   # Prepare params for use with Searchlogic plugin by removing non-Searchlogic
-  # elements, i.e. :controller, :action, :page, :order, :order_dir, etc.
+  # elements, i.e. :controller, :action, :page, :order etc.
   def search_params( parameters = nil )
     if parameters.nil?
       parameters = params.dup
@@ -17,7 +17,7 @@ module ReadableSearch
     search_keys = SEARCH_PARAMS_MAP.map { |param| param[:key] }
     parameters.delete_if {
       |key, value| ! search_keys.include?( key.to_sym ) }
-    
+      
     return sanitize_search_params( parameters )
   end
   
@@ -27,26 +27,29 @@ module ReadableSearch
       parameters = params.dup
     end
     SEARCH_PARAMS_MAP.each do |param|
-      if parameters[param[:key]]
-        # Remove elements set to their defaults
-        if parameters[param[:key]] == param[:null_equivalent]
-          parameters.delete(param[:key])
+      key = param[:key]
+      if parameters[key]
+        # Remove blank elements or those set to their defaults
+        if parameters[key].blank? ||
+          param[:null_equivalent].include?(parameters[key])
+          parameters.delete(key)
         else
-          value = parameters[param[:key]]
-          case param[:key]
-          # Slice off "under " and " dollars"
-          when ASK_AMOUNT_LESS_THAN_OR_EQUAL_TO
-            parameters[param[:key]] = value.slice(6..-1).slice(0..-9)
-          # Slice off "over " and " dollars"
-          when ASK_AMOUNT_GREATER_THAN_OR_EQUAL_TO
-            parameters[param[:key]] = value.slice(5..-1).slice(0..-9)
+          value = parameters[key]
+          case key
+          # Slice off superfluous text
+          when ASK_AMOUNT_GREATER_THAN_OR_EQUAL_TO,
+            ASK_AMOUNT_LESS_THAN_OR_EQUAL_TO
+            parameters[key] = value.gsub(/[^\d]/, '')
           when BEDROOM_NUMBER, BATHROOM_NUMBER
             pair = room_number_scope_from_string(
-              "#{param[:key].to_s.chomp('_number').to_sym}", value )
+              "#{key.to_s.chomp('_number').to_sym}", value )
             parameters.merge!( pair )
-            parameters.delete( param[:key] ) # Remove non-Searchlogic param
+            parameters.delete( key ) # Remove non-Searchlogic param
+          # Convert to array (actually, I think Searchlogic will still process
+          # this correctly without converting to an array, but it makes it
+          # more convenient when handling in other scripts
           when CATEGORIES_EQUALS_ANY, FEATURES_EQUALS_ALL, STYLES_EQUALS_ANY
-            parameters[param[:key]] = value.split(' ') # Convert to array
+            parameters[key] = value.split(' ')
           end
         end
       end
@@ -54,12 +57,181 @@ module ReadableSearch
     return parameters.merge( params[:q] || {} )
   end
   
+  # Sensible defaults for links pointing to listings index page
+  def listings_options( new_params = {} )
+    # Set controller and action
+    parameters = { :controller => :listings, :action => :index }
+    
+    # Constrain "all listings" by agency's primary country by default
+    if @active_agency.country
+      unless new_params[COUNTRY_EQUALS]
+        new_params[COUNTRY_EQUALS] = @active_agency.country.cached_slug
+      end
+    end
+    # Sensible to show just for sale listings instead of mixing in rentals
+    unless new_params[LISTING_TYPE_EQUALS]
+      new_params.merge!( LISTING_TYPE_EQUALS => 'for-sale' )
+    end
+    
+    # Add new params
+    parameters.merge!( search_options( new_params ) )
+    # Append pagination parameters if necessary
+    parameters.merge!( pagination_options( new_params ) )
+    
+    return parameters
+  end
+  
+  def search_options( new_params )# Default values - these will stay set unless overwritten later
+    parameters = {}
+    
+    # Overwrite parameters if hash provided
+    parameters.merge!( new_params )
+    
+    # Make sure price range is sensible
+    if parameters[ASK_AMOUNT_GREATER_THAN_OR_EQUAL_TO] ||
+      parameters[ASK_AMOUNT_LESS_THAN_OR_EQUAL_TO]
+      lower = parameters[ASK_AMOUNT_GREATER_THAN_OR_EQUAL_TO].to_i
+      upper = parameters[ASK_AMOUNT_LESS_THAN_OR_EQUAL_TO].to_i
+      if lower == 0 && upper == 0
+        parameters.delete(ASK_AMOUNT_GREATER_THAN_OR_EQUAL_TO)
+        parameters.delete(ASK_AMOUNT_LESS_THAN_OR_EQUAL_TO)
+      else
+        if upper.zero? || lower >= upper
+          parameters.delete(ASK_AMOUNT_LESS_THAN_OR_EQUAL_TO)
+        elsif lower.zero?
+          parameters.delete(ASK_AMOUNT_GREATER_THAN_OR_EQUAL_TO)
+        end
+      end
+    end
+    
+    parameters.each_pair do |key, value|
+      # Convert parameters with arrays for values to strings
+      parameters[key] = value.join(' ') if value.kind_of?(Array)
+      # TODO: figure out why these values are even present in the hash
+      parameters.delete(key) if value.blank?
+    end
+    
+    # This translates Searchlogic params that should be represented by just one
+    # parameter in the URL path
+    INTERNAL_PARAM_KEYS.each do |key|
+      next unless parameters[key]
+      case key
+      when BEDROOM_NUMBER_EQUALS
+        parameters[BEDROOM_NUMBER] = "exactly-#{parameters[key]}-bedrooms"
+      when BEDROOM_NUMBER_GTE
+        parameters[BEDROOM_NUMBER] = "at-least-#{parameters[key]}-bedrooms"
+      when BEDROOM_NUMBER_LTE
+        parameters[BEDROOM_NUMBER] = "no-more-than-#{parameters[key]}-bedrooms"
+      when BATHROOM_NUMBER_EQUALS
+        parameters[BATHROOM_NUMBER] = "exactly-#{parameters[key]}-bathrooms"
+      when BATHROOM_NUMBER_GTE
+        parameters[BATHROOM_NUMBER] = "at-least-#{parameters[key]}-bathrooms"
+      when BATHROOM_NUMBER_LTE
+        parameters[BATHROOM_NUMBER] = "no-more-than-#{parameters[key]}" +
+          "-bathrooms"
+      end
+      parameters.delete(key)
+    end
+    
+    # Also trim path so that it is as short as possible
+    keys_to_trim = []
+    SEARCH_PARAMS_MAP.each_with_index do |map_param, i|
+      key = map_param[:key]
+      
+      null_equivalent = true
+      if parameters[key]
+        unless map_param[:null_equivalent].include?( parameters[key] )
+          null_equivalent = false
+        end
+      end
+        
+      debugger if new_params == {}
+    
+      if null_equivalent
+        keys_to_trim << key
+        # Fill in the "gaps" in the path with placeholder values. Trailing
+        # values will be chopped off later (exclude keys we are always taking
+        # out of path)
+        unless INTERNAL_PARAM_KEYS.include?(key)
+          parameters[key] = map_param[:null_equivalent][0]
+        end
+      else
+        keys_to_trim = []
+        # Some parameters have extra text to make them more readable and
+        # search engine friendly
+        case key
+        when ASK_AMOUNT_GREATER_THAN_OR_EQUAL_TO
+          parameters[key] = "over-#{parameters[key]}-dollars"
+        when ASK_AMOUNT_LESS_THAN_OR_EQUAL_TO
+          parameters[key] = "under-#{parameters[key]}-dollars"
+        end
+      end
+    end
+    # Chop off all values set to their null equivalents
+    keys_to_trim.each { |key| parameters.delete( key ) }
+    
+    return parameters
+  end
+  
+  def pagination_options( parameters = nil )
+    pagination_keys = PAGINATE_PARAMS_MAP.map { |x| x[:key] }
+    # If one of the pagination parameters is present, they must all be
+    # added in order to match the corresponding route
+    at_least_one_key = false
+    pagination_keys.each do |key|
+      if parameters.has_key?( key )
+        at_least_one_key = true
+        break
+      end
+    end
+    return {} unless at_least_one_key
+    
+    # Get rid of non-pagination parameters
+    parameters.each_key do |key|
+      unless pagination_keys.include?(key)
+        parameters.delete( key )
+      end
+    end
+    
+    # Make sure all pagination parameters are set
+    PAGINATE_PARAMS_MAP.map do |map_param|
+      unless parameters[map_param[:key]]
+        parameters[map_param[:key]] = map_param[:null_equivalent][0]
+      end
+    end
+    
+    # Append the pagination parameters if present and at least one of them
+    # is set to a value other than its null equivalent
+    trim_keys = true
+    PAGINATE_PARAMS_MAP.each do |map_param|
+      unless map_param[:null_equivalent].include?(
+        parameters[map_param[:key]] )
+        trim_keys = false
+      end
+    end
+    # Chop off all values set to their null equivalents
+    if trim_keys
+      PAGINATE_PARAMS_MAP.each do |map_param|
+        parameters.delete( map_param[:key] )
+      end
+    end
+    
+    # Force pagination to have 'asc' or 'desc'
+    unless parameters[:order].blank?
+      unless parameters[:order].index(/asc|desc/)
+        parameters[:order] += ' asc'
+      end
+    end
+    
+    return parameters
+  end
+  
   def room_comparator_and_number_from_string( type, value )
     # Chop off trailing label, i.e. " bedrooms"
-    value = value.chomp("#{type.to_s.pluralize}").strip
+    value.gsub!("-#{type.to_s.pluralize}", '')
     number = value.match(/\d/).to_s.to_i
     return nil if number.zero?
-    return [ value.chomp(number.to_s).strip, number ]
+    return [ value.chomp(number.to_s).chomp('-'), number ]
   end
   
   def room_number_scope_from_string( type, value )
@@ -67,41 +239,14 @@ module ReadableSearch
     return {} unless result
     comparator, number = result
     case comparator
-    when 'at least'
+    when 'at-least'
       scope = "property_#{type}_number_greater_than_or_equal_to".to_sym
-    when 'no more than'
+    when 'no-more-than'
       scope = "property_#{type}_number_less_than_or_equal_to".to_sym
     else # when 'exactly'
       scope = "property_#{type}_number_equals".to_sym
     end
     return { scope => number }
-  end
-  
-  # Make params more human readable and keyword-rich so that URLs are better
-  # for search engines
-  def verbose_params( parameters = nil )
-    if parameters.nil?
-      parameters = params.dup
-    end
-    LISTING_PARAMS_MAP.each do |param|
-      value = parameters[param[:key]]
-      if value
-        unless value == param[:null_equivalent]
-          case param[:key]
-          # Slice off "under " and " dollars"
-          when ASK_AMOUNT_LESS_THAN_OR_EQUAL_TO
-            parameters[param[:key]] = 'under ' + value.to_s + ' dollars'
-          # Slice off "over " and " dollars"
-          when ASK_AMOUNT_GREATER_THAN_OR_EQUAL_TO
-            parameters[param[:key]] = 'over ' + value.to_s + ' dollars'
-          end
-        end
-      else
-        # All possible listings
-        parameters.merge!( param[:key] => param[:null_equivalent] )
-      end
-    end
-    return parameters
   end
   
   def searchlogic_params_to_readable_params( parameters, type = 'url',
@@ -160,7 +305,7 @@ module ReadableSearch
         bedroom_comparator = 'at least'
         bedroom_number = value
       when BEDROOM_NUMBER_LTE
-        bedroom_comparator = 'not more than'
+        bedroom_comparator = 'no more than'
         bedroom_number = value
       when BATHROOM_NUMBER_EQUALS
         bathroom_comparator = 'exactly'
@@ -169,7 +314,7 @@ module ReadableSearch
         bathroom_comparator = 'at least'
         bathroom_number = value
       when BATHROOM_NUMBER_LTE
-        bathroom_comparator = 'not more than'
+        bathroom_comparator = 'no more than'
         bathroom_number = value
       when ASK_AMOUNT_LESS_THAN_OR_EQUAL_TO
         ask_amount_maximum = value.to_s

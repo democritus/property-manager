@@ -42,72 +42,85 @@ ZONE_EQUALS = :property_barrio_canton_zone_cached_slug_equals
 SEARCH_PARAMS_MAP = [
   {
     :key => COUNTRY_EQUALS,
-    :null_equivalent => 'all'
+    :null_equivalent => ['all']
   },
   {
     :key => CATEGORIES_EQUALS_ANY,
-    :null_equivalent => 'property'
+    :null_equivalent => ['property']
   },
   { 
     :key => LISTING_TYPE_EQUALS,
-    :null_equivalent => 'for sale or rent'
+    :null_equivalent => ['for-sale-or-rent']
   },
   { 
     :key => MARKET_EQUALS,
-    :null_equivalent => 'any market'
+    :null_equivalent => ['any-market']
   },
   { 
     :key => BARRIO_EQUALS,
-    :null_equivalent => 'any barrio'
+    :null_equivalent => ['any-barrio']
   },
   { 
     :key => CANTON_EQUALS,
-    :null_equivalent => 'any canton'
+    :null_equivalent => ['any-canton']
   },
   { 
     :key => PROVINCE_EQUALS,
-    :null_equivalent => 'any province'
+    :null_equivalent => ['any-province']
   },
   { 
     :key => ZONE_EQUALS,
-    :null_equivalent => 'any zone'
+    :null_equivalent => ['any-zone']
   },
   { 
     :key => BEDROOM_NUMBER,
-    :null_equivalent => 'any bedroom number'
+    :null_equivalent => ['any-bedroom-number']
   },
   { 
     :key => BATHROOM_NUMBER,
-    :null_equivalent => 'any bathroom number'
-  },
-  { 
-    :key => ASK_AMOUNT_LESS_THAN_OR_EQUAL_TO,
-    :null_equivalent => 'under any amount'
+    :null_equivalent => ['any-bathroom-number']
   },
   { 
     :key => ASK_AMOUNT_GREATER_THAN_OR_EQUAL_TO,
-    :null_equivalent => 'over any amount'
+    :null_equivalent => ['over-any-amount']
+  },
+  { 
+    :key => ASK_AMOUNT_LESS_THAN_OR_EQUAL_TO,
+    :null_equivalent => ['under-any-amount']
   },
   { 
     :key => STYLES_EQUALS_ANY,
-    :null_equivalent => 'any style'
+    :null_equivalent => ['any-style']
   },
   { 
     :key => FEATURES_EQUALS_ALL,
-    :null_equivalent => 'any feature'
+    :null_equivalent => ['any-feature']
   }
 ]
 PAGINATE_PARAMS_MAP = [
-  { :key => :page, :null_equivalent => '1' },
-  { :key => :order, :null_equivalent => 'publish_date' },
-  { :key => :order_dir, :null_equivalent => 'desc' }
+  {
+    :key => :page,
+    :null_equivalent => ['1', ''],
+    :default_value => '1'
+  },
+  {
+    :key => :order,
+    :null_equivalent => [''],
+    :default_value => 'publish_date desc'
+  }
 ]
 LISTING_PARAMS_MAP = SEARCH_PARAMS_MAP + PAGINATE_PARAMS_MAP
+# Parameter keys that are sent to Searchlogic, but are implicit in the URL
+# through another parameter
+INTERNAL_PARAM_KEYS = [ BEDROOM_NUMBER_EQUALS, BEDROOM_NUMBER_GTE,
+  BEDROOM_NUMBER_LTE, BATHROOM_NUMBER_EQUALS, BATHROOM_NUMBER_GTE,
+  BATHROOM_NUMBER_LTE
+]
 
 js_pairs = []
 LISTING_PARAMS_MAP.each do |pair|
-  js_pairs << '{name: "' + pair[:key].to_s + '"' + ', null_equivalent: "' +
-    pair[:null_equivalent] + '"}'
+  js_pairs << '{name: "' + pair[:key].to_s + '"' + ', null_equivalent: [' +
+    pair[:null_equivalent].map { |x| "'#{x}'" }.join(',') + ']}'
 end
 JAVASCRIPT_LISTING_PARAMS_MAP = '[' + js_pairs.join(',') + ']'
 

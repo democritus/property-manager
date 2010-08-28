@@ -1,38 +1,95 @@
 ActionController::Routing::Routes.draw do |map|
-
-  # Listings search
-  # Cachable search urls compatible with Searchlogic (including pagination)
-  normal_bound_params_string = 'real_estate'
-  admin_bound_params_string = 'listings'
-  bound_params_requirements = {}
-  bound_params_defaults = {}
-  LISTING_PARAMS_MAP.each do |param|
-    normal_bound_params_string += '/:' + param[:key].to_s
-    admin_bound_params_string += '/:' + param[:key].to_s
-    bound_params_requirements.merge!(param[:key] => %r([^/;,?]+))
-    #bound_params_defaults.merge!(param[:key] => nil)
-  end
   
   # Normal view - cached
-  map.connect(
-    normal_bound_params_string,
-    bound_params_defaults.merge(
-      :controller => :listings,
-      :action => :index,
-      :requirements => bound_params_requirements
-    )
-  )
+  map.resources :real_estate,
+    :controller => :listings,
+    :only => [ :show, :index, :featured_glider ],
+    :member => { :glider_image_swap => :get },
+    :collection => { :featured_glider => :get } do |listings|
+    listings.resources :information_requests,
+      :only => :create,
+      :requirements => { :context_type => 'listings' }
+  end
   
   # Admin view - not cached
-  map.connect(
-    admin_bound_params_string,
-    bound_params_defaults.merge(
-      :controller => :listings,
-      :action => :index,
-      :requirements => bound_params_requirements
-    )
-  )
+  map.resources :listings,
+    :controller => :listings,
+    :only => [ :show, :index, :featured_glider ],
+    :member => { :glider_image_swap => :get },
+    :collection => { :featured_glider => :get } do |listings|
+    listings.resources :information_requests,
+      :only => :create,
+      :requirements => { :context_type => 'listings' }
+  end
   
+  # Listings search
+  # Cachable search urls compatible with Searchlogic (including pagination)
+  search_routes = []
+  length = SEARCH_PARAMS_MAP.length
+  (0..length).each do |outer_offset|
+    search_routes[outer_offset] = {
+      :params => '',
+      :requirements => {}
+    }
+    SEARCH_PARAMS_MAP.each_with_index do |param, inner_offset|
+      break if inner_offset == outer_offset
+      search_routes[outer_offset][:params] += '/:' + param[:key].to_s
+      search_routes[outer_offset][:requirements].merge!(
+        param[:key] => %r([^/;,?]+) )
+    end
+  end
+  paginate_routes = []
+  length = PAGINATE_PARAMS_MAP.length
+  (0..length - 1).each do |outer_offset|
+    PAGINATE_PARAMS_MAP.each_with_index do |param, inner_offset|
+      break if inner_offset == outer_offset + 1
+      regex = case param[:key]
+      when :page
+        %r(\d)
+      else # when :order
+#        %r(asc|desc)
+        %r((.+)(\sasc|\sdesc))
+      end
+      paginate_routes[outer_offset] = {
+        :params => '/:' + param[:key].to_s,
+        :requirements => { param[:key] => regex }
+      }
+    end
+  end
+  defaults = { :controller => :listings, :action => :index }
+#  [ :real_estate, :listings ].each do |controller_alias|
+  [ :real_estate ].each do |controller_alias|    
+    # Three loops: 1) search params only, 2) search params + page,
+    # 3) page params + order
+    (0..3).each do |i|
+      search_routes.each do |my_route|
+        append_params = ''
+        merge_requirements = {}
+        unless i == 3
+          case i
+          when 0, 1 # :page and :order OR just :page
+            (0..1-i).each do |paginate_mode|
+              append_params += paginate_routes[paginate_mode][:params]
+              merge_requirements.merge!(
+                paginate_routes[paginate_mode][:requirements] )
+            end
+          else # when 2 - just :order
+            append_params += paginate_routes[1][:params]
+            merge_requirements.merge!( paginate_routes[1][:requirements] )
+          end
+        end
+        map.connect(
+          "/#{controller_alias}" + my_route[:params] + append_params,
+          defaults.merge(
+            :requirements => my_route[:requirements].merge(
+              merge_requirements
+            )
+          )
+        )
+      end
+    end
+  end
+    
   #
   # Standard routes
   #
@@ -62,28 +119,6 @@ ActionController::Routing::Routes.draw do |map|
     agencies.resources :information_requests,
       :only => :create,
       :requirements => { :context_type => 'agencies' }
-  end
-  
-  # Normal view - cached
-  map.resources :real_estate,
-    :controller => :listings,
-    :only => [ :show, :index, :featured_glider ],
-    :member => { :glider_image_swap => :get },
-    :collection => { :featured_glider => :get } do |listings|
-    listings.resources :information_requests,
-      :only => :create,
-      :requirements => { :context_type => 'listings' }
-  end
-  
-  # Admin view - not cached
-  map.resources :listings,
-    :controller => :listings,
-    :only => [ :show, :index, :featured_glider ],
-    :member => { :glider_image_swap => :get },
-    :collection => { :featured_glider => :get } do |listings|
-    listings.resources :information_requests,
-      :only => :create,
-      :requirements => { :context_type => 'listings' }
   end
     
   # Admin routes

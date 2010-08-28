@@ -17,37 +17,37 @@ class ListingsController < ApplicationController
     session[:last_seen_params] = search_params
         
     # Searchlogic filtering
-  
-    # TODO: figure out how to pass order by params as searchlogic parameter
-    # instead of this ugly named scope hack
-    
-    unless params[:order].blank?
-      direction = 'ascend_by'
-      if params[:order_dir]
-        if params[:order_dir].downcase == 'desc'
-          direction = 'descend_by'
-        end
-      end
-    end
+    # TODO: figure out how to avoid using named scope hack
+#    if order_field
+#      case order_direction
+#      when 'DESC'
+#        direction = 'descend_by'
+#      else
+#        direction = 'ascend_by'
+#      end
+#    end
     unless active_agency.master_agency
-      if direction
-        @search = active_agency.listings.send(
-          "#{direction}_#{params[:order]}").search( search_params )
-        #@search = Listing.by_agency(active_agency.id).send(
-        #  "#{direction}_#{params[:order]}").search(search_params)
-      else
-        @search = active_agency.listing.search( search_params )
-        #@search = Listing.by_agency(active_agency.id).search(search_params)
-      end
+      @search = active_agency.listing.search( search_params )
+#      if direction
+#        @search = active_agency.listings.send(
+#          "#{direction}_#{params[:order]}").search( search_params )
+#      else
+#        @search = active_agency.listing.search( search_params )
+#      end
     else
-      if direction
-        @search = Listing.regular_index.send(
-          "#{direction}_#{params[:order]}").search( search_params )
-      else
-        @search = Listing.regular_index.search( search_params )
-      end
+      @search = Listing.regular_index.search( search_params )
+#      if direction
+#        @search = Listing.regular_index.send(
+#          "#{direction}_#{params[:order]}").search( search_params )
+#      else
+#        @search = Listing.regular_index.search( search_params )
+#      end
     end
-    @listings = @search.paginate :page => params[:page]
+    
+#    @listings = @search.paginate(
+#      pagination_options( :page => params[:page ] )
+#    )
+    @listings = @search.paginate( :page => params[:page ] )
   end
   
 # REMOVED: moved to partial
@@ -108,76 +108,29 @@ class ListingsController < ApplicationController
 
   private
   
-  
-  def order
-    order_params = {}
-    unless params[:order].blank?
-      order = params[:order] + ' IS NULL, ' + params[:order]
-      order_params.merge!('ascend_by_')
-      direction = ''
-      if params[:order_dir]
-        if params[:order_dir].upcase == 'DESC'
-          direction = ' DESC'
-        end
-      end    
-      unless params[:order_dir].blank?
-        direction = ' ' + params[:order_dir]
-      end
-      
-      return order + direction
-    end
-    
-    # TODO: create scheme to change order of listings so that the same listings
-    # don't always show up at the top of the list
-    if search_params.has_key?( COUNTRY_EQUALS )
-      if search_params.has_key?( CATEGORIES_EQUALS_ANY )
-        if search_params.has_key?( MARKET_EQUALS )
-          if search_params.has_key?( BARRIO_EQUALS )
-            order = 'listings.ask_amount'
-          else
-            order = 'barrios.name, listings.ask_amount'
-          end
-        else
-          order = 'markets.name, barrios.name'
-        end
-      else
-        if search_params.has_key?( MARKET_EQUALS )
-          if search_params.has_key?( BARRIO_EQUALS )
-            order = 'categories.name'
-          else
-            order = 'categories.name, barrios.name'
-          end
-        else
-          order = 'markets.name, barrios.name'
-        end
-      end
-    else
-      if search_params.has_key?( CATEGORIES_EQUALS_ANY )
-        order = 'countries.name, markets.name, barrios.name'
-      else
-        order = 'listings.ask_amount'
-      end
-    end
-    order = 'listings.created_at DESC' unless order
-    
-    return order
+  def order_field
+    return if params[:order].blank?
+    params[:order].split(' ').first
   end
   
-  def infer_order
-    unless params[:order].blank?
-      order = params[:order] + ' IS NULL, ' + params[:order]
-      direction = ''
-      if params[:order_dir]
-        if params[:order_dir].upcase == 'DESC'
-          direction = ' DESC'
-        end
-      end    
-      unless params[:order_dir].blank?
-        direction = ' ' + params[:order_dir]
-      end
-      
-      return order + direction
+  def order_direction
+    return if params[:order].strip.blank?
+    direction = params[:order].strip.split(' ').last
+    unless direction.blank?
+      direction.upcase!
+      direction = 'ASC' unless direction.index(/ASC|DESC/)
+    else
+      direction = 'ASC'
     end
+    return direction
+  end
+  
+  def order_clause
+    return if params[:order].strip.blank?
+    
+    "#{field} IS NULL, #{field} #{direction}"
+    
+    # # #
     
     # TODO: create scheme to change order of listings so that the same listings
     # don't always show up at the top of the list
