@@ -48,7 +48,9 @@ ActionController::Routing::Routes.draw do |map|
         %r(\d)
       else # when :order
 #        %r(asc|desc)
-        %r((.+)(\sasc|\sdesc))
+#        %r((.+)(\sasc|\sdesc))
+#        %r(([^\s/;,?-]+)(\sasc|\sdesc))
+        %r(([^\s/;,?-]+)(\s|%20)(asc|desc))
       end
       paginate_routes[outer_offset] = {
         :params => '/:' + param[:key].to_s,

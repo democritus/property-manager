@@ -17,36 +17,21 @@ class ListingsController < ApplicationController
     session[:last_seen_params] = search_params
         
     # Searchlogic filtering
-    # TODO: figure out how to avoid using named scope hack
-#    if order_field
-#      case order_direction
-#      when 'DESC'
-#        direction = 'descend_by'
-#      else
-#        direction = 'ascend_by'
-#      end
-#    end
     unless active_agency.master_agency
-      @search = active_agency.listing.search( search_params )
-#      if direction
-#        @search = active_agency.listings.send(
-#          "#{direction}_#{params[:order]}").search( search_params )
-#      else
-#        @search = active_agency.listing.search( search_params )
-#      end
+      unless order_scope
+        @search = active_agency.listing.search( search_params )
+      else
+        @search = active_agency.listing.send(order_scope).search(
+          search_params )
+      end
     else
-      @search = Listing.regular_index.search( search_params )
-#      if direction
-#        @search = Listing.regular_index.send(
-#          "#{direction}_#{params[:order]}").search( search_params )
-#      else
-#        @search = Listing.regular_index.search( search_params )
-#      end
+      unless order_scope
+        @search = Listing.regular_index.search( search_params )
+      else
+        @search = Listing.regular_index.send(order_scope).search(
+          search_params )
+      end
     end
-    
-#    @listings = @search.paginate(
-#      pagination_options( :page => params[:page ] )
-#    )
     @listings = @search.paginate( :page => params[:page ] )
   end
   
@@ -114,8 +99,8 @@ class ListingsController < ApplicationController
   end
   
   def order_direction
-    return if params[:order].strip.blank?
-    direction = params[:order].strip.split(' ').last
+    return if params[:order].blank?
+    direction = params[:order].split(' ').last
     unless direction.blank?
       direction.upcase!
       direction = 'ASC' unless direction.index(/ASC|DESC/)
@@ -125,47 +110,15 @@ class ListingsController < ApplicationController
     return direction
   end
   
-  def order_clause
-    return if params[:order].strip.blank?
-    
-    "#{field} IS NULL, #{field} #{direction}"
-    
-    # # #
-    
-    # TODO: create scheme to change order of listings so that the same listings
-    # don't always show up at the top of the list
-    if search_params.has_key?( COUNTRY_EQUALS )
-      if search_params.has_key?( CATEGORIES_EQUALS_ANY )
-        if search_params.has_key?( MARKET_EQUALS )
-          if search_params.has_key?( BARRIO_EQUALS )
-            order = 'listings.ask_amount'
-          else
-            order = 'barrios.name, listings.ask_amount'
-          end
-        else
-          order = 'markets.name, barrios.name'
-        end
-      else
-        if search_params.has_key?( MARKET_EQUALS )
-          if search_params.has_key?( BARRIO_EQUALS )
-            order = 'categories.name'
-          else
-            order = 'categories.name, barrios.name'
-          end
-        else
-          order = 'markets.name, barrios.name'
-        end
-      end
-    else
-      if search_params.has_key?( CATEGORIES_EQUALS_ANY )
-        order = 'countries.name, markets.name, barrios.name'
-      else
-        order = 'listings.ask_amount'
-      end
+  def order_scope
+    return unless order_field
+    case order_direction.downcase
+    when 'desc'
+      scope = 'descend_by'
+    else # 'asc'
+      scope = 'ascend_by'
     end
-    order = 'listings.created_at DESC' unless order
-    
-    return order
+    "#{scope}_#{order_field}"
   end
   
   def add_recent_listing(listing)

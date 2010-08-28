@@ -630,8 +630,8 @@ class=\"normal clearfix\" id=\"#{normal_id}\">
       unless value = params[key]
         value = pair[:null_equivalent][0]
       end
-      html += label_tag(key, key.to_s) + text_field_tag(
-#      html += hidden_field_tag(
+#      html += label_tag(key, key.to_s) + text_field_tag(
+      html += hidden_field_tag(
         key,
         value,
         { :style => 'display: block' }

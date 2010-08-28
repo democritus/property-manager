@@ -134,8 +134,9 @@
                 end
                 new_order_direction = default_order_direction
                 if params[:order]
-                  if params[:order] == item[:order]
-                    case params[:order].split(' ').last
+                  order_field, order_direction = params[:order].split(' ')
+                  if order_field == item[:order]
+                    case order_direction
                     when 'desc'
                       new_order_direction = 'asc'
                     else
