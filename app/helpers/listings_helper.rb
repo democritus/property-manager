@@ -472,14 +472,15 @@ module ListingsHelper
     return if places.empty?
     html = any_place_html = ''
     places.each do |place|
-      if @search_params[place_equals] # skip currently-selected place
+      if @search_params[place_equals]        
         any_place_html = '<li>' +
-          link_to("All #{type.to_s.pluralize}", listings_options(
-            @search_params.merge(
-              "#{type.to_s.upcase}_EQUALS".constantize => nil )
-          )) + '</li>'
-        next if @search_params[place_equals] == place.cached_slug
+          link_to("All #{type.to_s.pluralize}",
+            listings_options(
+              @search_params.merge(
+                "#{type.to_s.upcase}_EQUALS".constantize => nil ) ) ) + '</li>'
       end
+      # Skip currently-selected place
+      next if @search_params[place_equals] == place.cached_slug
       place_params = { place_equals => place.cached_slug }
       parents.each do |parent|
         if place.send("#{parent.to_s}")
@@ -502,35 +503,34 @@ module ListingsHelper
   
   def price_range_filter
     if @search_params[LISTING_TYPE_EQUALS]
-      listing_type = @search_params[LISTING_TYPE_EQUALS]
-      if listing_type == 'for-sale' || listing_type == 'for-rent'
-        listing_types = [ listing_type.gsub(/-/, ' ') ]
+      param_listing_type = @search_params[LISTING_TYPE_EQUALS]
+      if param_listing_type == 'for-sale' || param_listing_type == 'for-rent'
+        listing_types = [ param_listing_type.gsub(/-/, ' ') ]
       end
     end
     unless listing_types
       listing_types = [ 'for sale', 'for rent' ]
+      param_listing_type = 'for-sale-or-rent'
     end
-    html = any_price_range_html = listing_type_label = ''
-    listing_types.each do |listing_type|
+    
+    html = ''
+    # TODO: why doesn't this match a shorter route?
+    if @search_params[ASK_AMOUNT_GREATER_THAN_OR_EQUAL_TO] ||
+      @search_params[ASK_AMOUNT_LESS_THAN_OR_EQUAL_TO]
+      any_price_range_html = '<li>' +
+        link_to('Any price range', listings_options(
+          @search_params.merge(LISTING_TYPE_EQUALS => 'for-sale-or-rent',
+            ASK_AMOUNT_GREATER_THAN_OR_EQUAL_TO => nil,
+            ASK_AMOUNT_LESS_THAN_OR_EQUAL_TO => nil
+          )
+        )) + '</li>'
+    else
+      any_price_range_html = ''
+    end
+    listing_types.each_with_index do |listing_type, i|
       list_items = ''
       PRICE_RANGES[listing_type].each do |price_range|
-        if @search_params[ASK_AMOUNT_GREATER_THAN_OR_EQUAL_TO] ||
-          @search_params[ASK_AMOUNT_LESS_THAN_OR_EQUAL_TO]
-          if price_range[:lower] == @search_params[
-              ASK_AMOUNT_GREATER_THAN_OR_EQUAL_TO].to_i &&
-            price_range[:upper] == @search_params[
-              ASK_AMOUNT_LESS_THAN_OR_EQUAL_TO].to_i
-            any_price_range_html = '<li>' +
-              link_to('Any price range', listings_options(
-                @search_params.merge(
-                  ASK_AMOUNT_GREATER_THAN_OR_EQUAL_TO => nil,
-                  ASK_AMOUNT_LESS_THAN_OR_EQUAL_TO => nil
-                )
-              )) + '</li>'
-            next
-          end
-        end
-        boundaries = {}
+        boundaries = { LISTING_TYPE_EQUALS => param_listing_type }
         unless price_range[:lower].zero?
           boundaries.merge!(
             ASK_AMOUNT_GREATER_THAN_OR_EQUAL_TO => price_range[:lower].to_s)
@@ -544,19 +544,20 @@ module ListingsHelper
             @search_params.merge(boundaries)
           )) + '</li>'
       end
+      list_items = any_price_range_html + list_items
+      header = 'Filter by price range'
       if listing_types.length > 1
-        listing_type_label = ' (' + listing_type + ')'
-      else
-        listing_type_label = ''
+        if listing_type == 'for sale'
+          header += ' (for sale)'
+        else
+          header += ' (rentals)'
+        end
       end
-      html += list_items
+      html += "<h3>#{header}</h3>" + '<ul>' + list_items + '</ul>'
     end
     return unless html
-    html = any_price_range_html + html
-    '<div class="menu_list">' +
-      "<h3>Filter by price range#{listing_type_label}</h3>" +
-      '<ul>' + html + '</ul>' +
-    '</div>'
+    
+    "<div class=\"menu_list\">#{html}</div>"
   end
   
   def filter_field_list( collection, type = :links )

@@ -42,71 +42,88 @@ ZONE_EQUALS = :property_barrio_canton_zone_cached_slug_equals
 SEARCH_PARAMS_MAP = [
   {
     :key => COUNTRY_EQUALS,
-    :null_equivalent => ['all']
+    :null_equivalent => ['all'],
+    :default => 'all',
+    :required => true
   },
   {
     :key => CATEGORIES_EQUALS_ANY,
-    :null_equivalent => ['property']
+    :null_equivalent => ['property'],
+    :default => 'property',
+    :required => true
   },
   { 
     :key => LISTING_TYPE_EQUALS,
-    :null_equivalent => ['for-sale-or-rent']
+    :null_equivalent => ['for-sale-or-rent'],
+    :default => 'for-sale',
+    :required => true
   },
   { 
     :key => MARKET_EQUALS,
-    :null_equivalent => ['any-market']
+    :null_equivalent => ['any-market'],
+    :default => 'any-market'
   },
   { 
     :key => BARRIO_EQUALS,
-    :null_equivalent => ['any-barrio']
+    :null_equivalent => ['any-barrio'],
+    :default => 'any-barrio'
   },
   { 
     :key => CANTON_EQUALS,
-    :null_equivalent => ['any-canton']
+    :null_equivalent => ['any-canton'],
+    :default => 'any-canton'
   },
   { 
     :key => PROVINCE_EQUALS,
-    :null_equivalent => ['any-province']
+    :null_equivalent => ['any-province'],
+    :default => 'any-province'
   },
   { 
     :key => ZONE_EQUALS,
-    :null_equivalent => ['any-zone']
+    :null_equivalent => ['any-zone'],
+    :default => 'any-zone'
   },
   { 
     :key => BEDROOM_NUMBER,
-    :null_equivalent => ['any-bedroom-number']
+    :null_equivalent => ['any-bedroom-number'],
+    :default => 'any-bedroom-number'
   },
   { 
     :key => BATHROOM_NUMBER,
-    :null_equivalent => ['any-bathroom-number']
+    :null_equivalent => ['any-bathroom-number'],
+    :default => 'any-bathroom-number'
   },
   { 
     :key => ASK_AMOUNT_GREATER_THAN_OR_EQUAL_TO,
-    :null_equivalent => ['over-any-amount']
+    :null_equivalent => ['over-any-amount'],
+    :default => 'over-any-amount'
   },
   { 
     :key => ASK_AMOUNT_LESS_THAN_OR_EQUAL_TO,
-    :null_equivalent => ['under-any-amount']
+    :null_equivalent => ['under-any-amount'],
+    :default => 'under-any-amount'
   },
   { 
     :key => STYLES_EQUALS_ANY,
-    :null_equivalent => ['any-style']
+    :null_equivalent => ['any-style'],
+    :default => 'any-style'
   },
   { 
     :key => FEATURES_EQUALS_ALL,
-    :null_equivalent => ['any-feature']
+    :null_equivalent => ['any-feature'],
+    :default => 'any-feature'
   }
 ]
 PAGINATE_PARAMS_MAP = [
   {
     :key => :page,
     :null_equivalent => ['1', ''],
-    :default_value => '1'
+    :default => '1'
   },
   {
     :key => :order,
     :null_equivalent => [''],
-    :default_value => 'publish_date desc'
+    :default => 'publish_date desc'
   }
 ]
 LISTING_PARAMS_MAP = SEARCH_PARAMS_MAP + PAGINATE_PARAMS_MAP

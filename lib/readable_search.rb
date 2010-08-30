@@ -57,35 +57,38 @@ module ReadableSearch
     return parameters.merge( params[:q] || {} )
   end
   
-  # Sensible defaults for links pointing to listings index page
-  def listings_options( new_params = {} )
-    # Set controller and action
-    parameters = { :controller => :listings, :action => :index }
-    
-    # Constrain "all listings" by agency's primary country by default
-    if @active_agency.country
-      unless new_params[COUNTRY_EQUALS]
-        new_params[COUNTRY_EQUALS] = @active_agency.country.cached_slug
-      end
+  def required_search_param_keys
+    keys = []
+    SEARCH_PARAMS_MAP.map do |param|
+      keys << param[:key] if param[:required]
     end
-    # Sensible to show just for sale listings instead of mixing in rentals
-    unless new_params[LISTING_TYPE_EQUALS]
-      new_params.merge!( LISTING_TYPE_EQUALS => 'for-sale' )
-    end
-    
-    # Add new params
-    parameters.merge!( search_options( new_params ) )
-    # Append pagination parameters if necessary
-    parameters.merge!( pagination_options( new_params ) )
-    
-    return parameters
+    keys.reject { |x| x.nil? }
   end
   
-  def search_options( new_params )# Default values - these will stay set unless overwritten later
-    parameters = {}
+  def default_search_params
+    if @active_agency.country
+      country = @active_agency.country.cached_slug
+    else
+      country = search_params_defaults[ COUNTRY_EQUALS ]
+    end
+    {
+      COUNTRY_EQUALS => country,
+      CATEGORIES_EQUALS_ANY => search_params_defaults[ CATEGORIES_EQUALS_ANY ],
+      LISTING_TYPE_EQUALS => search_params_defaults[ LISTING_TYPE_EQUALS ]
+    }
+  end
+  
+  def search_params_defaults
+    result = {}
+    SEARCH_PARAMS_MAP.each do |param|
+      result["#{param[:key]}".to_sym] = param[:default]
+    end
+    return result
+  end
+  
+  def listings_options( new_params = {} )
     
-    # Overwrite parameters if hash provided
-    parameters.merge!( new_params )
+    parameters = new_params.dup
     
     # Make sure price range is sensible
     if parameters[ASK_AMOUNT_GREATER_THAN_OR_EQUAL_TO] ||
@@ -104,16 +107,10 @@ module ReadableSearch
       end
     end
     
-    parameters.each_pair do |key, value|
-      # Convert parameters with arrays for values to strings
-      parameters[key] = value.join(' ') if value.kind_of?(Array)
-      # TODO: figure out why these values are even present in the hash
-      parameters.delete(key) if value.blank?
-    end
-    
     # This translates Searchlogic params that should be represented by just one
     # parameter in the URL path
     INTERNAL_PARAM_KEYS.each do |key|
+      parameters.delete(key) if parameters[key].blank?
       next unless parameters[key]
       case key
       when BEDROOM_NUMBER_EQUALS
@@ -133,60 +130,76 @@ module ReadableSearch
       parameters.delete(key)
     end
     
+    # Fix parameters in non-standard format
+    parameters.each_pair do |key, value|
+      # Convert parameters with arrays for values to strings
+      parameters[key] = value.join(' ') if value.kind_of?(Array)
+#      # TODO: figure out if these values are still present in the hash (were appearing as ASK_AMOUNT... parameters)
+      parameters.delete(key) if value.blank?
+    end
+    
     # Also trim path so that it is as short as possible
     keys_to_trim = []
     SEARCH_PARAMS_MAP.each_with_index do |map_param, i|
       key = map_param[:key]
       
-      null_equivalent = true
-      if parameters[key]
-        unless map_param[:null_equivalent].include?( parameters[key] )
-          null_equivalent = false
-        end
-      end
-        
-      debugger if new_params == {}
-    
-      if null_equivalent
+      # All params should be present, then trimmed later
+      parameters[key] = map_param[:null_equivalent][0] if parameters[key].nil?
+      
+      # Trim null equivalents (except for required parameters)
+      if map_param[:null_equivalent].include?( parameters[key] )
         keys_to_trim << key
         # Fill in the "gaps" in the path with placeholder values. Trailing
         # values will be chopped off later (exclude keys we are always taking
         # out of path)
-        unless INTERNAL_PARAM_KEYS.include?(key)
-          parameters[key] = map_param[:null_equivalent][0]
-        end
+        parameters.delete( key ) if INTERNAL_PARAM_KEYS.include?(key)
       else
         keys_to_trim = []
         # Some parameters have extra text to make them more readable and
         # search engine friendly
         case key
         when ASK_AMOUNT_GREATER_THAN_OR_EQUAL_TO
-          parameters[key] = "over-#{parameters[key]}-dollars"
+          parameters[key] = "over-#{new_params[key]}-dollars"
         when ASK_AMOUNT_LESS_THAN_OR_EQUAL_TO
-          parameters[key] = "under-#{parameters[key]}-dollars"
+          parameters[key] = "under-#{new_params[key]}-dollars"
         end
       end
     end
-    # Chop off all values set to their null equivalents
+    
+#    # Chop off all values set to their null equivalents
     keys_to_trim.each { |key| parameters.delete( key ) }
     
-    return parameters
+    # Set defaults for required parameters
+    required_search_param_keys.each do |required_param|
+      unless parameters[required_param]
+        parameters[required_param] = default_search_params[required_param]
+      end
+    end
+    
+    # Append pagination parameters if necessary
+    parameters.merge(
+      pagination_params( new_params ).merge(
+        :controller => :listings,
+        :action => :index
+      )
+    )
   end
   
-  def pagination_options( parameters = nil )
+  def pagination_params( new_params = {} )
     pagination_keys = PAGINATE_PARAMS_MAP.map { |x| x[:key] }
     # If one of the pagination parameters is present, they must all be
     # added in order to match the corresponding route
     at_least_one_key = false
     pagination_keys.each do |key|
-      if parameters.has_key?( key )
+      if new_params.has_key?( key )
         at_least_one_key = true
         break
       end
     end
-    return {} unless at_least_one_key
+    return new_params unless at_least_one_key
     
     # Get rid of non-pagination parameters
+    parameters = new_params.dup
     parameters.each_key do |key|
       unless pagination_keys.include?(key)
         parameters.delete( key )

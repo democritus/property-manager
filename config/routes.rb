@@ -1,39 +1,19 @@
 ActionController::Routing::Routes.draw do |map|
   
-  # Normal view - cached
-  map.resources :real_estate,
-    :controller => :listings,
-    :only => [ :show, :index, :featured_glider ],
-    :member => { :glider_image_swap => :get },
-    :collection => { :featured_glider => :get } do |listings|
-    listings.resources :information_requests,
-      :only => :create,
-      :requirements => { :context_type => 'listings' }
-  end
-  
-  # Admin view - not cached
-  map.resources :listings,
-    :controller => :listings,
-    :only => [ :show, :index, :featured_glider ],
-    :member => { :glider_image_swap => :get },
-    :collection => { :featured_glider => :get } do |listings|
-    listings.resources :information_requests,
-      :only => :create,
-      :requirements => { :context_type => 'listings' }
-  end
-  
   # Listings search
   # Cachable search urls compatible with Searchlogic (including pagination)
   search_routes = []
   length = SEARCH_PARAMS_MAP.length
-  (0..length).each do |outer_offset|
+  (0..length - 1).each do |outer_offset|
     search_routes[outer_offset] = {
       :params => '',
       :requirements => {}
     }
     SEARCH_PARAMS_MAP.each_with_index do |param, inner_offset|
-      break if inner_offset == outer_offset
-      search_routes[outer_offset][:params] += '/:' + param[:key].to_s
+      break if inner_offset == outer_offset + 1
+      unless param[:key] == :controller_alias
+        search_routes[outer_offset][:params] += '/:' + param[:key].to_s
+      end
       search_routes[outer_offset][:requirements].merge!(
         param[:key] => %r([^/;,?]+) )
     end
@@ -47,9 +27,6 @@ ActionController::Routing::Routes.draw do |map|
       when :page
         %r(\d)
       else # when :order
-#        %r(asc|desc)
-#        %r((.+)(\sasc|\sdesc))
-#        %r(([^\s/;,?-]+)(\sasc|\sdesc))
         %r(([^\s/;,?-]+)(\s|%20)(asc|desc))
       end
       paginate_routes[outer_offset] = {
@@ -60,11 +37,14 @@ ActionController::Routing::Routes.draw do |map|
   end
   defaults = { :controller => :listings, :action => :index }
 #  [ :real_estate, :listings ].each do |controller_alias|
-  [ :real_estate ].each do |controller_alias|    
+  [ :real_estate ].each do |controller_alias|
     # Three loops: 1) search params only, 2) search params + page,
     # 3) page params + order
     (0..3).each do |i|
-      search_routes.each do |my_route|
+      search_routes.each_with_index do |my_route, j|
+        # Skip the first 4 params, since these should always be present
+        # First route should be: /real_estate/:country/:categories/:listing_type
+        next if j < 2
         append_params = ''
         merge_requirements = {}
         unless i == 3
@@ -90,6 +70,28 @@ ActionController::Routing::Routes.draw do |map|
         )
       end
     end
+  end
+  
+  # Normal view - cached
+  map.resources :real_estate,
+    :controller => :listings,
+    :only => [ :show, :index, :featured_glider ],
+    :member => { :glider_image_swap => :get },
+    :collection => { :featured_glider => :get } do |listings|
+    listings.resources :information_requests,
+      :only => :create,
+      :requirements => { :context_type => 'listings' }
+  end
+  
+  # Admin view - not cached
+  map.resources :listings,
+    :controller => :listings,
+    :only => [ :show, :index, :featured_glider ],
+    :member => { :glider_image_swap => :get },
+    :collection => { :featured_glider => :get } do |listings|
+    listings.resources :information_requests,
+      :only => :create,
+      :requirements => { :context_type => 'listings' }
   end
     
   #
