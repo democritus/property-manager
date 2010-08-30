@@ -110,7 +110,7 @@ module ReadableSearch
     # This translates Searchlogic params that should be represented by just one
     # parameter in the URL path
     INTERNAL_PARAM_KEYS.each do |key|
-      parameters.delete(key) if parameters[key].blank?
+      parameters.delete( key ) if parameters[key].blank?
       next unless parameters[key]
       case key
       when BEDROOM_NUMBER_EQUALS
@@ -134,7 +134,8 @@ module ReadableSearch
     parameters.each_pair do |key, value|
       # Convert parameters with arrays for values to strings
       parameters[key] = value.join(' ') if value.kind_of?(Array)
-#      # TODO: figure out if these values are still present in the hash (were appearing as ASK_AMOUNT... parameters)
+      # TODO: figure out if blank values are still present in the hash
+      #(were appearing as ASK_AMOUNT... parameters)
       parameters.delete(key) if value.blank?
     end
     
@@ -149,10 +150,6 @@ module ReadableSearch
       # Trim null equivalents (except for required parameters)
       if map_param[:null_equivalent].include?( parameters[key] )
         keys_to_trim << key
-        # Fill in the "gaps" in the path with placeholder values. Trailing
-        # values will be chopped off later (exclude keys we are always taking
-        # out of path)
-        parameters.delete( key ) if INTERNAL_PARAM_KEYS.include?(key)
       else
         keys_to_trim = []
         # Some parameters have extra text to make them more readable and
@@ -166,7 +163,7 @@ module ReadableSearch
       end
     end
     
-#    # Chop off all values set to their null equivalents
+    # Chop off all values set to their null equivalents
     keys_to_trim.each { |key| parameters.delete( key ) }
     
     # Set defaults for required parameters
@@ -196,12 +193,12 @@ module ReadableSearch
         break
       end
     end
-    return new_params unless at_least_one_key
+    return {} unless at_least_one_key
     
     # Get rid of non-pagination parameters
     parameters = new_params.dup
     parameters.each_key do |key|
-      unless pagination_keys.include?(key)
+      unless pagination_keys.include?( key )
         parameters.delete( key )
       end
     end
