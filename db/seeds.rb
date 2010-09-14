@@ -711,16 +711,19 @@ i = 0
 ].each do |record|
   if market_segment = MarketSegment.create!( record )
     market_segment_images = []
-    image_dir = RAILS_ROOT + '/seed_images/market_segment_images'
-    dir = Dir.new( image_dir )
-    j = 0
-    dir.each do |filename|
-      market_segment_images << {
-        :imageable_id => market_segment.id,
-        :imageable_type => 'MarketSegment',
-        :image_file => File.new( image_dir + '/' + filename, 'r' )
-      }
-      j += 1
+    image_dir = RAILS_ROOT + '/seed_images/market_segment_images/' +
+      record[:name].gsub(/\s/, '_')
+    if File.directory?( image_dir )
+      dir = Dir.new( image_dir )
+      dir.each do |filename|
+        unless filename == '.' || filename == '..'
+          market_segment_images << {
+            :imageable_id => market_segment.id,
+            :imageable_type => 'MarketSegment',
+            :image_file => File.new( image_dir + '/' + filename, 'r' )
+          }
+        end
+      end
     end
     MarketSegmentImage.create!( market_segment_images )
   end

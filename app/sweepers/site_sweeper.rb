@@ -51,7 +51,6 @@ class SiteSweeper < ActionController::Caching::Sweeper
           # array
           skip_path = true unless exclude_paths_to_ignore.include?( path )
         end
-        debugger
         unless filename == '.' || filename == '..'
           if File.directory?( path )
             unless skip_path
