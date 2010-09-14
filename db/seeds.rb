@@ -813,9 +813,6 @@ i = 0
     types << 'for rent'
   end
   record.delete(:type)
-  sale_highlighted = record[:sale_highlighted]
-  rent_highlighted = record[:rent_highlighted]
-  record.delete(:sale_highlighted)
   record.delete(:rent_highlighted)
   if category = Category.create!(record)
     types.each do |type|
@@ -828,9 +825,15 @@ i = 0
         }
         case listing_type
         when :sale
-          attributes.merge!( :highlighted => true ) if sale_highlighted
+          if record[:sale_highlighted]
+            attributes.merge!( :highlighted => true )
+            record.delete(:sale_highlighted)
+          end
         when :rent
-          attributes.merge!( :highlighted => true ) if rent_highlighted
+          if record[:rent_highlighted]
+            attributes.merge!( :highlighted => true )
+            record.delete(:rent_highlighted)
+          end
         end
         CategoryAssignment.create!( attributes )
       end
@@ -925,10 +928,6 @@ i = 0
     types << 'for rent'
   end
   record.delete(:type)
-  sale_highlighted = record[:sale_highlighted]
-  rent_highlighted = record[:rent_highlighted]
-  record.delete(:sale_highlighted)
-  record.delete(:rent_highlighted)
   if feature = Feature.create!(record)
     types.each do |type|
       listing_type = ListingType.find_by_name(type)
@@ -940,9 +939,15 @@ i = 0
         }
         case listing_type
         when :sale
-          attributes.merge!( :highlighted => true ) if sale_highlighted
+          if record[:sale_highlighted]
+            attributes.merge!( :highlighted => true )
+            record.delete(:sale_highlighted)
+          end
         when :rent
-          attributes.merge!( :highlighted => true ) if rent_highlighted
+          if record[:rent_highlighted]
+            attributes.merge!( :highlighted => true )
+            record.delete(:rent_highlighted)
+          end
         end
         FeatureAssignment.create!( attributes )
       end
@@ -1000,10 +1005,6 @@ i = 0
     types << 'for rent'
   end
   record.delete(:type)
-  sale_highlighted = record[:sale_highlighted]
-  rent_highlighted = record[:rent_highlighted]
-  record.delete(:sale_highlighted)
-  record.delete(:rent_highlighted)
   if style = Style.create!(record)
     types.each do |type|
       listing_type = ListingType.find_by_name(type)
@@ -1015,9 +1016,15 @@ i = 0
         }
         case listing_type
         when :sale
-          attributes.merge!( :highlighted => true ) if sale_highlighted
+          if record[:sale_highlighted]
+            attributes.merge!( :highlighted => true )
+            record.delete(:sale_highlighted)
+          end
         when :rent
-          attributes.merge!( :highlighted => true ) if rent_highlighted
+          if record[:rent_highlighted]
+            attributes.merge!( :highlighted => true )
+            record.delete(:rent_highlighted)
+          end
         end
         StyleAssignment.create!( attributes )
       end
