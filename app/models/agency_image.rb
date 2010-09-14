@@ -1,7 +1,7 @@
 class AgencyImage < Image
   
   acts_as_fleximage do
-    image_directory 'public/seed_images/agency_images'
+    image_directory 'public/source_images/agency_images'
     use_creation_date_based_directories false
     image_storage_format :png
     #output_image_jpg_quality 85

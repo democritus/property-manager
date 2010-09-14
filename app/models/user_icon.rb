@@ -1,7 +1,7 @@
 class UserIcon < Image
   
   acts_as_fleximage do
-    image_directory 'public/seed_images/user_icons'
+    image_directory 'public/source_images/user_icons'
     use_creation_date_based_directories false
     image_storage_format :png
     #output_image_jpg_quality 85
