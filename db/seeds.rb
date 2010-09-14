@@ -41,33 +41,33 @@ open(url) do |data|
     when 'CR'
       active = true
       nationality = 'Costa Rican'
-      currency_code = 'CRC'
+      alphabetic_code = 'CRC'
     when 'US'
       active = true
       nationality = 'American'
-      currency_code = 'USD'
+      alphabetic_code = 'USD'
     else
       active = false
       nationality = name
-      currency_code = nil
+      alphabetic_code = nil
     end
     countries << {
       :name => name,
       :iso2 => iso2,
       :nationality => nationality,
-      :currency_code => currency_code,
+      :alphabetic_code => alphabetic_code,
       :active => active
     }
   end
 end
 i = 0
 countries.each do |record|
-  if record[:currency_code]
-    currency = Currency.find_by_alphabetic_code(record[:currency_code],
+  if record[:alphabetic_code]
+    currency = Currency.find_by_alphabetic_code(record[:alphabetic_code],
       :select => [ :id ]
     )
-    record.delete(:currency_code)
   end
+  record.delete(:alphabetic_code)
   if currency
     record.merge!(:currency_id => currency.id) unless currency.id.blank?
   end
@@ -80,19 +80,19 @@ end
 #[
 #  {
 #    :name => 'Costa Rica',
-#    :iso2 => 'CR', :nationality => 'Costarricense', :currency_code => 'CRC'
+#    :iso2 => 'CR', :nationality => 'Costarricense', :alphabetic_code => 'CRC'
 #  },
 #  {
 #    :name => 'United States',
-#    :iso2 => 'US', :nationality => 'American', :currency_code => 'USD' }
+#    :iso2 => 'US', :nationality => 'American', :alphabetic_code => 'USD' }
 #].each do |record|
-#  currency = Currency.find_by_currency_code(record[:currency_code],
+#  currency = Currency.find_by_alphabetic_code(record[:alphabetic_code],
 #    :select => [ :id ]
 #  )
 #  if currency
 #    record.merge!(:currency_id => currency.id) unless currency.id.blank?
 #  end
-#  record.delete(:currency_code)
+#  record.delete(:alphabetic_code)
 #  Country.create!(record)
 #  i += 1
 #end
@@ -720,7 +720,7 @@ i = 0
         :imageable_type => 'MarketSegment',
         :image_file => File.new( image_dir + '/' + filename, 'r' )
       }
-      j++
+      j += 1
     end
     MarketSegmentImage.create!( market_segment_images )
   end
@@ -915,7 +915,6 @@ i = 0
   
 ].each do |record|
   types = []
-  record.each_pair do |key, value|
   case record[:type]
   when :sale, :both
     types << 'for sale'
@@ -1025,7 +1024,6 @@ i = 0
 end
 
 User.delete_all
-i = 0
 [
   {
     :login => 'admin',
@@ -1037,5 +1035,4 @@ i = 0
   }
 ].each do |record|
   User.create!(record)
-  i += 1
 end

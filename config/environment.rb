@@ -175,7 +175,7 @@ Rails::Initializer.run do |config|
   config.gem 'searchlogic',
     :lib     => 'searchlogic',
     :source  => 'http://gems.github.com',
-    :version => '~> 2.4.25'
+    :version => '~> 2.4.26'
   config.gem 'subdomain-fu',
     :lib     => 'subdomain-fu',
     :source  => 'http://gems.github.com',

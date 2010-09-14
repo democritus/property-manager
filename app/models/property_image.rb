@@ -1,7 +1,7 @@
 class PropertyImage < Image
   
   acts_as_fleximage do
-    image_directory 'public/source_images/property_images'
+    image_directory 'public/seed_images/property_images'
     use_creation_date_based_directories true
     image_storage_format :png
     #output_image_jpg_quality 85
