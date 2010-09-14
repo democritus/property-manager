@@ -28,7 +28,7 @@ class Agency < ActiveRecord::Base
   has_many :site_texts
   
   validates_presence_of :name, :short_name
-  validates_uniqueness_of :name, :short_name
+  validates_uniqueness_of :name, :short_name, :case_sensitive => false
 #  validates_format_of :name, :with => /^[a-zA-Z0-9\s]+$/,
 #    :message => "may only contain letters and numbers"
   validates_uniqueness_of :subdomain, :scope => :domain,

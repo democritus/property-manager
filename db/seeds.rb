@@ -66,11 +66,11 @@ countries.each do |record|
     currency = Currency.find_by_alphabetic_code(record[:currency_code],
       :select => [ :id ]
     )
+    record.delete(:currency_code)
   end
   if currency
     record.merge!(:currency_id => currency.id) unless currency.id.blank?
   end
-  record.delete(:currency_code)
   Country.create!(record)
   i += 1
 end

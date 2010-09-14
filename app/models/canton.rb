@@ -1,6 +1,6 @@
 class Canton < ActiveRecord::Base
 
-  attr_accessible :province_id, :zone_id, :name, :position, :cached_slug
+  attr_accessible :province_id, :zone_id, :name, :position
   
   has_friendly_id :name, :use_slug => true, :approximate_ascii => true,
     :scope => :province

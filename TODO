@@ -1,3 +1,31 @@
+Script for creating demo website for Keller Williams:
+
+0. Deploy latest version of code to production server
+prd$ cd /u/apps
+prd$ sudo chown -R brian:brian barrioearth.com
+dev> cap deploy
+prd$ sudo chown -R mongrel:mongrel barrioearth.com
+prd$ sudo /etc/init.d/mongrel_cluster restart
+
+1. Start with fresh database
+mysql> DROP DATABASE `barrioearth_production`;
+mysql> CREATE DATABASE `barrioearth_production`;
+
+2. Load legacy data into temporary database
+$ mysqldump --opt --user=be_user_php -pmastod0n barrioearth_php --ignore-table=barrioearth_php.visitorlog --ignore-table=barrioearth_php.ip_to_country | mysql -u be_user_legacy -pmarin3r barrioearth_legacy
+
+3. Convert to utf8
+$ rake db:convert:to_utf8
+
+4. Initialize production database
+$ rake db:migrate
+
+5. Populate production database with seed data
+$ rake db:seed
+
+6. Migrate legacy data from temporary database into production database
+$ rake db:migrate:legacy
+
 Migration
 -When migrating legacy data, accented characters cause strings to be cut off.
 *I converted the legacy database to utf8, so check if this fixes the problem

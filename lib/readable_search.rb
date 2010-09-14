@@ -67,7 +67,7 @@ module ReadableSearch
   
   def default_search_params
     if @active_agency.country
-      country = @active_agency.country.cached_slug
+      country = @active_agency.country.friendly_id
     else
       country = search_params_defaults[ COUNTRY_EQUALS ]
     end

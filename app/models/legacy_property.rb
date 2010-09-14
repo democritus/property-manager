@@ -35,9 +35,17 @@ class LegacyProperty < LegacyBase
   private
   
   def forced_agency_id
-    Agency.find(:first,
-      :order => '(domain = "barrioearth.com" AND subdomain IS NULL) DESC'
-    ).id
+# TODO: load old data into a specific site
+#    if RAILS_ENV == 'production'
+#      order = '(domain = "qlogicinc.com" AND subdomain == "kwdemo") DESC'
+#    else
+#      order = '(domain = "barrioearth.com" AND subdomain IS NULL) DESC'
+#    end
+#    Agency.find( :first, :order => order ).id
+    
+    # Loading legacy data into the first agency found in database (just for
+    # testing while there is only one agency)
+    Agency.find( :first ).id
   end
   
   def new_canton_id

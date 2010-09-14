@@ -78,13 +78,39 @@ class Listing < ActiveRecord::Base
       ]
     }
   }
-  
-#  REMOVED: not necessary. Use 'active_agency.listings' instead
-#  named_scope :by_agency, lambda {
-#    |agency_id| {
-#      :include => {
-#        :property => { :agency => { :broker => { :user => :user_icons } } } },
-#      :conditions => [ 'properties.agency_id = ?', agency_id ]
+
+# TODO: use something like this if scopes can be made to be "id agnostic",
+# where either a numeric id or "friendly_id" can be used
+#  named_scope :features_id_equals_all_custom, lambda { |values|
+#    using_friendly_id = false
+#    unless values.empty?
+#      values.each do |value|
+#        if value.to_i.zero?
+#          using_friendly_id = true
+#          break
+#        end
+#      end
+#    end
+#    if using_friendly_id
+#      field = 'cached_slug'
+#    else
+#      field = 'id'
+#    end
+#    {
+#      :conditions => ["(
+#          SELECT  COUNT(*)
+#          FROM `features`
+#          INNER JOIN `feature_assignments`
+#            ON `feature_assignments`.`feature_id` = `features`.`id`
+#            AND `feature_assignments`.`feature_assignable_type` = 'Listing'
+#          WHERE `features`.`#{field}` IN (:values)
+#            AND `feature_assignments`.`feature_assignable_id` = `listings`.`id`
+#        ) = :values_count",
+#        {
+#          :values => values,
+#          :values_count => values.length
+#        }
+#      ]
 #    }
 #  }
   

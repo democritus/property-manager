@@ -1,4 +1,5 @@
 class User < ActiveRecord::Base
+
   # Authentication (installed as gem)
   # for available options see documentation in: Authlogic::ActsAsAuthentic
   acts_as_authentic
@@ -26,9 +27,7 @@ class User < ActiveRecord::Base
     Notifier.deliver_password_reset_instructions(self)
   end
   
-  validates_format_of :email,
-    :with => /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i
+  # Note: Acts as authentic plugin automatically validates email, password, and
+  # password confirmation
   validates_presence_of :first_name, :last_name
-  validates_uniqueness_of :email, :login
 end
-

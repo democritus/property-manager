@@ -1,7 +1,7 @@
 class LegacyBase < ActiveRecord::Base
   
   self.abstract_class = true
-  establish_connection :legacy
+  establish_connection "legacy_#{RAILS_ENV.downcase}".to_sym
   
   def migrate
     new_record = eval("#{self.class}".gsub(/Legacy/, '')).new(map)

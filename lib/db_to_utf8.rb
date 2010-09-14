@@ -5,12 +5,19 @@ def convert_db_to_utf8
 #  db_user = db_config[:username]
 #  db_pass = db_config[:password] || ''
 
-  db_name = 'barrioearth_php'
-  db_user = 'be_user_php'
-  db_pass = 'jupit3r'
-  
-  latin1_dump = '/home/brian/tmp/latin1_dump.sql'
-  utf8_dump   = '/home/brian/tmp/utf8_dump.sql'
+  if RAILS_ENV == 'production'
+    db_name = 'barrioearth_legacy'
+    db_user = 'be_user_legacy'
+    db_pass = 'marin3r'
+    latin1_dump = '/tmp/latin1_dump.sql'
+    utf8_dump   = '/tmp/utf8_dump.sql'
+  else
+    db_name = 'barrioearth_php'
+    db_user = 'be_user_php'
+    db_pass = 'jupit3r'
+    latin1_dump = '/home/brian/tmp/latin1_dump.sql'
+    utf8_dump   = '/home/brian/tmp/utf8_dump.sql'
+  end
 
   print "Dumping database... "
   system "mysqldump --user=#{db_user} --password='#{db_pass}' --add-drop-table --default-character-set=latin1 --insert-ignore --skip-set-charset #{db_name} > #{latin1_dump}"

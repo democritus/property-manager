@@ -59,13 +59,22 @@ production:
   password: voyag3r
   host: localhost
   
-legacy:
+legacy_production:
   adapter: mysql
-  encoding: latin1
+  encoding: utf8
+  reconnect: false
+  database: barrioearth_legacy
+  pool: 5
+  username: be_user_legacy
+  password: marin3r
+  host: localhost
+  
+legacy_development:
+  adapter: mysql
+  encoding: utf8
   reconnect: false
   database: barrioearth_php
   pool: 5
   username: be_user_php
   password: jupit3r
   host: localhost
-#  host: luna.qlogicinc.com

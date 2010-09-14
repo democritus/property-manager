@@ -247,7 +247,7 @@
     -->
     <%
     static_params = {
-      :listing_type_cached_slug_equals => @listing.listing_type.name
+      :listing_type_cached_slug_equals => @listing.listing_type.friendly_id
     }
     if @listing.property.barrio
       static_params.merge!(
@@ -258,11 +258,11 @@
     if @listing.property.barrio
       if @listing.property.barrio.market
         nearby_area = @listing.property.barrio.market.name
-        nearby_slug = @listing.property.barrio.market.cached_slug
+        nearby_slug = @listing.property.barrio.market.friendly_id
         nearby_key = MARKET_EQUALS
       else
         nearby_area = @listing.property.barrio.name
-        nearby_slug = @listing.property.barrio.cached_slug
+        nearby_slug = @listing.property.barrio.friendly_id
         nearby_key = BARRIO_EQUALS
       end
     end

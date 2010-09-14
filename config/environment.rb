@@ -12,7 +12,6 @@ require File.join(File.dirname(__FILE__), 'boot')
 # by Searchlogic plugin
 ASK_AMOUNT_LESS_THAN_OR_EQUAL_TO = :ask_amount_less_than_or_equal_to
 ASK_AMOUNT_GREATER_THAN_OR_EQUAL_TO = :ask_amount_greater_than_or_equal_to
-BARRIO_EQUALS = :property_barrio_cached_slug_equals
 
 # Scopes that are translated from string key that comes in params into
 # differently named scope in search_params
@@ -25,6 +24,9 @@ BATHROOM_NUMBER_EQUALS = :property_bathroom_number_equals
 BATHROOM_NUMBER_GTE = :property_bathroom_number_greater_than_or_equal_to
 BATHROOM_NUMBER_LTE = :property_bathroom_number_less_than_or_equal_to
 
+# TODO: make the named routes referenced by these parameters "id agnostic",
+# where a friendly id OR regular id can be used
+BARRIO_EQUALS = :property_barrio_cached_slug_equals
 CANTON_EQUALS = :property_barrio_canton_cached_slug_equals
 CATEGORIES_EQUALS_ANY = :categories_cached_slug_equals_any
 CATEGORIES_EQUALS_ALL = :categories_cached_slug_equals_all
@@ -169,11 +171,11 @@ Rails::Initializer.run do |config|
   config.gem 'authlogic',
     :lib     => 'authlogic',
     :source  => 'http://gems.github.com',
-    :version => '~> 2.1.3'
+    :version => '~> 2.1.6'
   config.gem 'searchlogic',
     :lib     => 'searchlogic',
     :source  => 'http://gems.github.com',
-    :version => '~> 2.4.23'
+    :version => '~> 2.4.25'
   config.gem 'subdomain-fu',
     :lib     => 'subdomain-fu',
     :source  => 'http://gems.github.com',

@@ -480,13 +480,13 @@ module ListingsHelper
                 "#{type.to_s.upcase}_EQUALS".constantize => nil ) ) ) + '</li>'
       end
       # Skip currently-selected place
-      next if @search_params[place_equals] == place.cached_slug
+      next if @search_params[place_equals] == place.friendly_id
       place_params = { place_equals => place.cached_slug }
       parents.each do |parent|
         if place.send("#{parent.to_s}")
           place_params.merge!(
             "#{parent.to_s.upcase}_EQUALS".constantize =>
-              place.send("#{parent.to_s}").cached_slug
+              place.send("#{parent.to_s}").friendly_id
           )
         end
       end
@@ -581,7 +581,7 @@ module ListingsHelper
     else
       collection.each_with_index do |record, i|
         if i < min ||
-        cached_slug_array( model_name ).include?(record.cached_slug) ||
+        cached_slug_array( model_name ).include?( record.friendly_id ) ||
         record.send("#{model_name}_assignments")[0].highlighted
           fields[:highlighted] << record
         else
@@ -657,14 +657,14 @@ class=\"normal clearfix\" id=\"#{normal_id}\">
     scope_name = "#{model_capitalized}_EQUALS_#{inclusiveness}".constantize
     label = object.name.capitalize
     name = scope_name.to_s + '[]'
-    value = object.cached_slug
+    value = object.friendly_id
     id = model_name + '_' + value
     case type
     when :li
       content = content_tag( type, link_to(label,
           listings_options(
             @search_params.merge(
-              scope_name => object.cached_slug
+              scope_name => object.friendly_id
             )
           )
         )

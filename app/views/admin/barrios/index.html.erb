@@ -7,7 +7,7 @@
     <th>Market</th>
     <th>Canton</th>
     <th>Position</th>
-    <th>Cached Slug</th>
+    <th>Friendly Id</th>
   </tr>
 
 <% @barrios.each do |barrio| %>
@@ -17,7 +17,7 @@
     <td><%=h barrio.market.name %></td>
     <td><%=h barrio.canton.name %></td>
     <td><%=h barrio.position %></td>
-    <td><%=h barrio.cached_slug %></td>
+    <td><%=h barrio.friendly_id %></td>
     <td><%= link_to 'Show',
       admin_canton_barrio_path(@canton, barrio) %></td>
     <td><%= link_to 'Edit',

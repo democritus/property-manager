@@ -6,7 +6,7 @@
     <th>Country</th>
     <th>Province</th>
     <th>Position</th>
-    <th>Cached Slug</th>
+    <th>Friendly Id</th>
   </tr>
   <% for canton in @cantons %>
     <tr>
@@ -14,7 +14,7 @@
       <td><%=h canton.country_id %></td>
       <td><%=h canton.province_id %></td>
       <td><%=h canton.position %></td>
-      <td><%=h canton.cached_slug %></td>
+      <td><%=h canton.friendly_id %></td>
       <td><%= link_to 'Show',
         admin_province_canton_path(@province, canton) %></td>
       <td><%= link_to 'Edit',

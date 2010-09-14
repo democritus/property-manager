@@ -29,9 +29,7 @@ class InformationRequest < ActiveRecord::Base
   
   private
   
-  # Don't save email recipient since email hasn't been sent yet, but remember
-  # the intended recipient so that it can be saved later upon succesful
-  # delivery  
+  # Remember the intended recipient so that it can be mailed by model observer
   def set_recipient
     return nil unless self.agency_id
     agency = Agency.find( self.agency_id, :include => { :broker => :user } )
@@ -45,7 +43,7 @@ class InformationRequest < ActiveRecord::Base
           else
             name = agency[:name]
           end
-          # Set recipient fields and record in database
+          # Set recipient fields
           write_attribute(:recipient_email, email)
           write_attribute(:recipient_name, name)
         end
