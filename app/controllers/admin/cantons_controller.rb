@@ -51,7 +51,7 @@ class Admin::CantonsController < Admin::AdminController
   def destroy
     @canton = Canton.find(params[:id])
     @canton.destroy
-    redirect_to(province_canton_url(@canton.province, @canton)) }
+    redirect_to(province_canton_url(@canton.province, @canton))
   end
 
 

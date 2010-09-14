@@ -51,7 +51,7 @@ class Admin::BarriosController < Admin::AdminController
   def destroy
     @barrio = Barrio.find(params[:id])
     @barrio.destroy
-    redirect_to(canton_barrio_url(@barrio.canton, @barrio)) }
+    redirect_to(canton_barrio_url(@barrio.canton, @barrio))
   end
 
 

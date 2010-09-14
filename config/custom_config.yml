@@ -1,5 +1,5 @@
 development:
-  perform_page_caching: false
+  perform_page_caching: true
   perform_fleximage_caching: true
 
 production:

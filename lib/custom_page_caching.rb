@@ -78,7 +78,7 @@ module CustomPageCaching
     
     
     private
-    
+  
     # Insert hostname into path
     def cache_path( options, subdirectory = nil )
       path = ''
@@ -95,7 +95,12 @@ module CustomPageCaching
         when String
           options
         else
-          request.path
+          #request.path
+          if request.path.empty? || request.path == '/'
+            '/index'
+          else
+            request.path
+          end
       end
       return path
     end
